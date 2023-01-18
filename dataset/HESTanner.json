@@ -1,0 +1,53 @@
+{
+	"name": "HESTanner",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM_IMSA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "companyRut",
+				"type": "nvarchar"
+			},
+			{
+				"name": "supplierRut",
+				"type": "nvarchar"
+			},
+			{
+				"name": "orderNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "receptionNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "amount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "dteType",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "payDays",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "externalId",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "HESTanner"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

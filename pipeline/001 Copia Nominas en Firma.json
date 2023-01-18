@@ -1,0 +1,263 @@
+{
+	"name": "001 Copia Nominas en Firma",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Nominas en Firma",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'Automatizaciones/Nóminas en Firma'}/@{'Nominas_En_Firma.xlsx'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'bronce'}.@{'NominasEnFirma'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE bronce.NominasEnFirma",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "#",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "#",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Banco",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Banco",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Ejecucion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Ejecucion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Ejecucion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Ejecucion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Tipo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Tipo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FolioNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FolioNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ModPago",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ModPago",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RutProveedor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RutProveedor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreProveedor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NombreProveedor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Moneda",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Moneda",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Monto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Monto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoDte",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TipoDte",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Automatizaciones/Nóminas en Firma",
+							"File": "Nominas_En_Firma.xlsx",
+							"Sheet": "Sheet1"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "bronce",
+							"table": "NominasEnFirma"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Automatizaciones"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-10T14:19:50Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

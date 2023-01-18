@@ -1,0 +1,6 @@
+{
+	"name": "integrationHana",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

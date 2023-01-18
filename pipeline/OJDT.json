@@ -1,0 +1,1698 @@
+{
+	"name": "OJDT",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base OJDT to Datalake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "SBO_MANQUEHUE.@{'OJDT'}"
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{concat(concat('SAP/Tablas Raw'),'/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'OJDT.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"Table_Name": "OJDT"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake_Fechas",
+						"type": "DatasetReference",
+						"parameters": {
+							"ano": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy')",
+								"type": "Expression"
+							},
+							"mes": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'MM')",
+								"type": "Expression"
+							},
+							"dia": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'dd')",
+								"type": "Expression"
+							},
+							"FolderPath": {
+								"value": "@concat('SAP/Tablas Raw')",
+								"type": "Expression"
+							},
+							"FileName": "OJDT.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "OJDT to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base OJDT to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')}/@{'OJDT.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'OJDT'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.OJDT",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "BatchNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BatchNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TransId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BtfStatus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BtfStatus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TransType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseRef",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseRef",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RefDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RefDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Memo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Memo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Ref1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Ref1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Ref2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Ref2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedBy",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreatedBy",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LocTotal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LocTotal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FcTotal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FcTotal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SysTotal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SysTotal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TransCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OrignCurr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OrignCurr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransRate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TransRate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BtfLine",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BtfLine",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransCurr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TransCurr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Project",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Project",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DueDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DueDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TaxDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TaxDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PCAddition",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PCAddition",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FinncPriod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FinncPriod",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DataSource",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DataSource",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UpdateDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UpdateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UserSign",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UserSign",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UserSign2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UserSign2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RefndRprt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RefndRprt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LogInstanc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LogInstanc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ObjType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ObjType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Indicator",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indicator",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AdjTran",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AdjTran",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RevSource",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RevSource",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "StornoDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "StornoDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "StornoToTr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "StornoToTr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AutoStorno",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AutoStorno",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Corisptivi",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Corisptivi",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "StampTax",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "StampTax",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Series",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Series",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AutoVAT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AutoVAT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocSeries",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocSeries",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FolioPref",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FolioPref",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FolioNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FolioNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateTime",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreateTime",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BlockDunn",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BlockDunn",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ReportEU",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ReportEU",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Report347",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Report347",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Printed",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Printed",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AttNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AttNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GenRegNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GenRegNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RG23APart2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RG23APart2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RG23CPart2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RG23CPart2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MatType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MatType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Creator",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Creator",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Approver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Approver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Location",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Location",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SeqCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SeqCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Serial",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Serial",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SeriesStr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SeriesStr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SubStr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SubStr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AutoWT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AutoWT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTSum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTSum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTSumSC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTSumSC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTSumFC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTSumFC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTApplied",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTApplied",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTAppliedS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTAppliedS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTAppliedF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTAppliedF",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseAmnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseAmnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseAmntSC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseAmntSC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseAmntFC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseAmntFC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseVtAt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseVtAt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseVtAtSC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseVtAtSC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseVtAtFC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseVtAtFC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VersionNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VersionNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseTrans",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseTrans",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ResidenNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ResidenNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OperatCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OperatCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Ref3",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Ref3",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SSIExmpt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SSIExmpt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SignMsg",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SignMsg",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SignDigest",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SignDigest",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CertifNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CertifNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "KeyVersion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "KeyVersion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CUP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CUP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CIG",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CIG",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SupplCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SupplCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SPSrcType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SPSrcType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SPSrcID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SPSrcID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SPSrcDLN",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SPSrcDLN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DeferedTax",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DeferedTax",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AgrNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AgrNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SeqNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SeqNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ECDPosTyp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ECDPosTyp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RptPeriod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RptPeriod",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RptMonth",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RptMonth",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExTransId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExTransId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PrlLinked",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PrlLinked",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PTICode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PTICode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Letter",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Letter",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FolNumFrom",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FolNumFrom",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FolNumTo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FolNumTo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RepSection",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RepSection",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExclTaxRep",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExclTaxRep",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IsCoEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IsCoEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SAPPassprt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SAPPassprt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AtcEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AtcEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Attachment",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Attachment",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EBookable",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EBookable",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_Libro",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_Libro",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_AntMes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_AntMes",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_AntTra",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_AntTra",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_PresEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_PresEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_DocEntryProd",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_DocEntryProd",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_FVTAOINV",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_FVTAOINV",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_FVTACOPCH",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_FVTACOPCH",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_FCMPOPCH",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_FCMPOPCH",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_FTRACKID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_FTRACKID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_unidad",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_unidad",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_tipoope",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_tipoope",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_numplanok",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_numplanok",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')",
+								"type": "Expression"
+							},
+							"File": "OJDT.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "OJDT"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SAP/Tablas Raw"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-20T00:19:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

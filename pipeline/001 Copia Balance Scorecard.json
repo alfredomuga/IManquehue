@@ -1,0 +1,203 @@
+{
+	"name": "001 Copia Balance Scorecard",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Balance Scorecard",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'Automatizaciones/Balance Scorecard'}/@{'Mock Up CMI.xlsx'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'bronce'}.@{'BalanceScorecard'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE bronce.BalanceScorecard",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "N°",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "N",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Pespectiva",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Pespectiva",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Indicador",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indicador",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Real",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Real",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Meta",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Meta",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Periodicidad",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Periodicidad",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Meta Auxiliar (Verde)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Meta Auxiliar Verde",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Meta Auxiliar (Amarilla)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Meta Auxiliar Amarilla",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Alarma Auxiliar",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Alarma Auxiliar",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Alarma",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Alarma",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Automatizaciones/Balance Scorecard",
+							"File": "Mock Up CMI.xlsx",
+							"Sheet": "TdG"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "bronce",
+							"table": "BalanceScorecard"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Automatizaciones"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-04T13:48:36Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

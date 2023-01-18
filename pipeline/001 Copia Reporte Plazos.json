@@ -1,0 +1,633 @@
+{
+	"name": "001 Copia Reporte Plazos",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Reporte Plazos SAP",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'Automatizaciones/Reporte Plazos'}/@{'Base_Conjunta_Reporte_Plazos.xlsx'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'bronce'}.@{'ReportePlazosSAP'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE bronce.ReportePlazosSAP",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "#",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "#",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Num Doc SAP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Num Doc SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Folio Factura",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Folio Factura",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Codigo DTE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Codigo DTE",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Tipo Documento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Tipo Documento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Total",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Total",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Recepcion FEX",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Recepcion FEX",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Aceptacion DTE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Aceptacion DTE",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Dias Aprobacion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dias Aprobacion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Documento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Documento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Contabilizacion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Contabilizacion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Dias Registro",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dias Registro",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha de Pago",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha de Pago",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Dias Pago",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dias Pago",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Proveedor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Proveedor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Grupo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Grupo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Ares de Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Areas de Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Area de Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre Area de Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Total_Plazo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Total_Plazo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Automatizaciones/Reporte Plazos",
+							"File": "Base_Conjunta_Reporte_Plazos.xlsx",
+							"Sheet": "SAP"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "bronce",
+							"table": "ReportePlazosSAP"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Reporte Plazos AX",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'Automatizaciones/Reporte Plazos'}/@{'Base_Conjunta_Reporte_Plazos.xlsx'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'bronce'}.@{'ReportePlazosAX'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE bronce.ReportePlazosAX",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "#",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "#",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Num Doc SAP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Num Doc SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Folio Factura",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Folio Factura",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Codigo DTE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Codigo DTE",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Tipo Documento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Tipo Documento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Total",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Total",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Recepcion FEX",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Recepcion FEX",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Aceptacion DTE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Aceptacion DTE",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Dias Aprobacion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dias Aprobacion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Documento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Documento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Contabilizacion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha Contabilizacion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Dias Registro",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dias Registro",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha de Pago",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha de Pago",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Dias Pago",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dias Pago",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Proveedor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Proveedor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Grupo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Grupo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Ares de Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Areas de Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Area de Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre Area de Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Total_Plazo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Total_Plazo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Automatizaciones/Reporte Plazos",
+							"File": "Base_Conjunta_Reporte_Plazos.xlsx",
+							"Sheet": "AX"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "bronce",
+							"table": "ReportePlazosAX"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Automatizaciones"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-11T14:39:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

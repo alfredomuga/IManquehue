@@ -1,0 +1,16 @@
+{
+	"name": "EscribirHES",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Publicar OC",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"PayDays": "Value"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

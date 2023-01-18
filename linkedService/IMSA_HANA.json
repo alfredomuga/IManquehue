@@ -1,0 +1,16 @@
+{
+	"name": "IMSA_HANA",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SapHana",
+		"typeProperties": {
+			"connectionString": "servernode=172.20.20.1:30015;uid=SAPINST",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2ZWM2YTQ5Yy05OGYzLTQ4YjgtYmIyMy0wNTA2YzlmNmU1NjMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationHana",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

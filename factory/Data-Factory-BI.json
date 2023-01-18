@@ -1,0 +1,9 @@
+{
+	"name": "Data-Factory-BI",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ddff8c07-14f5-4823-b2ee-6c1af120588b",
+		"tenantId": "befa7669-a76b-489d-8b89-5b3c67dff108"
+	}
+}

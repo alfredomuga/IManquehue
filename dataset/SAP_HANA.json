@@ -1,0 +1,13 @@
+{
+	"name": "SAP_HANA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IMSA_HANA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SapHanaTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

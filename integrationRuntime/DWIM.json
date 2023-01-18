@@ -1,0 +1,7 @@
+{
+	"name": "DWIM",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "IR de la VM IMSA"
+	}
+}

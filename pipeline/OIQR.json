@@ -1,0 +1,678 @@
+{
+	"name": "OIQR",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base OIQR to Datalake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "SBO_MANQUEHUE.@{'OIQR'}"
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{concat(concat('SAP/Tablas Raw'),'/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'OIQR.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"Table_Name": "OIQR"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake_Fechas",
+						"type": "DatasetReference",
+						"parameters": {
+							"ano": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy')",
+								"type": "Expression"
+							},
+							"mes": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'MM')",
+								"type": "Expression"
+							},
+							"dia": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'dd')",
+								"type": "Expression"
+							},
+							"FolderPath": {
+								"value": "@concat('SAP/Tablas Raw')",
+								"type": "Expression"
+							},
+							"FileName": "OIQR.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "OIQR to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base OIQR to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')}/@{'OIQR.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'OIQR'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.OIQR",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "DocEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocTime",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocTime",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IOffIncAcc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IOffIncAcc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DOffDecAcc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DOffDecAcc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Reference",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Reference",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Comments",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Comments",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocDueDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocDueDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DataSource",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DataSource",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UserSign",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UserSign",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VersionNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VersionNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "JdtNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "JdtNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Reference2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Reference2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ObjType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ObjType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Series",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Series",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PriceSrc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PriceSrc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PriceList",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PriceList",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "JrnlMemo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "JrnlMemo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LogIns",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LogIns",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UserSign2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UserSign2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UpdateDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UpdateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CountDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CountDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CountTime",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CountTime",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WddStatus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WddStatus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DraftKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DraftKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Printed",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Printed",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocTotal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocTotal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BPLId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BPLId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BPLName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BPLName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UpdateTS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UpdateTS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CopyOption",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CopyOption",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BaseEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BaseEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PIndicator",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PIndicator",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FinncPriod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FinncPriod",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AtcEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AtcEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Attachment",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Attachment",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "YearEndDt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "YearEndDt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')",
+								"type": "Expression"
+							},
+							"File": "OIQR.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "OIQR"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SAP/Tablas Raw"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-20T00:19:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

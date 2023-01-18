@@ -1,0 +1,5046 @@
+{
+	"name": "OCRD",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base OCRD to Datalake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "SBO_MANQUEHUE.@{'OCRD'}"
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{concat(concat('SAP/Tablas Raw'),'/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'OCRD.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"Table_Name": "OCRD"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake_Fechas",
+						"type": "DatasetReference",
+						"parameters": {
+							"ano": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy')",
+								"type": "Expression"
+							},
+							"mes": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'MM')",
+								"type": "Expression"
+							},
+							"dia": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'dd')",
+								"type": "Expression"
+							},
+							"FolderPath": {
+								"value": "@concat('SAP/Tablas Raw')",
+								"type": "Expression"
+							},
+							"FileName": "OCRD.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "OCRD to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base OCRD to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')}/@{'OCRD.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'OCRD'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.OCRD",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CardCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CardCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CardName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CardName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CardType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CardType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GroupCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GroupCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CmpPrivate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CmpPrivate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Address",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Address",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ZipCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ZipCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailAddres",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailAddres",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailZipCod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailZipCod",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Phone1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Phone1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Phone2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Phone2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fax",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fax",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CntctPrsn",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CntctPrsn",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Notes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Notes",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Balance",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Balance",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ChecksBal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ChecksBal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DNotesBal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DNotesBal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OrdersBal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OrdersBal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GroupNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GroupNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditLine",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreditLine",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DebtLine",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DebtLine",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Discount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Discount",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatStatus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatStatus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LicTradNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LicTradNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DdctStatus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DdctStatus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DdctPrcnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DdctPrcnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ValidUntil",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ValidUntil",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Chrctrstcs",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Chrctrstcs",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExMatchNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExMatchNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "InMatchNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "InMatchNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ListNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ListNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DNoteBalFC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DNoteBalFC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderBalFC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OrderBalFC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DNoteBalSy",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DNoteBalSy",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderBalSy",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OrderBalSy",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Transfered",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Transfered",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BalTrnsfrd",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BalTrnsfrd",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IntrstRate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IntrstRate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Commission",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Commission",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CommGrCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CommGrCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Free_Text",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Free_Text",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SlpCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SlpCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PrevYearAc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PrevYearAc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Currency",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Currency",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RateDifAct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RateDifAct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BalanceSys",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BalanceSys",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BalanceFC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BalanceFC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Protected",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Protected",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cellular",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cellular",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AvrageLate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AvrageLate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "County",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "County",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Country",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Country",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailCity",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailCity",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailCounty",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailCounty",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailCountr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailCountr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "E_Mail",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "E_Mail",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Picture",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Picture",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DflAccount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DflAccount",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DflBranch",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DflBranch",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BankCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BankCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AddID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AddID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Pager",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Pager",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FatherCard",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FatherCard",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CardFName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CardFName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FatherType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FatherType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup3",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup3",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup4",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup4",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup5",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup5",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup6",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup6",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup7",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup7",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup8",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup8",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup9",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup9",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup10",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup10",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup11",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup11",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup12",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup12",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup13",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup13",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup14",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup14",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup15",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup15",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup16",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup16",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup17",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup17",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup18",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup18",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup19",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup19",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup20",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup20",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup21",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup21",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup22",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup22",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup23",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup23",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup24",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup24",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup25",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup25",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup26",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup26",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup27",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup27",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup28",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup28",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup29",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup29",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup30",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup30",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup31",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup31",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup32",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup32",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup33",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup33",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup34",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup34",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup35",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup35",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup36",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup36",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup37",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup37",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup38",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup38",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup39",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup39",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup40",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup40",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup41",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup41",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup42",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup42",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup43",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup43",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup44",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup44",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup45",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup45",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup46",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup46",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup47",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup47",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup48",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup48",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup49",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup49",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup50",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup50",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup51",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup51",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup52",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup52",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup53",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup53",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup54",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup54",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup55",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup55",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup56",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup56",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup57",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup57",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup58",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup58",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup59",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup59",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup60",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup60",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup61",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup61",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup62",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup62",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup63",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup63",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QryGroup64",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QryGroup64",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DdctOffice",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DdctOffice",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UpdateDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UpdateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExportCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExportCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DscntObjct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DscntObjct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DscntRel",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DscntRel",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SPGCounter",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SPGCounter",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SPPCounter",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SPPCounter",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DdctFileNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DdctFileNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SCNCounter",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SCNCounter",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MinIntrst",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MinIntrst",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DataSource",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DataSource",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OprCount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OprCount",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExemptNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExemptNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Priority",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Priority",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditCard",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreditCard",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CrCardNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CrCardNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CardValid",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CardValid",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UserSign",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UserSign",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LocMth",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LocMth",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "validFor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "validFor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "validFrom",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "validFrom",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "validTo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "validTo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "frozenFor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "frozenFor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "frozenFrom",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "frozenFrom",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "frozenTo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "frozenTo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "sEmployed",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "sEmployed",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MTHCounter",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MTHCounter",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BNKCounter",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BNKCounter",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DdgKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DdgKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DdtKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DdtKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ValidComm",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ValidComm",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FrozenComm",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FrozenComm",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "chainStore",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "chainStore",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DiscInRet",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DiscInRet",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "State1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "State1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "State2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "State2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatGroup",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatGroup",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LogInstanc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LogInstanc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ObjType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ObjType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Indicator",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indicator",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ShipType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DebPayAcct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DebPayAcct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipToDef",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ShipToDef",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Block",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Block",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailBlock",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailBlock",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Password",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Password",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ECVatGroup",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ECVatGroup",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Deleted",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Deleted",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IBAN",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IBAN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DocEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FormCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FormCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Box1099",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Box1099",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PymCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PymCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BackOrder",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BackOrder",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PartDelivr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PartDelivr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DunnLevel",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DunnLevel",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DunnDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DunnDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BlockDunn",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BlockDunn",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BankCountr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BankCountr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CollecAuth",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CollecAuth",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DME",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DME",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "InstrucKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "InstrucKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SinglePaym",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SinglePaym",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ISRBillId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ISRBillId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PaymBlock",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PaymBlock",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RefDetails",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RefDetails",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HouseBank",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HouseBank",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OwnerIdNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OwnerIdNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PyBlckDesc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PyBlckDesc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HousBnkCry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HousBnkCry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HousBnkAct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HousBnkAct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HousBnkBrn",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HousBnkBrn",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ProjectCod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ProjectCod",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SysMatchNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SysMatchNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatIdUnCmp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatIdUnCmp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AgentCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AgentCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TolrncDays",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TolrncDays",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SelfInvoic",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SelfInvoic",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DeferrTax",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DeferrTax",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LetterNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LetterNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MaxAmount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MaxAmount",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FromDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FromDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ToDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ToDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTLiable",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTLiable",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CrtfcateNO",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CrtfcateNO",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExpireDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExpireDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NINum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NINum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AccCritria",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AccCritria",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Equ",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Equ",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HldCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HldCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ConnBP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ConnBP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MltMthNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MltMthNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TypWTReprt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TypWTReprt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VATRegNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VATRegNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RepName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RepName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Industry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Industry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Business",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Business",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WTTaxCat",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WTTaxCat",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IsDomestic",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IsDomestic",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IsResident",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IsResident",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AutoCalBCG",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AutoCalBCG",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OtrCtlAcct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OtrCtlAcct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AliasName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AliasName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Building",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Building",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailBuildi",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailBuildi",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BoEPrsnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BoEPrsnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BoEDiscnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BoEDiscnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BoEOnClct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BoEOnClct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UnpaidBoE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UnpaidBoE",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ITWTCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ITWTCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DunTerm",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DunTerm",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ChannlBP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ChannlBP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DfTcnician",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DfTcnician",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Territory",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Territory",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BillToDef",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BillToDef",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DpmClear",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DpmClear",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IntrntSite",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IntrntSite",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LangCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LangCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HousActKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HousActKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Profession",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Profession",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CDPNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CDPNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DflBankKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DflBankKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BCACode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BCACode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UseShpdGd",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UseShpdGd",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RegNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RegNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VerifNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VerifNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BankCtlKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BankCtlKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HousCtlKey",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HousCtlKey",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AddrType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AddrType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "InsurOp347",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "InsurOp347",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailAddrTy",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailAddrTy",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "StreetNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "StreetNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MailStrNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MailStrNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TaxRndRule",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TaxRndRule",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VendTID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VendTID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ThreshOver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ThreshOver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SurOver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SurOver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VendorOcup",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VendorOcup",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OpCode347",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OpCode347",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DpmIntAct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DpmIntAct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ResidenNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ResidenNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UserSign2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UserSign2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PlngGroup",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PlngGroup",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatIDNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatIDNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Affiliate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Affiliate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MivzExpSts",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MivzExpSts",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HierchDdct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HierchDdct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CertWHT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CertWHT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CertBKeep",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CertBKeep",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WHShaamGrp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WHShaamGrp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IndustryC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IndustryC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DatevAcct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DatevAcct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DatevFirst",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DatevFirst",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GTSRegNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GTSRegNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GTSBankAct",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GTSBankAct",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GTSBilAddr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GTSBilAddr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HsBnkSwift",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HsBnkSwift",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HsBnkIBAN",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HsBnkIBAN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DflSwift",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DflSwift",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AutoPost",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AutoPost",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IntrAcc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IntrAcc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FeeAcc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FeeAcc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CpnNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CpnNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NTSWebSite",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NTSWebSite",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DflIBAN",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DflIBAN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Series",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Series",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EDocExpFrm",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EDocExpFrm",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TaxIdIdent",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TaxIdIdent",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Attachment",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Attachment",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AtcEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AtcEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DiscRel",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DiscRel",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NoDiscount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NoDiscount",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SCAdjust",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SCAdjust",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DflAgrmnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DflAgrmnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GlblLocNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GlblLocNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SenderID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SenderID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RcpntID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RcpntID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MainUsage",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MainUsage",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SefazCheck",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SefazCheck",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ChecksBalL",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ChecksBalL",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ChecksBalS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ChecksBalS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DateFrom",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DateFrom",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DateTill",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DateTill",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RelCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RelCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OKATO",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OKATO",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OKTMO",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OKTMO",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "KBKCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "KBKCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TypeOfOp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TypeOfOp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OwnerCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OwnerCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MandateID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MandateID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SignDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SignDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Remark1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Remark1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ConCerti",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ConCerti",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TpCusPres",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TpCusPres",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RoleTypCod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RoleTypCod",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BlockComm",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BlockComm",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EmplymntCt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EmplymntCt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExcptnlEvt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExcptnlEvt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExpnPrfFnd",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExpnPrfFnd",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EdrsFromBP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EdrsFromBP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EdrsToBP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EdrsToBP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateTS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreateTS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UpdateTS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UpdateTS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EDocGenTyp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EDocGenTyp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "eStreet",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "eStreet",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "eStreetNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "eStreetNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "eBuildnNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "eBuildnNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "eZipCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "eZipCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "eCityTown",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "eCityTown",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "eCountry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "eCountry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "eDistrict",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "eDistrict",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RepFName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RepFName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RepSName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RepSName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RepCmpName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RepCmpName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RepFisCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RepFisCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RepAddID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RepAddID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PECAddr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PECAddr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IPACodePA",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IPACodePA",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PriceMode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PriceMode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EffecPrice",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EffecPrice",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TxExMxVdTp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TxExMxVdTp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MerchantID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MerchantID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UseBilAddr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UseBilAddr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NaturalPer",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NaturalPer",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DPPStatus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DPPStatus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnAddID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnAddID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EncryptIV",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EncryptIV",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnDflAccnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnDflAccnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnDflIBAN",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnDflIBAN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnERD4In",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnERD4In",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnERD4Out",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnERD4Out",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DflCustomr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DflCustomr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TspEntry",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TspEntry",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TspLine",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TspLine",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FCERelevnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FCERelevnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FCEVldte",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FCEVldte",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AggregDoc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AggregDoc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EffcAllSrc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EffcAllSrc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EBVatExCau",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EBVatExCau",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DataVers",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DataVers",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LegalText",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LegalText",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatResDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatResDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatResCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatResCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnIBAN",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnIBAN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DefaultCur",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DefaultCur",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatResName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatResName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VatResAddr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VatResAddr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CertDetail",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CertDetail",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EORINumber",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EORINumber",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FCEPmnMean",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FCEPmnMean",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DefCommDDt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DefCommDDt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DefCommMon",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DefCommMon",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DefCommDay",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DefCommDay",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ExLettDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ExLettDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_Tipo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_Tipo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_ModPago",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_ModPago",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_Tipo_Prov",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_Tipo_Prov",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_Nom1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_Nom1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_Nom2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_Nom2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_Ape_Pater",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_Ape_Pater",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_Ape_Mater",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_Ape_Mater",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_Tipo_Id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_Tipo_Id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_TipoTrato",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_TipoTrato",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_Especialidad",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_Especialidad",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_Cargo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_Cargo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_AntTope",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_AntTope",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_RUT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_RUT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_PrcRet",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_PrcRet",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_PrcAnt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_PrcAnt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_EXX_FE_Cesionario",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_EXX_FE_Cesionario",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')",
+								"type": "Expression"
+							},
+							"File": "OCRD.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "OCRD"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SAP/Tablas Raw"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-20T00:19:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

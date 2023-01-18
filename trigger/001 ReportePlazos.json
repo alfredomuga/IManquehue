@@ -1,0 +1,26 @@
+{
+	"name": "001 ReportePlazos",
+	"properties": {
+		"description": "Desencadenador para el Reporte de Plazos.",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "001 Copia Reporte Plazos",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/imsa-files/blobs/Automatizaciones/Reporte Plazos",
+			"blobPathEndsWith": "Base_Conjunta_Reporte_Plazos.xlsx",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

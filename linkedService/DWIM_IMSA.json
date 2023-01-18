@@ -1,0 +1,16 @@
+{
+	"name": "DWIM_IMSA",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=52.249.255.70;initial catalog=DWIM;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmMTBjM2Q3Ni03ODFkLTRhNjItYmUzMy05N2ViZTNiMWM5N2EiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "DWIM",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

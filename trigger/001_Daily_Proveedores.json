@@ -1,0 +1,47 @@
+{
+	"name": "001_Daily_Proveedores",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "001_Base_Proveedores",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "002_Base_Costos",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"fch_inicio": "2022/07/01"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "006_Base_Proveedores_Constructora",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2022-09-10T17:03:00",
+				"timeZone": "Pacific SA Standard Time",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						6
+					]
+				}
+			}
+		}
+	}
+}

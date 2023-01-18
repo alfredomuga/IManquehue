@@ -1,0 +1,778 @@
+{
+	"name": "002_Base_Orden_de_compra",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base OC SAP to Datalake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{'SAP/Orden de Compra'}/@{'Orden_de_compra.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"query": {
+							"value": "@concat('SELECT T0.\"DocNum\" \"Num.OC SAP\",T0.\"BPLName\" \"Sucursal\",T3.\"CardCode\" \"Cod.Proveedor\",T3.\"CardName\" \"Nom.Proveedor\",T1.\"Project\" \"Proyecto\",T1.\"U_Partida\" \"Partida\",T1.\"ItemCode\" \"Cod.Articulo\",T1.\"Dscription\" \"Nom.Articulo\",T1.\"unitMsr\" \"Unidad Medida\",T1.\"Quantity\" \"Cantidad\",T1.\"Price\" \"Precio por Unidad\",T1.\"LineTotal\" \"Total (ML)\",CASE WHEN (T0.\"CANCELED\" = ''Y'') THEN ''Cancelada'' WHEN (T0.\"CANCELED\" = ''N'') and (T0.\"DocStatus\" = ''C'') THEN ''Cerrada'' WHEN (T0.\"CANCELED\" = ''N'') and (T0.\"DocStatus\" = ''O'') and (T0.\"Printed\" = ''Y'') THEN ''Abierta-Imprimida'' WHEN (T0.\"CANCELED\" = ''N'') and (T0.\"DocStatus\" = ''O'') and (T0.\"Printed\" = ''N'') THEN ''Abierta'' ELSE ''--'' END \"Estado OC\", (SELECT first_value(T112.\"U_NAME\" ORDER BY T111.\"UpdateDate\" desc, T111.\"UpdateTime\" desc) FROM \"SBO_MANQUEHUE\".\"OWDD\" T100 INNER JOIN \"SBO_MANQUEHUE\".\"WDD1\" T111 ON T111.\"WddCode\" = T100.\"WddCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T112 ON T111.\"UserID\" = T112.\"USERID\" WHERE T111.\"Status\" IN (''Y'', ''N'', ''W'') AND T100.\"ObjType\" in (22) and T100.\"IsDraft\" in(''N'') and T100.\"DocEntry\" is not null and T100.\"DocEntry\" = T0.\"DocEntry\") \"Aprobacion\", T1.\"FreeTxt\" \"Texto Libre\", (T1.\"Quantity\" - T1.\"OpenCreQty\") \"Cant.Recibida\", CASE WHEN EXISTS(select T4.\"DocEntry\" from \"SBO_MANQUEHUE\".\"PCH1\" T4 INNER JOIN \"SBO_MANQUEHUE\".\"OPCH\" T7 ON T4.\"DocEntry\" = T7.\"DocEntry\" INNER JOIN \"SBO_MANQUEHUE\".\"PDN1\" T5 ON T4.\"BaseEntry\" = T5.\"DocEntry\" INNER JOIN \"SBO_MANQUEHUE\".\"OPDN\" T8 ON T5.\"DocEntry\"  = T8.\"DocEntry\" INNER JOIN \"SBO_MANQUEHUE\".\"POR1\" T6 ON T5.\"BaseEntry\" = T6.\"DocEntry\" where T4.\"BaseType\" = 20 and T5.\"BaseType\" = 22 and T7.\"CANCELED\" = ''N'' AND T8.\"CANCELED\" = ''N'' and T6.\"DocEntry\" = T0.\"DocEntry\") THEN ''SI'' ELSE ''NO'' END \"Facturado\",T1.\"OpenCreQty\" \"Cant.Pendiente\",T1.\"BaseRef\" \"Solicitud de Compra\",T0.\"TaxDate\" \"Fec.OC\",T0.\"DocDate\" \"Fec.Contabilizacion\",T1.\"WhsCode\" \"Almacen\",(SELECT first_value(T100.\"DraftEntry\" ORDER BY T100.\"DraftEntry\") FROM \"SBO_MANQUEHUE\".\"OWDD\" T100 INNER JOIN \"SBO_MANQUEHUE\".\"WDD1\" T111 ON T111.\"WddCode\" = T100.\"WddCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T112 ON T111.\"UserID\" = T112.\"USERID\" WHERE T111.\"Status\" IN (''Y'', ''N'', ''W'') AND T100.\"ObjType\" in (22) and T100.\"IsDraft\" in(''N'') and T100.\"DocEntry\" is not null and T100.\"DocEntry\" = T0.\"DocEntry\") \"Clave Doc.Preliminar\",T0.\"Comments\" \"Comentarios\",T1.\"ShipDate\" \"Fec.Entrega\" FROM \"SBO_MANQUEHUE\".\"OPOR\" T0 INNER JOIN \"SBO_MANQUEHUE\".\"POR1\" T1 ON T0.\"DocEntry\" = T1.\"DocEntry\" INNER JOIN \"SBO_MANQUEHUE\".\"OCRD\" T3 ON T0.\"CardCode\" = T3.\"CardCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T2 ON T0.\"UserSign\" = T2.\"USERID\" WHERE T0.\"BPLId\" = 32 AND (T0.\"TaxDate\" >= ''',formatDateTime(pipeline().parameters.fch_inicio,'yyyy/MM/dd'),''' AND T0.\"TaxDate\" <= ''',formatDateTime(addHours(utcnow(),-6),'yyyy/MM/dd'),''') ORDER BY T0.\"TaxDate\", T0.\"DocNum\"')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Num.OC SAP",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Num.OC SAP",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cod.Proveedor",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Cod.Proveedor",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom.Proveedor",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nom.Proveedor",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Partida",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Partida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cod.Articulo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Cod.Articulo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom.Articulo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nom.Articulo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Unidad Medida",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Unidad Medida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cantidad",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Cantidad",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Precio por Unidad",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Precio por Unidad",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Total (ML)",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Total (ML)",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Estado OC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Estado OC",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Aprobacion",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Aprobacion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Texto Libre",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Texto Libre",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cant.Recibida",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Cant.Recibida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Facturado",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Facturado",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cant.Pendiente",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Cant.Pendiente",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Solicitud de Compra",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Solicitud de Compra",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fec.OC",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Fec.OC",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fec.Contabilizacion",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Fec.Contabilizacion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Almacen",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Almacen",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Clave Doc.Preliminar",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Clave Doc.Preliminar",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fec.Entrega",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Fec.Entrega",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Orden de Compra",
+							"File": "Orden_de_compra.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "Base OC CSV to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base OC SAP to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'SAP/Orden de Compra'}/@{'Orden_de_compra.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'orden_de_compra'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "SAP/Orden de Compra",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.costos_constructora",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Num.OC SAP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Num.OC SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cod.Proveedor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cod.Proveedor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom.Proveedor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nom.Proveedor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Partida",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Partida",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cod.Articulo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cod.Articulo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom.Articulo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nom.Articulo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Unidad Medida",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Unidad Medida",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cantidad",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cantidad",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Precio por Unidad",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Precio por Unidad",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Total (ML)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Total (ML)",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Estado OC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Estado OC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Aprobacion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Aprobacion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Texto Libre",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Texto Libre",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cant.Recibida",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cant.Recibida",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Facturado",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Facturado",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cant.Pendiente",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cant.Pendiente",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Solicitud de Compra",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Solicitud de Compra",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fec.OC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fec.OC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fec.Contabilizacion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fec.Contabilizacion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Almacen",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Almacen",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Clave Doc.Preliminar",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Clave Doc.Preliminar",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fec.Entrega",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fec.Entrega",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Orden de Compra",
+							"File": "Orden_de_compra.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "orden_de_compra"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"fch_inicio": {
+				"type": "String",
+				"defaultValue": "2022/07/01"
+			}
+		},
+		"folder": {
+			"name": "SAP"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-19T03:19:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

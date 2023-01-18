@@ -1,0 +1,39 @@
+{
+	"name": "Publicar OC",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"CompanyRut": {
+				"type": "string"
+			},
+			"SupplierRUT": {
+				"type": "string"
+			},
+			"OrderNumber": {
+				"type": "string"
+			},
+			"ReceptionNumber": {
+				"type": "string"
+			},
+			"Amount": {
+				"type": "int"
+			},
+			"DTEType": {
+				"type": "int"
+			},
+			"PayDays": {
+				"type": "int"
+			},
+			"ExternalId": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://apimtanner-qa.azure-api.net/enterprise/providers-portal/integration-erp-red-proveedores/api/PurchaseOrder/SavePurchaseOrder",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

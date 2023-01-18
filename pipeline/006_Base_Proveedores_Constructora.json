@@ -1,0 +1,681 @@
+{
+	"name": "006_Base_Proveedores_Constructora",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base Proveedores SAP to Datalake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{concat('SAP/Proveedores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'Proveedores_Constructora.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"query": "SELECT \nFAC.\"FolioNum\",\nFAC.\"Project\" ,\nPY.\"PrjName\"  ,           \nDAYS_BETWEEN ( TO_DATE(FAC.\"DocDate\"), \nTO_DATE(CURRENT_DATE))-1 \"DIAS\",\nFAC.\"BPLId\",\nFAC.\"BPLName\"  ,                              \nCASE WHEN CO.\"U_tipoempresa\" in ('MANQ SERVICIOS','MANQ DESARROLLO') THEN 'INMOBILIARIA'\n      WHEN CO.\"U_tipoempresa\" in ('GRUPO PIEDRA ROJA') THEN 'MACROLOTE'\n      ELSE CO.\"U_tipoempresa\" END \"UNIDAD DE NEGOCIO\",\nSN.\"GroupCode\",\nGC.\"GroupName\",         \n(FAC.\"DocTotal\" - FAC.\"PaidToDate\") SALDO,\nFAC.\"DocNum\",\nFAC.\"CANCELED\",\nFAC.\"DocDate\",          \nFAC.\"DocDueDate\",         \nFAC.\"CardCode\",  \nFAC.\"CardName\",                                                            \nFAC.\"DocTotal\",\nFAC.\"PaidToDate\",\nFAC.\"SysRate\",\nFAC.\"DocTotalSy\",\nFAC.\"Indicator\"\nFROM \"SBO_MANQUEHUE\".\"OPCH\" FAC\nLEFT  JOIN \"SBO_MANQUEHUE\".\"OPRJ\" PY ON FAC.\"Project\" = PY.\"PrjCode\"\nINNER JOIN \"SBO_MANQUEHUE\".\"OCRD\" SN ON FAC.\"CardCode\" = SN.\"CardCode\"\nINNER JOIN \"SBO_MANQUEHUE\".\"OBPL\" CO ON FAC.\"BPLId\" = CO.\"BPLId\"\nINNER JOIN \"SBO_MANQUEHUE\".\"OCRG\" GC ON SN.\"GroupCode\" = GC.\"GroupCode\"\nWHERE FAC.\"CANCELED\" = 'N'\nAND FAC.\"DocSubType\" IN ('DM','--')\nAND FAC.\"DocDate\" >= '2022-06-01'\nAND (FAC.\"DocTotal\" - FAC.\"PaidToDate\") > 0\nAND FAC.\"BPLId\" <> 41\nAND GC.\"GroupCode\" IN (115)\nORDER BY FAC.\"BPLId\",FAC.\"DocDate\"",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "FolioNum",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "FolioNum",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Project",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Project",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PrjName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PrjName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DIAS",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "DIAS",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BPLId",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "BPLId",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BPLName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BPLName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UNIDAD DE NEGOCIO",
+									"type": "String"
+								},
+								"sink": {
+									"name": "UNIDAD DE NEGOCIO",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GroupCode",
+									"type": "Int16"
+								},
+								"sink": {
+									"name": "GroupCode",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GroupName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "GroupName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SALDO",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SALDO",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocNum",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "DocNum",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CANCELED",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CANCELED",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "DocDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocDueDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "DocDueDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CardCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CardCode",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CardName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CardName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocTotal",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "DocTotal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PaidToDate",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "PaidToDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SysRate",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SysRate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocTotalSy",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "DocTotalSy",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Indicator",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Indicator",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Proveedores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))",
+								"type": "Expression"
+							},
+							"File": "Proveedores_Constructora.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "Base Proveedores CSV to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base Proveedores SAP to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{concat('SAP/Proveedores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'Proveedores_Constructora.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'Proveedores_Constructora'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.Proveedores_constructora",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "FolioNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FolioNum",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Project",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Project",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PrjName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PrjName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DIAS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DIAS",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BPLId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BPLId",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BPLName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BPLName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UNIDAD DE NEGOCIO",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "UNIDAD DE NEGOCIO",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GroupCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GroupCode",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GroupName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GroupName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SALDO",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SALDO",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocNum",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CANCELED",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CANCELED",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocDueDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocDueDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CardCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CardCode",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CardName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CardName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocTotal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocTotal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PaidToDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PaidToDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SysRate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SysRate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DocTotalSy",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DocTotalSy",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Indicator",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indicator",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Proveedores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))",
+								"type": "Expression"
+							},
+							"File": "Proveedores_Constructora.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "Proveedores_Constructora"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SAP"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-06T18:45:21Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,1184 @@
+{
+	"name": "002_Base_Costos",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base Costos Constructoras SAP to Datalake_p1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{'SAP/Costos Constructora'}/@{'Costos_Constructora_p1.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"query": {
+							"value": "@concat('SELECT ''Entrada de Mercancias Interna'' \"Tipo_Documento\",T1.\"Project\" \"Cod_Proyecto\",T2.\"PrjName\" \"Nom_Proyecto\",T1.\"U_Partida\" \"Partida\",(SELECT T100.\"U_Description\" FROM \"SBO_MANQUEHUE\".\"@EXX_PRE3\" T100 WHERE T100.\"U_DocEntry\" = T1.\"U_PresEntry\" and T100.\"U_Code\" = T1.\"U_Partida\") \"Nom_Partida\",T3.\"Segment_0\" \"Num_Cuenta_Contable\",T3.\"AcctName\" \"Cuenta_Contable\",T4.\"RefDate\" \"Fecha_Registro_Contable\",T4.\"Number\" \"Numero_Asiento\",T4.\"TransId\" \"Num_Trasaccion\",T0.\"DocNum\" \"Num_Doc_Origen\",T1.\"OcrCode\" \"CeCo\",T10.\"OcrName\" \"Nombre CeCo\",T1.\"OcrCode2\" \"Segmento Negocio\",T12.\"OcrName\" \"Nombre Segmento Negocio\",T1.\"OcrCode3\" \"Area Negocio\",T13.\"OcrName\" \"Nombre Area Negocio\",T1.\"OcrCode4\" \"Concepto Gasto\",T14.\"OcrName\" \"Nombre Concepto Gasto\",T1.\"LineTotal\" \"Credito\",T1.\"TotalSumSy\" \"Credito UF\",0 \"Debito\",0 \"Debito UF\",T4.\"Memo\" \"Glosa\",T15.\"U_NAME\" \"Creador Asiento\",T0.\"Comments\" \"Comentarios\" FROM \"SBO_MANQUEHUE\".\"IGN1\" T1 INNER JOIN \"SBO_MANQUEHUE\".\"OIGN\" T0 ON T1.\"DocEntry\" = T0.\"DocEntry\" LEFT JOIN \"SBO_MANQUEHUE\".\"OPRJ\" T2 ON T2.\"PrjCode\" = T1.\"Project\" LEFT JOIN \"SBO_MANQUEHUE\".\"OACT\" T3 ON T3.\"AcctCode\" = T1.\"AcctCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OJDT\" T4 ON T4.\"TransId\" = T0.\"TransId\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T10 ON T1.\"OcrCode\" = T10.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T12 ON T1.\"OcrCode2\" = T12.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T13 ON T1.\"OcrCode3\" = T13.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T14 ON T1.\"OcrCode4\" = T14.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T15 ON T0.\"UserSign\" = T15.\"USERID\" where T3.\"Segment_0\" IN (''5101101'',''5101102'',''5101201'',''5101202'',''5101203'',''5101204'',''5101205'',''5101206'',''5101207'',''5101401'',''5101402'',''5101403'',''5101404'',''5101405'') and T0.\"BPLId\" = 32 AND T0.\"ObjType\" = 59 AND (T4.\"RefDate\" >= ''',formatDateTime(pipeline().parameters.fch_inicio,'yyyy/MM/dd'),''' AND T4.\"RefDate\" <= ''',formatDateTime(addHours(utcnow(),-6),'yyyy/MM/dd'),''') UNION ALL SELECT ''SM - Salida Mercancias'' \"Tipo_Documento\",T1.\"Project\" \"Cod_Proyecto\",T2.\"PrjName\" \"Nom_Proyecto\",T1.\"U_Partida\" \"Partida\",(SELECT T100.\"U_Description\" FROM \"SBO_MANQUEHUE\".\"@EXX_PRE3\" T100 WHERE T100.\"U_DocEntry\" = T1.\"U_PresEntry\" and T100.\"U_Code\" = T1.\"U_Partida\") \"Nom_Partida\",T3.\"Segment_0\" \"Num_Cuenta_Contable\",T3.\"AcctName\" \"Cuenta_Contable\",T4.\"RefDate\" \"Fecha_Registro_Contable\",T4.\"Number\" \"Numero_Asiento\",T4.\"TransId\" \"Num_Trasaccion\",T0.\"DocNum\" \"Num_Doc_Origen\",T1.\"OcrCode\" \"CeCo\",T10.\"OcrName\" \"Nombre CeCo\",T1.\"OcrCode2\" \"Segmento Negocio\",T12.\"OcrName\" \"Nombre Segmento Negocio\",T1.\"OcrCode3\" \"Area Negocio\",T13.\"OcrName\" \"Nombre Area Negocio\",T1.\"OcrCode4\" \"Concepto Gasto\",T14.\"OcrName\" \"Nombre Concepto Gasto\",0 \"Credito\",0 \"Credito UF\",(SELECT abs(T11.\"TransValue\") FROM \"SBO_MANQUEHUE\".\"OINM\" T11 where T11.\"TransType\" = 60 and T11.\"BASE_REF\" = T0.\"DocNum\" and T11.\"DocLineNum\" = T1.\"LineNum\")\"Debito\",Round(((SELECT abs(T11.\"TransValue\") FROM \"SBO_MANQUEHUE\".\"OINM\" T11 where T11.\"TransType\" = 60 and T11.\"BASE_REF\" = T0.\"DocNum\" and T11.\"DocLineNum\" = T1.\"LineNum\") /T0.\"SysRate\"),2) \"Debito UF\",T4.\"Memo\" \"Glosa\",T15.\"U_NAME\" \"Creador Asiento\",T0.\"Comments\" \"Comentarios\" FROM \"SBO_MANQUEHUE\".\"IGE1\" T1 INNER JOIN \"SBO_MANQUEHUE\".\"OIGE\" T0 ON T1.\"DocEntry\" = T0.\"DocEntry\" LEFT JOIN \"SBO_MANQUEHUE\".\"OPRJ\" T2 ON T2.\"PrjCode\" = T1.\"Project\" LEFT JOIN \"SBO_MANQUEHUE\".\"OACT\" T3 ON T3.\"AcctCode\" = T1.\"AcctCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OJDT\" T4 ON T4.\"TransId\" = T0.\"TransId\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T10 ON T1.\"OcrCode\" = T10.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T12 ON T1.\"OcrCode2\" = T12.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T13 ON T1.\"OcrCode3\" = T13.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T14 ON T1.\"OcrCode4\" = T14.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T15 ON T0.\"UserSign\" = T15.\"USERID\" where T3.\"Segment_0\" IN (''5101101'',''5101102'',''5101201'',''5101202'',''5101203'',''5101204'',''5101205'',''5101206'',''5101207'',''5101401'',''5101402'',''5101403'',''5101404'',''5101405'') and T0.\"BPLId\" = 32 AND T0.\"ObjType\" = 60 AND (T4.\"RefDate\" >= ''',formatDateTime(pipeline().parameters.fch_inicio,'yyyy/MM/dd'),''' AND T4.\"RefDate\" <= ''',formatDateTime(addHours(utcnow(),-6),'yyyy/MM/dd'),''') UNION ALL SELECT ''TT - Factura Proveedores'' \"Tipo_Documento\",T1.\"Project\" \"Cod_Proyecto\",T2.\"PrjName\" \"Nom_Proyecto\",T1.\"U_Partida\" \"Partida\",(SELECT T100.\"U_Description\" FROM \"SBO_MANQUEHUE\".\"@EXX_PRE3\" T100 WHERE T100.\"U_DocEntry\" = T1.\"U_PresEntry\" and T100.\"U_Code\" = T1.\"U_Partida\") \"Nom_Partida\",T3.\"Segment_0\" \"Num_Cuenta_Contable\",T3.\"AcctName\" \"Cuenta_Contable\",T4.\"RefDate\" \"Fecha_Registro_Contable\",T4.\"Number\" \"Numero_Asiento\",T4.\"TransId\" \"Num_Trasaccion\",T0.\"DocNum\" \"Num_Doc_Origen\",T1.\"OcrCode\" \"CeCo\",T10.\"OcrName\" \"Nombre CeCo\",T1.\"OcrCode2\" \"Segmento Negocio\",T12.\"OcrName\" \"Nombre Segmento Negocio\",T1.\"OcrCode3\" \"Area Negocio\",T13.\"OcrName\" \"Nombre Area Negocio\",T1.\"OcrCode4\" \"Concepto Gasto\",T14.\"OcrName\" \"Nombre Concepto Gasto\",0 \"Credito\",0 \"Credito UF\",T1.\"LineTotal\" \"Debito\",T1.\"TotalSumSy\" \"Debito UF\",T4.\"Memo\" \"Glosa\",T15.\"U_NAME\" \"Creador Asiento\",T0.\"Comments\" \"Comentarios\" FROM \"SBO_MANQUEHUE\".\"PCH1\" T1 INNER JOIN \"SBO_MANQUEHUE\".\"OPCH\" T0 ON T1.\"DocEntry\" = T0.\"DocEntry\" LEFT JOIN \"SBO_MANQUEHUE\".\"OPRJ\" T2 ON T2.\"PrjCode\" = T1.\"Project\" LEFT JOIN \"SBO_MANQUEHUE\".\"OACT\" T3 ON T3.\"AcctCode\" = T1.\"AcctCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OJDT\" T4 ON T4.\"TransId\" = T0.\"TransId\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T10 ON T1.\"OcrCode\" = T10.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T12 ON T1.\"OcrCode2\" = T12.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T13 ON T1.\"OcrCode3\" = T13.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T14 ON T1.\"OcrCode4\" = T14.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T15 ON T0.\"UserSign\" = T15.\"USERID\" where T3.\"Segment_0\" IN (''5101101'',''5101102'',''5101201'',''5101202'',''5101203'',''5101204'',''5101205'',''5101206'',''5101207'',''5101401'',''5101402'',''5101403'',''5101404'',''5101405'') and T0.\"BPLId\" = 32 AND T0.\"ObjType\" = 18 AND (T4.\"RefDate\" >= ''',formatDateTime(pipeline().parameters.fch_inicio,'yyyy/MM/dd'),''' AND T4.\"RefDate\" <= ''',formatDateTime(addHours(utcnow(),-6),'yyyy/MM/dd'),''')')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Tipo_Documento",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Tipo_Documento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cod_Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Cod_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom_Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nom_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Partida",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Partida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom_Partida",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nom_Partida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Cuenta_Contable",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Num_Cuenta_Contable",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cuenta_Contable",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Cuenta_Contable",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Registro_Contable",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Fecha_Registro_Contable",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Numero_Asiento",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Numero_Asiento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Trasaccion",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Num_Trasaccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Doc_Origen",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Num_Doc_Origen",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CeCo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CeCo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre CeCo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre CeCo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Segmento Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Segmento Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Segmento Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre Segmento Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Area Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Area Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Area Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre Area Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Concepto Gasto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Concepto Gasto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Concepto Gasto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre Concepto Gasto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Credito",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Credito",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Credito UF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Credito UF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Debito",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Debito",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Debito UF",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Debito UF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Glosa",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Glosa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Creador Asiento",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Creador Asiento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Costos Constructora",
+							"File": "Costos_Constructora_p1.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "Base Costos Constructoras CSV to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base Costos Constructoras SAP to Datalake_p2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'SAP/Costos Constructora'}/@{'Costos_Constructora_p1.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'costos_constructora'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "SAP/Costos Constructora",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.costos_constructora",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Tipo_Documento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Tipo_Documento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cod_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cod_Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nom_Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Partida",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Partida",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom_Partida",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nom_Partida",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Cuenta_Contable",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Num_Cuenta_Contable",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cuenta_Contable",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cuenta_Contable",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Registro_Contable",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Registro_Contable",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Numero_Asiento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Numero_Asiento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Trasaccion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Num_Trasaccion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Doc_Origen",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Num_Doc_Origen",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CeCo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CeCo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre CeCo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre CeCo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Segmento Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Segmento Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Segmento Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre Segmento Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Area Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Area Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Area Negocio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre Area Negocio",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Concepto Gasto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Concepto Gasto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Concepto Gasto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre Concepto Gasto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Credito",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Credito",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Credito UF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Credito UF",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Debito",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Debito",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Debito UF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Debito UF",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Glosa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Glosa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Creador Asiento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Creador Asiento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Costos Constructora",
+							"File": "Costos_Constructora_p1.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "costos_constructora"
+						}
+					}
+				]
+			},
+			{
+				"name": "Base Costos Constructoras SAP to Datalake_p2",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base Costos Constructoras SAP to Datalake_p1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{'SAP/Costos Constructora'}/@{'Costos_Constructora_p2.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"query": {
+							"value": "@concat('SELECT ''AS - Asiento'' \"Tipo_Documento\",T1.\"Project\" \"Cod_Proyecto\",T2.\"PrjName\" \"Nom_Proyecto\",T1.\"U_partida\" \"Partida\",(SELECT T100.\"U_Description\" FROM \"SBO_MANQUEHUE\".\"@EXX_PRE3\" T100 WHERE T100.\"U_DocEntry\" = T1.\"U_obra\" and T100.\"U_Code\" = T1.\"U_partida\") \"Nom_Partida\",T3.\"Segment_0\" \"Num_Cuenta_Contable\",T3.\"AcctName\" \"Cuenta_Contable\",T4.\"RefDate\" \"Fecha_Registro_Contable\",T4.\"Number\" \"Numero_Asiento\",T4.\"TransId\" \"Num_Trasaccion\",0 \"Num_Doc_Origen\",T1.\"ProfitCode\" \"CeCo\",T10.\"OcrName\" \"Nombre CeCo\",T1.\"OcrCode2\" \"Segmento Negocio\",T12.\"OcrName\" \"Nombre Segmento Negocio\",T1.\"OcrCode3\" \"Area Negocio\",T13.\"OcrName\" \"Nombre Area Negocio\",T1.\"OcrCode4\" \"Concepto Gasto\",T14.\"OcrName\" \"Nombre Concepto Gasto\",CASE WHEN T1.\"Credit\">0 THEN T1.\"Credit\" ELSE 0 END \"Credito\",CASE WHEN T1.\"SYSCred\">0 THEN T1.\"SYSCred\" ELSE 0 END \"Credito UF\",CASE WHEN T1.\"Debit\">0 THEN T1.\"Debit\" ELSE 0 END \"Debito\",CASE WHEN T1.\"SYSDeb\">0 THEN T1.\"SYSDeb\" ELSE 0 END \"Debito UF\",T4.\"Memo\" \"Glosa\",T15.\"U_NAME\" \"Creador Asiento\",T0.\"Memo\" \"Comentarios\" FROM \"SBO_MANQUEHUE\".\"JDT1\" T1 INNER JOIN \"SBO_MANQUEHUE\".\"OJDT\" T0 ON T1.\"TransId\" = T0.\"TransId\" LEFT JOIN \"SBO_MANQUEHUE\".\"OPRJ\" T2 ON T2.\"PrjCode\" = T1.\"Project\" LEFT JOIN \"SBO_MANQUEHUE\".\"OACT\" T3 ON T3.\"AcctCode\" = T1.\"Account\" LEFT JOIN \"SBO_MANQUEHUE\".\"OJDT\" T4 ON T4.\"TransId\" = T0.\"TransId\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T10 ON T1.\"ProfitCode\" = T10.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T12 ON T1.\"OcrCode2\" = T12.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T13 ON T1.\"OcrCode3\" = T13.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T14 ON T1.\"OcrCode4\" = T14.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T15 ON T0.\"UserSign\" = T15.\"USERID\" WHERE T3.\"Segment_0\" IN (''5101101'',''5101102'',''5101201'',''5101202'',''5101203'',''5101204'',''5101205'',''5101206'',''5101207'',''5101401'',''5101402'',''5101403'',''5101404'',''5101405'') and T1.\"BPLId\" = 32 AND T0.\"TransType\" = 30 AND (T4.\"RefDate\" >= ''',formatDateTime(pipeline().parameters.fch_inicio,'yyyy/MM/dd'),''' AND T4.\"RefDate\" <= ''',formatDateTime(addHours(utcnow(),-6),'yyyy/MM/dd'),''') UNION ALL SELECT ''PA - Contabilizacion Stock'' \"Tipo_Documento\",T1.\"Project\" \"Cod_Proyecto\",T2.\"PrjName\" \"Nom_Proyecto\",'''' \"Partida\",'''' \"Nom_Partida\",T3.\"Segment_0\" \"Num_Cuenta_Contable\",T3.\"AcctName\" \"Cuenta_Contable\",T4.\"RefDate\" \"Fecha_Registro_Contable\",T4.\"Number\" \"Numero_Asiento\",T4.\"TransId\" \"Num_Trasaccion\",T0.\"DocNum\" \"Num_Doc_Origen\",T1.\"OcrCode\" \"CeCo\",T10.\"OcrName\" \"Nombre CeCo\",T1.\"OcrCode2\" \"Segmento Negocio\",T12.\"OcrName\" \"Nombre Segmento Negocio\",T1.\"OcrCode3\" \"Area Negocio\",T13.\"OcrName\" \"Nombre Area Negocio\",T1.\"OcrCode4\" \"Concepto Gasto\",T14.\"OcrName\" \"Nombre Concepto Gasto\",0 \"Credito\",0 \"Credito UF\",(SELECT abs(T11.\"TransValue\") FROM \"SBO_MANQUEHUE\".\"OINM\" T11 where T11.\"TransType\" = 10000071 and T11.\"BASE_REF\" = T0.\"DocNum\" and T11.\"DocLineNum\" = T1.\"DocLineNum\") \"Debito\",(SELECT round(abs(T11.\"TransValue\")/(select FIRST_VALUE (\"ORTT\".\"Rate\" ORDER BY \"ORTT\".\"Rate\") from \"SBO_MANQUEHUE\".\"ORTT\" where \"ORTT\".\"RateDate\"=T0.\"DocDate\" and \"ORTT\".\"Currency\"=''UF''),2) FROM \"SBO_MANQUEHUE\".\"OINM\" T11 where T11.\"TransType\" = 10000071 and T11.\"BASE_REF\" = T0.\"DocNum\" and T11.\"DocLineNum\" = T1.\"DocLineNum\") \"Debito UF\",T4.\"Memo\" \"Glosa\",T15.\"U_NAME\" \"Creador Asiento\",T0.\"Comments\" \"Comentarios\" FROM \"SBO_MANQUEHUE\".\"IQR1\" T1 INNER JOIN \"SBO_MANQUEHUE\".\"OIQR\" T0 ON T1.\"DocEntry\" = T0.\"DocEntry\" LEFT JOIN \"SBO_MANQUEHUE\".\"OPRJ\" T2 ON T2.\"PrjCode\" = T1.\"Project\" LEFT JOIN \"SBO_MANQUEHUE\".\"OACT\" T3 ON T3.\"AcctCode\" = T1.\"DOffDecAcc\" LEFT JOIN \"SBO_MANQUEHUE\".\"OJDT\" T4 ON T4.\"TransId\" = T0.\"JdtNum\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T10 ON T1.\"OcrCode\" = T10.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T12 ON T1.\"OcrCode2\" = T12.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T13 ON T1.\"OcrCode3\" = T13.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T14 ON T1.\"OcrCode4\" = T14.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T15 ON T0.\"UserSign\" = T15.\"USERID\" where T3.\"Segment_0\" IN (''5101101'',''5101102'',''5101201'',''5101202'',''5101203'',''5101204'',''5101205'',''5101206'',''5101207'',''5101401'',''5101402'',''5101403'',''5101404'',''5101405'') and T0.\"BPLId\" = 32 AND T0.\"ObjType\" = 10000071 AND (T4.\"RefDate\" >= ''',formatDateTime(pipeline().parameters.fch_inicio,'yyyy/MM/dd'),''' AND T4.\"RefDate\" <=''',formatDateTime(addHours(utcnow(),-6),'yyyy/MM/dd'),''') UNION ALL SELECT ''TT - Factura Proveedores,'' \"Tipo_Documento\",T1.\"Project\" \"Cod_Proyecto\",T2.\"PrjName\" \"Nom_Proyecto\",T1.\"U_partida\" \"Partida\",(SELECT T100.\"U_Description\" FROM \"SBO_MANQUEHUE\".\"@EXX_PRE3\" T100 WHERE T100.\"U_DocEntry\" = T1.\"U_obra\" and T100.\"U_Code\" = T1.\"U_partida\") \"Nom_Partida\",T3.\"Segment_0\" \"Num_Cuenta_Contable\",T3.\"AcctName\" \"Cuenta_Contable\",T4.\"RefDate\" \"Fecha_Registro_Contable\",T4.\"Number\" \"Numero_Asiento\",T4.\"TransId\" \"Num_Trasaccion\",0 \"Num_Doc_Origen\",T1.\"ProfitCode\" \"CeCo\",T10.\"OcrName\" \"Nombre CeCo\",T1.\"OcrCode2\" \"Segmento Negocio\",T12.\"OcrName\" \"Nombre Segmento Negocio\",T1.\"OcrCode3\" \"Area Negocio\",T13.\"OcrName\" \"Nombre Area Negocio\",T1.\"OcrCode4\" \"Concepto Gasto\",T14.\"OcrName\" \"Nombre Concepto Gasto\",CASE WHEN T1.\"Credit\">0 THEN T1.\"Credit\" ELSE 0 END \"Credito\",CASE WHEN T1.\"SYSCred\">0 THEN T1.\"SYSCred\" ELSE 0 END \"Credito UF\",CASE WHEN T1.\"Debit\">0 THEN T1.\"Debit\" ELSE 0 END \"Debito\",CASE WHEN T1.\"SYSDeb\">0 THEN T1.\"SYSDeb\" ELSE 0 END \"Debito UF\",T4.\"Memo\" \"Glosa\",T15.\"U_NAME\" \"Creador Asiento\",T0.\"Memo\" \"Comentarios\" FROM \"SBO_MANQUEHUE\".\"JDT1\" T1 INNER JOIN \"SBO_MANQUEHUE\".\"OJDT\" T0 ON T1.\"TransId\" = T0.\"TransId\" LEFT JOIN \"SBO_MANQUEHUE\".\"OPRJ\" T2 ON T2.\"PrjCode\" = T1.\"Project\" LEFT JOIN \"SBO_MANQUEHUE\".\"OACT\" T3 ON T3.\"AcctCode\" = T1.\"Account\" LEFT JOIN \"SBO_MANQUEHUE\".\"OJDT\" T4 ON T4.\"TransId\" = T0.\"TransId\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T10 ON T1.\"ProfitCode\" = T10.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T12 ON T1.\"OcrCode2\" = T12.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T13 ON T1.\"OcrCode3\" = T13.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T14 ON T1.\"OcrCode4\" = T14.\"OcrCode\" LEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T15 ON T0.\"UserSign\" = T15.\"USERID\" where T3.\"Segment_0\" IN (''5101101'',''5101102'',''5101201'',''5101202'',''5101203'',''5101204'',''5101205'',''5101206'',''5101207'',''5101401'',''5101402'',''5101403'',''5101404'',''5101405'') and T1.\"TransId\" not in (select t21.\"TransId\" from \"SBO_MANQUEHUE\".\"JDT1\" t21 inner join \"SBO_MANQUEHUE\".\"OJDT\" t20 on t21.\"TransId\" = t20.\"TransId\" inner join \"SBO_MANQUEHUE\".\"OPCH\" t23 on T21.\"TransId\" = t23.\"TransId\" inner join \"SBO_MANQUEHUE\".\"PCH1\" t24 on T23.\"DocEntry\" = t24.\"DocEntry\" inner join \"SBO_MANQUEHUE\".\"OACT\" t22 on t24.\"AcctCode\" = t22.\"AcctCode\" where   t22.\"Segment_0\" IN (''5101101'',''5101102'',''5101201'',''5101202'',''5101203'',''5101204'',''5101205'',''5101206'',''5101207'',''5101401'',''5101402'',''5101403'',''5101404'',''5101405'')) AND T1.\"BPLId\" = 32 AND T0.\"TransType\" = 18 AND (T4.\"RefDate\" >= ''',formatDateTime(pipeline().parameters.fch_inicio,'yyyy/MM/dd'),''' AND T4.\"RefDate\" <= ''',formatDateTime(addHours(utcnow(),-6),'yyyy/MM/dd'),''')')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Tipo_Documento",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Tipo_Documento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cod_Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Cod_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom_Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nom_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Partida",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Partida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nom_Partida",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nom_Partida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Cuenta_Contable",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Num_Cuenta_Contable",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Cuenta_Contable",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Cuenta_Contable",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Registro_Contable",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Fecha_Registro_Contable",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Numero_Asiento",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Numero_Asiento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Trasaccion",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Num_Trasaccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Num_Doc_Origen",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Num_Doc_Origen",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CeCo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CeCo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre CeCo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre CeCo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Segmento Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Segmento Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Segmento Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre Segmento Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Area Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Area Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Area Negocio",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre Area Negocio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Concepto Gasto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Concepto Gasto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Concepto Gasto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre Concepto Gasto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Credito",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Credito",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Credito UF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Credito UF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Debito",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Debito",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Debito UF",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Debito UF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Glosa",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Glosa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Creador Asiento",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Creador Asiento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Costos Constructora",
+							"File": "Costos_Constructora_p2.csv"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"fch_inicio": {
+				"type": "String",
+				"defaultValue": "2022/07/01"
+			}
+		},
+		"folder": {
+			"name": "SAP"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-12T03:11:57Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

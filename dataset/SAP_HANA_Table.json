@@ -1,0 +1,25 @@
+{
+	"name": "SAP_HANA_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IMSA_HANA",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Table_Name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SapHanaTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "SBO_MANQUEHUE",
+			"table": {
+				"value": "@dataset().Table_Name",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

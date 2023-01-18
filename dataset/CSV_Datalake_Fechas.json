@@ -1,0 +1,48 @@
+{
+	"name": "CSV_Datalake_Fechas",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ano": {
+				"type": "string"
+			},
+			"mes": {
+				"type": "string"
+			},
+			"dia": {
+				"type": "string"
+			},
+			"FolderPath": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat(dataset().FolderPath,'/',dataset().ano,'/',dataset().mes,'/',dataset().dia)",
+					"type": "Expression"
+				},
+				"fileSystem": "imsa-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

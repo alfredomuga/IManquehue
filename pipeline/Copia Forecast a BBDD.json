@@ -1,0 +1,275 @@
+{
+	"name": "Copia Forecast a BBDD",
+	"properties": {
+		"activities": [
+			{
+				"name": "Datalake to DB",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'Modelo Flujo de Caja/Forecast/Forecast Proyectos Actuales'}/@{'BD forecast FC.xlsx'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'forecast'}.@{'forecast_flujos_de_caja'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE [forecast].[forecast_flujos_de_caja]",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "RUT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RUT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Importe",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Importe",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Importe UF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Importe_UF",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "ID_Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ID_Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreProyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NombreProyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Item CC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Item_CC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Item(CC)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre_Item_CC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Texto de la transacción",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Texto_de_la_transacción",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Descripcion del Diario",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Descripcion_del_Diario",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Modelo Flujo de Caja/Forecast/Forecast Proyectos Actuales",
+							"File": "BD forecast FC.xlsx",
+							"Sheet": "Base (2)"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "forecast",
+							"table": "forecast_flujos_de_caja"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Flujo de Caja"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-10-02T19:52:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

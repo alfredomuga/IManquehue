@@ -1,0 +1,2971 @@
+{
+	"name": "OUSR",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base OUSR to Datalake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "SBO_MANQUEHUE.@{'OUSR'}"
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{concat(concat('SAP/Tablas Raw'),'/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'OUSR.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "USERID",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "USERID",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PASSWORD",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD1",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PASSWORD1",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD2",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PASSWORD2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "INTERNAL_K",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "INTERNAL_K",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "USER_CODE",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "USER_CODE",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "U_NAME",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "U_NAME",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GROUPS",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "GROUPS",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD4",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PASSWORD4",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SUPERUSER",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "SUPERUSER",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DISCOUNT",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								},
+								"sink": {
+									"name": "DISCOUNT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD3",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PASSWORD3",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info1File",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Info1File",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info1Field",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Info1Field",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info2File",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Info2File",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info2Field",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Info2Field",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info3File",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Info3File",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info3Field",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Info3Field",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info4File",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Info4File",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Info4Field",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Info4Field",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "dType",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "dType",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "E_Mail",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "E_Mail",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PortNum",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PortNum",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OutOfOffic",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "OutOfOffic",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SendEMail",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "SendEMail",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SendSMS",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "SendSMS",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DfltsGroup",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "DfltsGroup",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CashLimit",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "CashLimit",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MaxCashSum",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								},
+								"sink": {
+									"name": "MaxCashSum",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fax",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Fax",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SendFax",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "SendFax",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Locked",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Locked",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Department",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Department",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Branch",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Branch",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Language",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "Language",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Charset",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Charset",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OpenCdt",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "OpenCdt",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CdtPrvDays",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "CdtPrvDays",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DsplyRates",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "DsplyRates",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AuImpRates",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "AuImpRates",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OpenDps",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "OpenDps",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RcrFlag",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "RcrFlag",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CheckFiles",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "CheckFiles",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OpenCredit",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "OpenCredit",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditDay1",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "CreditDay1",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditDay2",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "CreditDay2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WallPaper",
+									"type": "String",
+									"physicalType": "NCLOB"
+								},
+								"sink": {
+									"name": "WallPaper",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WllPprDsp",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "WllPprDsp",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AdvImagePr",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "AdvImagePr",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ContactLog",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "ContactLog",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LastWarned",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "LastWarned",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AlertPolFr",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "AlertPolFr",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ScreenLock",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "ScreenLock",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ShowNewMsg",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "ShowNewMsg",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Picture",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Picture",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Position",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Position",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Address",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Address",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Country",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Country",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Tel1",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Tel1",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Tel2",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Tel2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GENDER",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "GENDER",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Birthday",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "Birthday",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EnbMenuFlt",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "EnbMenuFlt",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "objType",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "objType",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "logInstanc",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "logInstanc",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "userSign",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "userSign",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "createDate",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "createDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "userSign2",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "userSign2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "updateDate",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "updateDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OneLogPwd",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "OneLogPwd",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "lastLogin",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "lastLogin",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LastPwds",
+									"type": "String",
+									"physicalType": "NCLOB"
+								},
+								"sink": {
+									"name": "LastPwds",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LastPwds2",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "LastPwds2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LastPwdSet",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "LastPwdSet",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FailedLog",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "FailedLog",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PwdNeverEx",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PwdNeverEx",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesDisc",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								},
+								"sink": {
+									"name": "SalesDisc",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PurchDisc",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								},
+								"sink": {
+									"name": "PurchDisc",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LstLogoutD",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "LstLogoutD",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LstLoginT",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "LstLoginT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LstLogoutT",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "LstLogoutT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LstPwdChT",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "LstPwdChT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LstPwdChB",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "LstPwdChB",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RclFlag",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "RclFlag",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MobileUser",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "MobileUser",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MobileIMEI",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "MobileIMEI",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PrsWkCntEb",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "PrsWkCntEb",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SnapShotId",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "SnapShotId",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "STData",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "STData",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SupportUsr",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "SupportUsr",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NoSTPwdNum",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "NoSTPwdNum",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DomainUser",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "DomainUser",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CUSAgree",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "CUSAgree",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EmailSig",
+									"type": "String",
+									"physicalType": "NCLOB"
+								},
+								"sink": {
+									"name": "EmailSig",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TPLId",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "TPLId",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DigCrtPath",
+									"type": "String",
+									"physicalType": "NCLOB"
+								},
+								"sink": {
+									"name": "DigCrtPath",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ShowNewTsk",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "ShowNewTsk",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IntgrtEb",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "IntgrtEb",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AllBrnchF",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "AllBrnchF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EvtNotify",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "EvtNotify",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IgnDtOwn",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "IgnDtOwn",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EnterAsTab",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "EnterAsTab",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DotAsSep",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "DotAsSep",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MouseOnly",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "MouseOnly",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Color",
+									"type": "Int16",
+									"physicalType": "SMALLINT"
+								},
+								"sink": {
+									"name": "Color",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SkinType",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "SkinType",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Font",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Font",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FontSize",
+									"type": "Int32",
+									"physicalType": "INTEGER"
+								},
+								"sink": {
+									"name": "FontSize",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NaturalPer",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "NaturalPer",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DPPStatus",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "DPPStatus",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AutoAsnBPL",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "AutoAsnBPL",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EncryptIV",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "EncryptIV",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "HandleEDoc",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "HandleEDoc",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ShowLicBal",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "ShowLicBal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LicBaHDate",
+									"type": "DateTime",
+									"physicalType": "TIMESTAMP"
+								},
+								"sink": {
+									"name": "LicBaHDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"Table_Name": "OUSR"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake_Fechas",
+						"type": "DatasetReference",
+						"parameters": {
+							"ano": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy')",
+								"type": "Expression"
+							},
+							"mes": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'MM')",
+								"type": "Expression"
+							},
+							"dia": {
+								"value": "@formatDateTime(addhours(utcnow(),-4), 'dd')",
+								"type": "Expression"
+							},
+							"FolderPath": {
+								"value": "@concat('SAP/Tablas Raw')",
+								"type": "Expression"
+							},
+							"FileName": "OUSR.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "OUSR to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base OUSR to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')}/@{'OUSR.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'OUSR'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.OUSR",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "USERID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "USERID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PASSWORD",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PASSWORD1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PASSWORD2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "INTERNAL_K",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "INTERNAL_K",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "USER_CODE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "USER_CODE",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "U_NAME",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "U_NAME",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GROUPS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GROUPS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD4",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PASSWORD4",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SUPERUSER",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SUPERUSER",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DISCOUNT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DISCOUNT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PASSWORD3",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PASSWORD3",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info1File",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info1File",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info1Field",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info1Field",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info2File",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info2File",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info2Field",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info2Field",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info3File",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info3File",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info3Field",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info3Field",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info4File",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info4File",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Info4Field",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Info4Field",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "dType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "dType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "E_Mail",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "E_Mail",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PortNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PortNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OutOfOffic",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OutOfOffic",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SendEMail",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SendEMail",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SendSMS",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SendSMS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DfltsGroup",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DfltsGroup",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CashLimit",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CashLimit",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MaxCashSum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MaxCashSum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fax",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fax",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SendFax",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SendFax",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Locked",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Locked",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Department",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Department",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Branch",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Branch",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Language",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Language",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Charset",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Charset",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OpenCdt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OpenCdt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CdtPrvDays",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CdtPrvDays",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DsplyRates",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DsplyRates",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AuImpRates",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AuImpRates",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OpenDps",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OpenDps",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RcrFlag",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RcrFlag",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CheckFiles",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CheckFiles",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OpenCredit",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OpenCredit",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditDay1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreditDay1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditDay2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreditDay2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WallPaper",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WallPaper",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WllPprDsp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WllPprDsp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AdvImagePr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AdvImagePr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ContactLog",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ContactLog",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LastWarned",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LastWarned",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AlertPolFr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AlertPolFr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ScreenLock",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ScreenLock",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ShowNewMsg",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ShowNewMsg",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Picture",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Picture",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Position",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Position",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Address",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Address",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Country",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Country",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Tel1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Tel1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Tel2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Tel2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "GENDER",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GENDER",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Birthday",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Birthday",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnbMenuFlt",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnbMenuFlt",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "objType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "objType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "logInstanc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "logInstanc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "userSign",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "userSign",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "createDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "createDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "userSign2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "userSign2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "updateDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "updateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OneLogPwd",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OneLogPwd",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "lastLogin",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "lastLogin",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LastPwds",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LastPwds",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LastPwds2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LastPwds2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LastPwdSet",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LastPwdSet",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FailedLog",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FailedLog",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PwdNeverEx",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PwdNeverEx",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesDisc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SalesDisc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PurchDisc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PurchDisc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LstLogoutD",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LstLogoutD",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LstLoginT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LstLoginT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LstLogoutT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LstLogoutT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LstPwdChT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LstPwdChT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LstPwdChB",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LstPwdChB",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RclFlag",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RclFlag",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MobileUser",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MobileUser",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MobileIMEI",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MobileIMEI",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PrsWkCntEb",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PrsWkCntEb",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SnapShotId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SnapShotId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "STData",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "STData",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SupportUsr",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SupportUsr",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NoSTPwdNum",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NoSTPwdNum",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DomainUser",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DomainUser",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CUSAgree",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CUSAgree",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EmailSig",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EmailSig",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TPLId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TPLId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DigCrtPath",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DigCrtPath",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ShowNewTsk",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ShowNewTsk",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IntgrtEb",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IntgrtEb",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AllBrnchF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AllBrnchF",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EvtNotify",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EvtNotify",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IgnDtOwn",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "IgnDtOwn",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EnterAsTab",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EnterAsTab",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DotAsSep",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DotAsSep",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MouseOnly",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MouseOnly",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Color",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Color",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "SkinType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SkinType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Font",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Font",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FontSize",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FontSize",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NaturalPer",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NaturalPer",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DPPStatus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DPPStatus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AutoAsnBPL",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AutoAsnBPL",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EncryptIV",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EncryptIV",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HandleEDoc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HandleEDoc",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ShowLicBal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ShowLicBal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LicBaHDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LicBaHDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')",
+								"type": "Expression"
+							},
+							"File": "OUSR.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "OUSR"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SAP/Tablas Raw"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-20T00:32:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
