@@ -1,0 +1,28 @@
+{
+	"name": "Excel_CentroCostos_DataLake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Audatia (Nomina por Peso y PY-C",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Centro_Costos.xlsx",
+				"folderPath": "Modelo RRHH",
+				"fileSystem": "imsa-files"
+			},
+			"range": "A5:F1000",
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Libro: Audatia (Nomina por Peso y PY-CC)",
+				"type": "String"
+			}
+		]
+	}
+}
