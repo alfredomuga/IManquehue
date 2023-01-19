@@ -16,11 +16,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "imsa-files/Modelo RRHH/Finiquitos.xlsx"
+						"value": "imsa-files/Modelo RRHH/Centro_Costos.xlsx"
 					},
 					{
 						"name": "Destination",
-						"value": "@{'rrhh'}.@{'historico_finiquitos'}"
+						"value": "@{'rrhh'}.@{'peso_centro_de_costos'}"
 					}
 				],
 				"typeProperties": {
@@ -59,7 +59,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schema": "rrhh",
-							"table": "historico_finiquitos"
+							"table": "peso_centro_de_costos"
 						}
 					}
 				]
