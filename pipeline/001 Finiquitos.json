@@ -16,11 +16,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "imsa-files/@{'Modelo RRHH'}/@{'Areas_Empleados.xlsx'}"
+						"value": "imsa-files/Modelo RRHH/Finiquitos.xlsx"
 					},
 					{
 						"name": "Destination",
-						"value": "@{'rrhh'}.@{'diccionario_areas_empleados'}"
+						"value": "@{'rrhh'}.@{'historico_finiquitos'}"
 					}
 				],
 				"typeProperties": {
