@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "Data-Factory-BI"
+		},
+		"DWIM_IMSA_connectionString": {
+			"value": ""
+		},
+		"IMSA_HANA_connectionString": {
+			"value": ""
+		},
+		"imsadatalake_accountKey": {
+			"value": ""
+		},
+		"Publicar OC_properties_typeProperties_url": {
+			"value": "https://apimtanner-qa.azure-api.net/enterprise/providers-portal/integration-erp-red-proveedores/api/PurchaseOrder/SavePurchaseOrder"
+		},
+		"imsadatalake_properties_typeProperties_url": {
+			"value": "https://imsadatalake.dfs.core.windows.net/"
+		},
+		"001 Balance Scorecard_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Base DC_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 NominasEnFirma_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 ReportePlazos_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
+			"value": "2022/07/01"
+		},
+		"001 Areas Empleados_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Centro Costos_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Finiquitos_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

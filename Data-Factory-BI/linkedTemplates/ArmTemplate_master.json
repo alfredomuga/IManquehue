@@ -1,0 +1,193 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Data-Factory-BI"
+		},
+		"DWIM_IMSA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWIM_IMSA'"
+		},
+		"IMSA_HANA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IMSA_HANA'"
+		},
+		"imsadatalake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
+		},
+		"Publicar OC_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://apimtanner-qa.azure-api.net/enterprise/providers-portal/integration-erp-red-proveedores/api/PurchaseOrder/SavePurchaseOrder"
+		},
+		"imsadatalake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://imsadatalake.dfs.core.windows.net/"
+		},
+		"001 Balance Scorecard_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Base DC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 NominasEnFirma_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 ReportePlazos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
+			"type": "string",
+			"defaultValue": "2022/07/01"
+		},
+		"001 Areas Empleados_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Centro Costos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Finiquitos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "Data-Factory-BI_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"imsadatalake_accountKey": {
+						"value": "[parameters('imsadatalake_accountKey')]"
+					},
+					"DWIM_IMSA_connectionString": {
+						"value": "[parameters('DWIM_IMSA_connectionString')]"
+					},
+					"IMSA_HANA_connectionString": {
+						"value": "[parameters('IMSA_HANA_connectionString')]"
+					},
+					"Publicar OC_properties_typeProperties_url": {
+						"value": "[parameters('Publicar OC_properties_typeProperties_url')]"
+					},
+					"imsadatalake_properties_typeProperties_url": {
+						"value": "[parameters('imsadatalake_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "Data-Factory-BI_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "Data-Factory-BI_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"001 Balance Scorecard_properties_typeProperties_scope": {
+						"value": "[parameters('001 Balance Scorecard_properties_typeProperties_scope')]"
+					},
+					"001 Base DC_properties_typeProperties_scope": {
+						"value": "[parameters('001 Base DC_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "Data-Factory-BI_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"001 NominasEnFirma_properties_typeProperties_scope": {
+						"value": "[parameters('001 NominasEnFirma_properties_typeProperties_scope')]"
+					},
+					"001 ReportePlazos_properties_typeProperties_scope": {
+						"value": "[parameters('001 ReportePlazos_properties_typeProperties_scope')]"
+					},
+					"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
+						"value": "[parameters('001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio')]"
+					},
+					"001 Areas Empleados_properties_typeProperties_scope": {
+						"value": "[parameters('001 Areas Empleados_properties_typeProperties_scope')]"
+					},
+					"001 Centro Costos_properties_typeProperties_scope": {
+						"value": "[parameters('001 Centro Costos_properties_typeProperties_scope')]"
+					},
+					"001 Finiquitos_properties_typeProperties_scope": {
+						"value": "[parameters('001 Finiquitos_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_2')]"
+			]
+		}
+	]
+}

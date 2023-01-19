@@ -1,0 +1,3099 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Data-Factory-BI"
+		},
+		"imsadatalake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
+		},
+		"DWIM_IMSA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWIM_IMSA'"
+		},
+		"IMSA_HANA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IMSA_HANA'"
+		},
+		"Publicar OC_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://apimtanner-qa.azure-api.net/enterprise/providers-portal/integration-erp-red-proveedores/api/PurchaseOrder/SavePurchaseOrder"
+		},
+		"imsadatalake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://imsadatalake.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Publicar OC')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"CompanyRut": {
+						"type": "string"
+					},
+					"SupplierRUT": {
+						"type": "string"
+					},
+					"OrderNumber": {
+						"type": "string"
+					},
+					"ReceptionNumber": {
+						"type": "string"
+					},
+					"Amount": {
+						"type": "int"
+					},
+					"DTEType": {
+						"type": "int"
+					},
+					"PayDays": {
+						"type": "int"
+					},
+					"ExternalId": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('Publicar OC_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/imsadatalake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('imsadatalake_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('imsadatalake_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWIM')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"description": "IR de la VM IMSA",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationHana')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_Datalake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Folder": {
+						"type": "string"
+					},
+					"File": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().File",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().Folder",
+							"type": "Expression"
+						},
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_Datalake_Fechas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ano": {
+						"type": "string"
+					},
+					"mes": {
+						"type": "string"
+					},
+					"dia": {
+						"type": "string"
+					},
+					"FolderPath": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().FolderPath,'/',dataset().ano,'/',dataset().mes,'/',dataset().dia)",
+							"type": "Expression"
+						},
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EscribirHES')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Publicar OC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"PayDays": "Value"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Publicar OC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Excel_Area_Empleados_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FolderPath": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					},
+					"Sheet": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().Sheet",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().FolderPath",
+							"type": "Expression"
+						},
+						"fileSystem": "imsa-files"
+					},
+					"range": "A5:N1000",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Excel_Datalake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Folder": {
+						"type": "string"
+					},
+					"File": {
+						"type": "string"
+					},
+					"Sheet": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().Sheet",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().File",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().Folder",
+							"type": "Expression"
+						},
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWIM_IMSA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('DWIM_IMSA_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "DWIM",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/DWIM')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IMSA_HANA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SapHana",
+				"typeProperties": {
+					"connectionString": "[parameters('IMSA_HANA_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationHana",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationHana')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Excel_Finiquitos_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Finiquitos",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Finiquitos.xlsx",
+						"folderPath": "Modelo RRHH",
+						"fileSystem": "imsa-files"
+					},
+					"range": "A4:AM1000",
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Libro: Finiquitos",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Excel_CentroCostos_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Audatia (Nomina por Peso y PY-C",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Centro_Costos.xlsx",
+						"folderPath": "Modelo RRHH",
+						"fileSystem": "imsa-files"
+					},
+					"range": "A5:F1000",
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Libro: Audatia (Nomina por Peso y PY-CC)",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWIM')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM_IMSA",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schema": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HESTanner')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM_IMSA",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "companyRut",
+						"type": "nvarchar"
+					},
+					{
+						"name": "supplierRut",
+						"type": "nvarchar"
+					},
+					{
+						"name": "orderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "receptionNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "amount",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "dteType",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "payDays",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "externalId",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "HESTanner"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_HANA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IMSA_HANA",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SapHanaTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IMSA_HANA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_HANA_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IMSA_HANA",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Table_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SapHanaTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "SBO_MANQUEHUE",
+					"table": {
+						"value": "@dataset().Table_Name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IMSA_HANA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Area Empleados')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Area Empleados",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/@{'Modelo RRHH'}/@{'Areas_Empleados.xlsx'}"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'rrhh'}.@{'diccionario_areas_empleados'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE rrhh.diccionario_areas_empleados",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Area_Empleados_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderPath": "Modelo RRHH",
+									"FileName": "Areas_Empleados.xlsx",
+									"Sheet": "Reporte Areas Audatia"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "rrhh",
+									"table": "diccionario_areas_empleados"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "RRHH"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-13T18:14:59Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Excel_Area_Empleados_DataLake')]",
+				"[concat(variables('factoryId'), '/datasets/DWIM')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Copia Balance Scorecard')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Balance Scorecard",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/@{'Automatizaciones/Balance Scorecard'}/@{'Mock Up CMI.xlsx'}"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'BalanceScorecard'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.BalanceScorecard",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "N°",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "N",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Pespectiva",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Pespectiva",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Indicador",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indicador",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Real",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Real",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Meta",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Meta",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Periodicidad",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Periodicidad",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Meta Auxiliar (Verde)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Meta Auxiliar Verde",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Meta Auxiliar (Amarilla)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Meta Auxiliar Amarilla",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Alarma Auxiliar",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Alarma Auxiliar",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Alarma",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Alarma",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": "Automatizaciones/Balance Scorecard",
+									"File": "Mock Up CMI.xlsx",
+									"Sheet": "TdG"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "BalanceScorecard"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Automatizaciones"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-04T13:48:36Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Excel_Datalake')]",
+				"[concat(variables('factoryId'), '/datasets/DWIM')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Copia Base DC')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Base DC",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/@{'Modelo Flujo de Caja/Base DC'}/@{'BaseDC.xlsx'}"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'BaseDC'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.BaseDC",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "LLAVE 2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Llave2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LLAVE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Llave",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PROPIEDAD",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Propiedad",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTADO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Estado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PROYECTO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ETAPA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SUBAGRUPACIÓN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Subagrupacion",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FEECHA RECEPCIÓN MUNICIPAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaRecepcionMunicipal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MANZANA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Manzana",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SITIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Sitio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "M2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "M2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MT2 TERRENO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MT2Terreno",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MODELO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Modelo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PROGRAMA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Programa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTAC.",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Estac",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BODEGA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Bodega",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NOMBRE PRODUCTO ADICIONAL (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NombreProductoAdicional",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NOMBRE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Nombre",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "APELLIDO PATERNO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ApellidoPaterno",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "APELLIDO MATERNO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ApellidoMaterno",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "RUT CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RUTCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "GÉNERO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Genero",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "OCUPACIÓN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Ocupacion",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTADO CIVIL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "EstadoCivil",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PEP",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PEP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "RELACIONADO CON PEP",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RelacionadoPEP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MEDIO LLEGADA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MedioLlegada",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR LISTA PROD. PRINCIPAL (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorListaProdPrincipal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PRECIO BASE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PrecioBase",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DCTO. UF PROD. PRINCIPAL (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DctoUFProdPrincipal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DCTO. SUB TOTAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DctoSubtotal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR PROD. PRINCIPAL CON DCTO. (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorProdPrincipalDcto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "IVA PROD. PRINCIPAL  (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IVAProdPrincipal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR TOTAL Bodega(*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorTotalBodega",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "IVA Bodega. (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IVABodega",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PRECIO BASE Bodega.",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PrecioBaseBodega",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR TOTAL EST (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorTotalEst",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "IVA EST. (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IVAEst",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PRECIO BASE EST.",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PrecioBaseEst",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TOTAL NETO (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TotalNeto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "IVA VALOR TOTAL (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IVAValorTotal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TOTAL BRUTO (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TotalBruto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR TOTAL PROD. ADICIONAL (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorTotalProdAdicional",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR LISTA PROD. PRINCIPAL UF/MT2 ",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorListaProdPrincipalUFMT2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR PROD. PRINCIPAL CON DCTO. UF/MT2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorProdPrincipalDctoUFMT2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TOTAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Total",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "APLICA IVA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AplicaIVA",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TIPO DE CARGA DE PRECIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TipoCargaPrecio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR TERRENO TOTAL (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorTerrenoTotal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FONDO DE RESERVA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FondoReserva",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "RESERVA (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Reserva",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CONTADO CONTRA PROMESA (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ContadoContraPromesa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CUOTA PERIODO DE CONSTRUCCION (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "CuotaPeriodoConstruccion",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SALDO CONTRA ESCRITURA (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SaldoContraEscritura",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TIPO SUBSIDIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TipoSubsidio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTO SUBSIDIO BASE (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MontoSubsidioBase",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTO SUBSIDIO INTEGRACION(*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MontoSubsidioIntegracion",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTO SUBSIDIO CAPTACION (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MontoSubsidioCaptacion",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTADO SUBSIDIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "EstadoSubsidio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NUMERO DE SUBSIDIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumeroSubsidio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTO AHORRO (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MontoAhorro",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTO CREDITO HIPOTECARIO (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MontoCreditoHipotecario",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ABONO (*)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Abono",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA CREACIÓN RESERVA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaCreacionReserva",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PAC",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PAC",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA AUTORIZACIÓN RESERVA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaAutorizacionReserva",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA APROBACIÓN RESERVA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaAprobacionReserva",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA ÚLTIMA MODIFICACIÓN PROMESA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaUltimaModificacionPromesa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NOMBRE ASEGURADORA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NombreAseguradora",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NÚMERO PÓLIZA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumeroPoliza",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VALOR PÓLIZA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ValorPoliza",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA VENCIMIENTO PÓLIZA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaVencPoliza",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA NOTARIA PROMESA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaNotariaPromesa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA ENTREGA CLIENTE PROMESA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEntregaClientePromesa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VB CONTABILIDAD PROMESA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VBContabilidadPromesa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BANCO APROBACIÓN COMERCIAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BancoAprobacionComercial",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA ENVÍO DATOS DE VENTA AL BANCO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEnvioDatosVentaBanco",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA APROBACIÓN DEL BANCO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaAprobacionBanco",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TASA INTERÉS (%)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TasaInteres",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "AÑOS PLAZO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AñosPlazo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA APROBACIÓN ESTUDIO DE TÍTULOS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaAprobacionEstudioTitulos",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA TASACIÓN ESTUDIO DE TÍTULOS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaTasacionEstudioTitulos",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NOMBRE NOTARIA CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NombreNotariaCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NÚMERO REPERTORIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumeroRepertorio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA ESCRITURA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEscritura",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NÚMERO RESOLUCIÓN SERVIU",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumeroResolucionServiu",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA RESOLUCIÓN SERVIU",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaResolucionServiu",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA ENVIO BORRADOR ESCRITURA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEnvioBorradorEscritura",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA FIRMA CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaFirmaCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO INMOBILIARIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoInmobiliaria",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO ABOGADO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoAbogado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA VB ABOGADO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaVBAbogado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO CORRECCIONES",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoCorrecciones",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA SALIDA CORRECCIONES",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaSalidaCorrecciones",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO A FIRMA GERENCIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoFirmaGerencia",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA FIRMA INMOBILIARIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaFirmaInmobiliaria",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO ESCRITURA FIRMADA NOTARIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoEscrituraFirmadaNotaria",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA ENVIO BANCO CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEnvioBancoCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA EMISION CARTA DE RESGUARDO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEmisionCartaResguardo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO BANCO ALZANTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoBancoAlzante",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA SALIDA BANCO ALZANTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaSalidaBancoAlzante",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FIRMA BANCO ALZANTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FirmaBancoAlzante",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO NOTARIA POST ALZAMIENTO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoNotariaPostAlzamiento",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO BANCO CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoBancoCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA SALIDA BANCO CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaSalidaBancoCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA CIERRE COPIAS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaCierreCopias",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PPTO CONSERVADOR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PPTOConservador",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NÚMERO DE CARATULA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumeroCaratula",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO CBR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoCBR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA SALIDA CBR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaSalidaCBR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA RECEPCION ESCRITURA INMOBILIARIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaRecepcionEscrituraInmobiliaria",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO COBRO SERVIU",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoCobroServiu",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NÚMERO LIBRETA COBRO AHORRO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumeroLibretaCobroAhorro",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA INGRESO COBRO AHORRO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaIngresoCobroAhorro",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA PAGO INSTRUCCION NOTARIAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaPagoInstruccionNotarial",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA PAGO CREDITO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaPagoCredito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA PAGO SUBSIDIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaPagoSubsidio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA PAGO AHORRO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaPagoAhorro",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA ENVIO VB",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEnvioVB",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA DE ENTREGA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaEntrega",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA FINALIZADO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaFinalizado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "COMENTARIO PAGO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ComentarioPago",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "COMENTARIO NEGOCIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ComentarioNegocio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VENDEDOR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Vendedor",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "RAZÓN DE COMPRA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RazonCompra",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA CREACIÓN PROMESA ORIGINAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaCreacionPromesaOriginal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TIPO DE PAGO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TipoPago",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTADO DEL CRÉDITO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "EstadoCredito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTADO DEL PROYECTO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "EstadoProyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "HITO ESCRITURA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "HitoEscritura",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NOMBRE CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NombreCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SOCIEDAD",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Sociedad",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS FIRMA CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasFirmaCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS INGRESO INMOBILIARIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasIngresoInmobiliaria",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS VB LEGAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasVBLegal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": " DÍAS FIRMA INMOBILIARIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasFirmaInmobiliaria",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS CARTA DE RESGUARDO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasCartaResguardo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS BANCO ALZANTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasBancoAlzante",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS CIERRE Y COPIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasCierreCopia",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS CBR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasCBR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS HASTA EL PAGO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasHastaPago",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS TOTALES",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasTotales",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS DESDE INGRESO A FIRMA INMOBILIARIA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasDesdeIngresoFirmaInmobiliaria",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS V°B° CONTABLE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasVBContable",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PROMEDIO DIAS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PromedioDias",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BANCO ALZANTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BancoAlzante",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SEGUIMIENTO Y OBSERVACIONES",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SeguimientoObservaciones",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UNIDADES PROYECTO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "UnidadesProyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UNIDADES VENDIDAS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "UnidadesVendidas",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UF POR VENDER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "UFPorVender",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UNIDADES DISPONIBLES",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "UnidadesDisponibles",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VENTA TOTAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VentaTotal",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CRÉDITO RECUPERADO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "CreditoRecuperado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "POR RECUPERAR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PorRecuperar",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "POR ESCRITURAR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PorEscriturar",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DEUDA INICIAL ",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DeudaInicial",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SALDO DEUDA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SaldoDeuda",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DEUDORES > 60 DÍAS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Deudores60Dias",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DEUDORES AL 30-10",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Deudores3010",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS REPERTORIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasRepertorio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTADO ALZAMIENTO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "EstadoAlzamiento",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA PAGO CUOTA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FechaPagoCuota",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CUOTA ALZAMIENTO PROYECTADA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "CuotaAlzamientoProyectada",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ESTADO BANCO ALZANTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "EstadoBancoAlzante",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS BANCO CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasBancoCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DÍAS TERMINADA",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DiasTerminada",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CONVENIO DE PAGO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ConvenioPago",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PROYECCIÓN DE PAGO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ProyeccionPago",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TIPO DE CONVENIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TipoConvenio",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PROYECCIÓN HISTORICA - FIRMA CLIENTE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ProyeccionHistoricaFirmaCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MES P. Firma Cliente",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "MesPFirmaCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "AÑO P. Firma Cliente",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AñoPFirmaCliente",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Deudores Comerciales",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DeudoresComerciales",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyección Recuperación",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ProyecciónRecuperación",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyección Recuperación Ajustada",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ProyecciónRecuperaciónAjustada",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyección Mensual ",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ProyecciónMensual",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ID CONVENIO",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IDCONVENIO",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ID HITO ",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IDHITO",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": "Modelo Flujo de Caja/Base DC",
+									"File": "BaseDC.xlsx",
+									"Sheet": "Base"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "BaseDC"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Flujo de Caja/Base DC"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-10-13T20:38:51Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Excel_Datalake')]",
+				"[concat(variables('factoryId'), '/datasets/DWIM')]"
+			]
+		}
+	]
+}
