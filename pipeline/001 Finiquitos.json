@@ -1,9 +1,9 @@
 {
-	"name": "001 Area Empleados",
+	"name": "001 Finiquitos",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Area Empleados",
+				"name": "Copy Finiquitos",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -34,7 +34,6 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"preCopyScript": "TRUNCATE TABLE rrhh.diccionario_areas_empleados",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
@@ -50,13 +49,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Excel_Area_Empleados_DataLake",
-						"type": "DatasetReference",
-						"parameters": {
-							"FolderPath": "Modelo RRHH",
-							"FileName": "Areas_Empleados.xlsx",
-							"Sheet": "Reporte Areas Audatia"
-						}
+						"referenceName": "Excel_Finiquitos_DataLake",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -65,7 +59,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schema": "rrhh",
-							"table": "diccionario_areas_empleados"
+							"table": "historico_finiquitos"
 						}
 					}
 				]
