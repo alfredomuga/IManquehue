@@ -7,6 +7,22 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "Data-Factory-BI"
 		},
+		"001 Balance Scorecard_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Base DC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Centro Costos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Finiquitos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
 		"001 NominasEnFirma_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
@@ -18,24 +34,128 @@
 		"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
 			"type": "string",
 			"defaultValue": "2022/07/01"
-		},
-		"001 Areas Empleados_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
-		},
-		"001 Centro Costos_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
-		},
-		"001 Finiquitos_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Balance Scorecard')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "001 Copia Balance Scorecard",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/imsa-files/blobs/Automatizaciones/Balance Scorecard",
+					"blobPathEndsWith": "Mock Up CMI.xlsx",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('001 Balance Scorecard_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Base DC')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "001 Copia Base DC",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/imsa-files/blobs/Modelo Flujo de Caja/Base DC",
+					"blobPathEndsWith": "BaseDC.xlsx",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('001 Base DC_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Centro Costos')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "001 Centro Costos",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/imsa-files/blobs/Modelo RRHH",
+					"blobPathEndsWith": "Centro_Costos.xlsx",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('001 Centro Costos_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Finiquitos')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "001 Finiquitos",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/imsa-files/blobs/Modelo RRHH",
+					"blobPathEndsWith": "Finiquitos.xlsx",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('001 Finiquitos_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/001 NominasEnFirma')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -348,93 +468,6 @@
 						"startTime": "2022-09-12T01:00:00",
 						"timeZone": "Pacific SA Standard Time"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Areas Empleados')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "001 Area Empleados",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/imsa-files/blobs/Modelo RRHH",
-					"blobPathEndsWith": "Areas_Empleados.xlsx",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('001 Areas Empleados_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Centro Costos')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "001 Centro Costos",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/imsa-files/blobs/Modelo RRHH",
-					"blobPathEndsWith": "Centro_Costos.xlsx",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('001 Centro Costos_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Finiquitos')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "001 Finiquitos",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/imsa-files/blobs/Modelo RRHH",
-					"blobPathEndsWith": "Finiquitos.xlsx",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('001 Finiquitos_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
 				}
 			},
 			"dependsOn": []

@@ -27,11 +27,23 @@
 			"type": "string",
 			"defaultValue": "https://imsadatalake.dfs.core.windows.net/"
 		},
+		"001 Areas Empleados_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
 		"001 Balance Scorecard_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
 		},
 		"001 Base DC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Centro Costos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
+		"001 Finiquitos_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
 		},
@@ -46,18 +58,6 @@
 		"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
 			"type": "string",
 			"defaultValue": "2022/07/01"
-		},
-		"001 Areas Empleados_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
-		},
-		"001 Centro Costos_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
-		},
-		"001 Finiquitos_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
 		},
 		"containerUri": {
 			"type": "string",
@@ -139,11 +139,8 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"001 Balance Scorecard_properties_typeProperties_scope": {
-						"value": "[parameters('001 Balance Scorecard_properties_typeProperties_scope')]"
-					},
-					"001 Base DC_properties_typeProperties_scope": {
-						"value": "[parameters('001 Base DC_properties_typeProperties_scope')]"
+					"001 Areas Empleados_properties_typeProperties_scope": {
+						"value": "[parameters('001 Areas Empleados_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -165,6 +162,18 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"001 Balance Scorecard_properties_typeProperties_scope": {
+						"value": "[parameters('001 Balance Scorecard_properties_typeProperties_scope')]"
+					},
+					"001 Base DC_properties_typeProperties_scope": {
+						"value": "[parameters('001 Base DC_properties_typeProperties_scope')]"
+					},
+					"001 Centro Costos_properties_typeProperties_scope": {
+						"value": "[parameters('001 Centro Costos_properties_typeProperties_scope')]"
+					},
+					"001 Finiquitos_properties_typeProperties_scope": {
+						"value": "[parameters('001 Finiquitos_properties_typeProperties_scope')]"
+					},
 					"001 NominasEnFirma_properties_typeProperties_scope": {
 						"value": "[parameters('001 NominasEnFirma_properties_typeProperties_scope')]"
 					},
@@ -173,15 +182,6 @@
 					},
 					"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
 						"value": "[parameters('001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio')]"
-					},
-					"001 Areas Empleados_properties_typeProperties_scope": {
-						"value": "[parameters('001 Areas Empleados_properties_typeProperties_scope')]"
-					},
-					"001 Centro Costos_properties_typeProperties_scope": {
-						"value": "[parameters('001 Centro Costos_properties_typeProperties_scope')]"
-					},
-					"001 Finiquitos_properties_typeProperties_scope": {
-						"value": "[parameters('001 Finiquitos_properties_typeProperties_scope')]"
 					}
 				}
 			},
