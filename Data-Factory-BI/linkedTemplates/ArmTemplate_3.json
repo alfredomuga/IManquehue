@@ -222,6 +222,80 @@
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Presupuesto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Presupuesto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -289,6 +363,80 @@
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Periodo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Periodo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -356,6 +504,44 @@
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Hitos",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hitos",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Orden",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Orden",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -402,7 +588,7 @@
 							},
 							{
 								"name": "Destination",
-								"value": "@{'bronce.'}.@{'escenario'}"
+								"value": "@{'bronce'}.@{'escenario'}"
 							}
 						],
 						"typeProperties": {
@@ -423,6 +609,44 @@
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Escenario",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Escenario",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Numero Asociado",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Numero Asociado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -445,7 +669,7 @@
 								"referenceName": "DWIM",
 								"type": "DatasetReference",
 								"parameters": {
-									"schema": "bronce.",
+									"schema": "bronce",
 									"table": "escenario"
 								}
 							}
