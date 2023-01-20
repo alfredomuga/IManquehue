@@ -1,0 +1,681 @@
+{
+	"name": "007_Deudores_Inmobiliarios",
+	"properties": {
+		"activities": [
+			{
+				"name": "Base DeudoresInmobiliarios SAP to Datalake",
+				"description": "",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{concat('SAP/Proveedores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'Proveedores_Constructora.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"query": "SELECT \nt0.\"TransId\"                            as \"NumeroTransaccion\"\n,t1.\"TransType\"                      as \"TipoTransaccion\"\n,t0.\"RefDate\"                          as \"FechaContabilizacion\"\n,t0.\"TaxDate\"                          as \"FechaDocumento\"\n,t0.\"DueDate\"                         as \"FechaVencimiento\"\n,t1.\"BPLName\"                       as \"Sucursal\"\n,t2.\"Segment_0\"                    as \"CuentaMayor\"\n,t2.\"AcctName\"                      as \"NombreCuentaMayor\"\n,t1.\"ShortName\"                    as \"CodCliente\"\n,t3.\"CardName\"                     as \"NombreCliente\"\n--,t1.\"Account\"\n,t1.\"Debit\"                                              as \"DebitoCLP\"\n,(t1.\"Credit\" *-1)    as \"CreditoCLP\"\n,t1.\"SYSDeb\"                          as \"DebitoUF\"\n,case        when (t1.\"ContraAct\" = '_SYS00000001100') then 0\n                               when (t1.\"ContraAct\" = '_SYS00000001101') then 0\n                               when (rtrim(upper(t1.\"LineMemo\")) = 'REVALORIZACION SALDO') then 0\n                               else round((t1.\"SYSCred\" * -1),2)\nend as \"CreditoUF\"\n,case when (t1.\"Debit\" <> 0) then t1.\"Debit\"\n                else (t1.\"Credit\" *-1)\nend as \"Total Pesos\"\n, case when (t1.\"SYSDeb\" <> 0) then t1.\"SYSDeb\"\n                else\n                               case         when (t1.\"ContraAct\" = '_SYS00000001100') then 0\n                                                               when (t1.\"ContraAct\" = '_SYS00000001101') then 0\n                                                               when (rtrim(upper(t1.\"LineMemo\")) = 'REVALORIZACION SALDO') then 0\n                                                               else round((t1.\"SYSCred\" * -1),2)\n                               end          \nend as \"Total UF\"\n--,t1.\"ContraAct\"\n,t1.\"FCCurrency\"     as \"Moneda\"\n,t1.\"LineMemo\"                     as \"Comentarios\"\n,t1.\"Ref1\"                                               as \"Referencia1\"\n,t1.\"Ref2\"                                               as \"Referencia2\"\n,t1.\"Project\"                           as \"Proyecto\"\n,t0.\"TransCode\"\nFROM \"SBO_MANQUEHUE\".\"JDT1\" T1 inner join \"SBO_MANQUEHUE\".\"OJDT\" t0 on t1.\"TransId\" = t0.\"TransId\"\ninner join \"SBO_MANQUEHUE\".\"OACT\" t2 on t1.\"Account\" = t2.\"AcctCode\"\nleft join \"SBO_MANQUEHUE\".\"OCRD\" t3 on T1.\"ShortName\" = t3.\"CardCode\"\nWHERE \nT1.\"Account\" in ('_SYS00000000025', '_SYS00000000573')\nand t0.\"RefDate\" <= current_date\nAND t1.\"Credit\" > (case when t1.\"ContraAct\" = '_SYS00000000991' then -0.00001 else 0 end)\nand t2.\"Segment_0\" in ('2102117') --anticipo clientes\nand t1.\"FCCurrency\" is not null\nand t0.\"StornoToTr\" is null\nand (select T11.\"StornoToTr\" from \"SBO_MANQUEHUE\".\"OJDT\" T11 where t11.\"StornoToTr\" = T0.\"TransId\") is null\nand (t0.\"TransCode\" <> 'RDA' or t0.\"TransCode\" is null)\norder by 1, 2\n",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "NumeroTransaccion",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "NumeroTransaccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoTransaccion",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TipoTransaccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaContabilizacion",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "FechaContabilizacion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaDocumento",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "FechaDocumento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaVencimiento",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "FechaVencimiento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CuentaMayor",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CuentaMayor",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreCuentaMayor",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NombreCuentaMayor",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CodCliente",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CodCliente",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreCliente",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NombreCliente",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DebitoCLP",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "DebitoCLP",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditoCLP",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CreditoCLP",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DebitoUF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "DebitoUF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditoUF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CreditoUF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Total Pesos",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Total Pesos",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Total UF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Total UF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Moneda",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Moneda",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Referencia1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Referencia1",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Referencia2",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Referencia2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TransCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TransCode",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Deudores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))",
+								"type": "Expression"
+							},
+							"File": "DeudoresInmobiliarios.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "Base DeudoresInmobiliarios CSV to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base DeudoresInmobiliarios SAP to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{concat('SAP/Deudores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'Proveedores_Constructora.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'sap'}.@{'DeudoresInmobiliarios'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.DeudoresInmobiliarios",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "NumeroTransaccion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NumeroTransaccion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoTransaccion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TipoTransaccion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaContabilizacion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FechaContabilizacion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaDocumento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FechaDocumento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaVencimiento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FechaVencimiento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CuentaMayor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CuentaMayor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreCuentaMayor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NombreCuentaMayor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CodCliente",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CodCliente",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreCliente",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NombreCliente",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DebitoCLP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DebitoCLP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditoCLP",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreditoCLP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DebitoUF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DebitoUF",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditoUF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CreditoUF",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Moneda",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Moneda",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Referencia1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Referencia1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Referencia2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Referencia2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TransCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FechaSnapshot",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@concat('SAP/Deudores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))",
+								"type": "Expression"
+							},
+							"File": "DeudoresInmobiliarios.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "DeudoresInmobiliarios"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SAP"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-06T18:45:21Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
