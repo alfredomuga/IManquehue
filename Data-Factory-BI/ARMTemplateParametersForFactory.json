@@ -43,6 +43,9 @@
 		},
 		"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
 			"value": "2022/07/01"
+		},
+		"001 Control Hitos_properties_typeProperties_scope": {
+			"value": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
 		}
 	}
 }

@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "Data-Factory-BI"
 		},
+		"001 Areas Empleados_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
 		"001 Balance Scorecard_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
@@ -34,12 +38,460 @@
 		"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
 			"type": "string",
 			"defaultValue": "2022/07/01"
+		},
+		"001 Control Hitos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Control Hitos')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Real",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'real'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.real",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Real",
+									"Range": "A1:E1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "real"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Budget",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'budget'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.budget",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Budget",
+									"Range": "A1:F1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "budget"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Forecast",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'forecast'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.forecast",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Forecast",
+									"Range": "A1:F1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "forecast"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Hitos",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'hitos'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.hitos",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Hitos",
+									"Range": "A1:C1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "hitos"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Escenario",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce.'}.@{'escenario'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.escenario",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Escenario",
+									"Range": "A1:C1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce.",
+									"table": "escenario"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Automatizaciones"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Areas Empleados')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "001 Area Empleados",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/imsa-files/blobs/Modelo RRHH",
+					"blobPathEndsWith": "Areas_Empleados.xlsx",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('001 Areas Empleados_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/001 Balance Scorecard')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -471,6 +923,37 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Control Hitos')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "001 Control Hitos",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/imsa-files/blobs/Automatizaciones/Control de Hitos",
+					"blobPathEndsWith": "ControlHitos.xlsx",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('001 Control Hitos_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/001 Control Hitos')]"
+			]
 		}
 	]
 }

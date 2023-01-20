@@ -427,6 +427,48 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Excel_Control_Hitos_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Sheet": {
+						"type": "string"
+					},
+					"Range": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().Sheet",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"range": {
+						"value": "@dataset().Range",
+						"type": "Expression"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWIM')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -737,218 +779,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Excel_CentroCostos_DataLake')]",
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Copia Balance Scorecard')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Balance Scorecard",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Automatizaciones/Balance Scorecard'}/@{'Mock Up CMI.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'bronce'}.@{'BalanceScorecard'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE bronce.BalanceScorecard",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "N°",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "N",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Pespectiva",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Pespectiva",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Indicador",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indicador",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Real",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Real",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Meta",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Meta",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Periodicidad",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Periodicidad",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Meta Auxiliar (Verde)",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Meta Auxiliar Verde",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Meta Auxiliar (Amarilla)",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Meta Auxiliar Amarilla",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Alarma Auxiliar",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Alarma Auxiliar",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Alarma",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Alarma",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Automatizaciones/Balance Scorecard",
-									"File": "Mock Up CMI.xlsx",
-									"Sheet": "TdG"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "bronce",
-									"table": "BalanceScorecard"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Automatizaciones"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-04T13:48:36Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Excel_Datalake')]",
 				"[concat(variables('factoryId'), '/datasets/DWIM')]"
 			]
 		}
