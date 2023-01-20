@@ -1,0 +1,37 @@
+{
+	"name": "Excel_Control_Hitos_DataLake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Sheet": {
+				"type": "string"
+			},
+			"Range": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": {
+				"value": "@dataset().Sheet",
+				"type": "Expression"
+			},
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ControlHitos.xlsx",
+				"folderPath": "Automatizaciones/Control de Hitos",
+				"fileSystem": "imsa-files"
+			},
+			"range": {
+				"value": "@dataset().Range",
+				"type": "Expression"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}

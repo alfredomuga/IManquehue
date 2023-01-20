@@ -1,0 +1,181 @@
+{
+	"name": "001 Control Hitos",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Real",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Control_Hitos_DataLake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Sheet": "Real",
+							"Range": "A1:E1000"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Budget",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Control_Hitos_DataLake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Sheet": "Budget",
+							"Range": "A1:F1000"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Forecast",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Control_Hitos_DataLake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Sheet": "Forecast",
+							"Range": "A1:F1000"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Hitos",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Control_Hitos_DataLake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Sheet": "Hitos",
+							"Range": "A1:C1000"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Escenario",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Excel_Control_Hitos_DataLake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Sheet": "Escenario",
+							"Range": "A1:C1000"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Automatizaciones"
+		},
+		"annotations": []
+	}
+}
