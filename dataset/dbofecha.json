@@ -17,31 +17,111 @@
 				"precision": 10
 			},
 			{
-				"name": "idProyectoEtapa",
+				"name": "FechaCompleta",
+				"type": "date"
+			},
+			{
+				"name": "Anho",
+				"type": "varchar"
+			},
+			{
+				"name": "AnhoMes",
+				"type": "varchar"
+			},
+			{
+				"name": "Semestre",
+				"type": "varchar"
+			},
+			{
+				"name": "Trimestre",
+				"type": "varchar"
+			},
+			{
+				"name": "MesIngles",
+				"type": "varchar"
+			},
+			{
+				"name": "MesEspanhol",
+				"type": "varchar"
+			},
+			{
+				"name": "MesAbreviado",
+				"type": "varchar"
+			},
+			{
+				"name": "NumeroMes",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "idEscenario",
+				"name": "NumeroMesCero",
+				"type": "varchar"
+			},
+			{
+				"name": "Quincena",
+				"type": "varchar"
+			},
+			{
+				"name": "NumeroSemana",
+				"type": "varchar"
+			},
+			{
+				"name": "DiaIngles",
+				"type": "varchar"
+			},
+			{
+				"name": "DiaEspanol",
+				"type": "varchar"
+			},
+			{
+				"name": "DiaAbreviado",
+				"type": "varchar"
+			},
+			{
+				"name": "NumeroDiaSemana",
+				"type": "varchar"
+			},
+			{
+				"name": "NumeroDiaMes",
+				"type": "varchar"
+			},
+			{
+				"name": "NumeroDiaMesCero",
+				"type": "varchar"
+			},
+			{
+				"name": "MesDia",
+				"type": "varchar"
+			},
+			{
+				"name": "Considerar1",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "CodigoHito",
-				"type": "varchar"
-			},
-			{
-				"name": "OrdenHito",
+				"name": "Considerar2",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "Proyecto",
-				"type": "varchar"
+				"name": "ConsiderarFiltroPeriodo",
+				"type": "int",
+				"precision": 10
 			},
 			{
-				"name": "Etapa",
-				"type": "varchar"
+				"name": "ConsiderarEscrituracion",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ConsiderarPromesas",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ConsiderarReservas",
+				"type": "int",
+				"precision": 10
 			}
 		],
 		"typeProperties": {

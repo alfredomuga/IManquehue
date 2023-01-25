@@ -12,35 +12,16 @@
 		"type": "SqlServerTable",
 		"schema": [
 			{
-				"name": "idFecha",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "idProyectoEtapa",
-				"type": "int",
-				"precision": 10
-			},
-			{
 				"name": "idEscenario",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "CodigoHito",
+				"name": "Escenario",
 				"type": "varchar"
 			},
 			{
-				"name": "OrdenHito",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "Proyecto",
-				"type": "varchar"
-			},
-			{
-				"name": "Etapa",
+				"name": "Codigo",
 				"type": "varchar"
 			}
 		],
