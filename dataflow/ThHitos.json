@@ -48,6 +48,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "DimEscenario"
+				},
+				{
+					"dataset": {
+						"referenceName": "DWIM",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [],
@@ -121,7 +128,12 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> DimEscenario"
+				"     format: 'table') ~> DimEscenario",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT *\\nFROM DWIM.dim.ProyectoEtapa\\nwhere DWIM.dim.etapagestion is not null and act = 1 and DWIM.dim.TipoActivo = \\'Proyecto Inmobiliario\\'\\norder by DWIM.dim.idproyectoetapa desc',",
+				"     format: 'query') ~> source1"
 			]
 		}
 	}
