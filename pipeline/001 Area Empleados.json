@@ -41,6 +41,176 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Empresa - Nombre Empresa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "empresa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Empleado - Nombre Completo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "empleado",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Empleado - RUT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "rut",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - Cargo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "cargo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Empleado - Rol Privado",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "rol_privado",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - Nombre Gerencia",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "gerencia",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - ID Área Nivel 1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "id_area_1",
+									"type": "Int16",
+									"physicalType": "smallint"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - Nombre Área Nivel 1",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "area_1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - ID Área Nivel 2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "id_area_2",
+									"type": "Int16",
+									"physicalType": "smallint"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - Nombre Área Nivel 2",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "area_2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - Familia de Cargo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "familia_cargo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Campos Personalizados de Trabajo - Rol del Colaborador",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "rol_colaborador",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - Nombre Área Asignada(o)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "nombre_area_asignado",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Trabajo - Obra",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "obra",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
