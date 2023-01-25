@@ -9,51 +9,119 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "CSV_Datalake",
+						"referenceName": "Real",
 						"type": "DatasetReference"
 					},
-					"name": "report"
+					"name": "Real"
 				},
 				{
 					"dataset": {
-						"referenceName": "DWIM",
+						"referenceName": "Budget",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "Budget"
 				},
 				{
 					"dataset": {
-						"referenceName": "DWIM",
+						"referenceName": "Forecast",
 						"type": "DatasetReference"
 					},
-					"name": "source3"
+					"name": "Forecast"
 				},
 				{
 					"dataset": {
-						"referenceName": "DWIM",
+						"referenceName": "dbofecha",
 						"type": "DatasetReference"
 					},
-					"name": "source4"
+					"name": "dboFecha"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimProyectoEtapa",
+						"type": "DatasetReference"
+					},
+					"name": "DimProyectoEtapa"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimEscenario",
+						"type": "DatasetReference"
+					},
+					"name": "DimEscenario"
 				}
 			],
 			"sinks": [],
 			"transformations": [],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          Column_1 as string,",
+				"          Column_2 as string,",
+				"          Column_3 as string,",
+				"          Column_4 as string,",
+				"          Column_5 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> report",
-				"source(allowSchemaDrift: true,",
+				"     ignoreNoFilesFound: false) ~> Real",
+				"source(output(",
+				"          Column_1 as string,",
+				"          Column_2 as string,",
+				"          Column_3 as string,",
+				"          Column_4 as string,",
+				"          Column_5 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Budget",
+				"source(output(",
+				"          Column_1 as string,",
+				"          Column_2 as string,",
+				"          Column_3 as string,",
+				"          Column_4 as string,",
+				"          Column_5 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Forecast",
+				"source(output(",
+				"          idFecha as integer,",
+				"          idProyectoEtapa as integer,",
+				"          idEscenario as integer,",
+				"          CodigoHito as string,",
+				"          OrdenHito as integer,",
+				"          Proyecto as string,",
+				"          Etapa as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source2",
-				"source(allowSchemaDrift: true,",
+				"     format: 'table') ~> dboFecha",
+				"source(output(",
+				"          idFecha as integer,",
+				"          idProyectoEtapa as integer,",
+				"          idEscenario as integer,",
+				"          CodigoHito as string,",
+				"          OrdenHito as integer,",
+				"          Proyecto as string,",
+				"          Etapa as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source3",
-				"source(allowSchemaDrift: true,",
+				"     format: 'table') ~> DimProyectoEtapa",
+				"source(output(",
+				"          idFecha as integer,",
+				"          idProyectoEtapa as integer,",
+				"          idEscenario as integer,",
+				"          CodigoHito as string,",
+				"          OrdenHito as integer,",
+				"          Proyecto as string,",
+				"          Etapa as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source4"
+				"     format: 'table') ~> DimEscenario"
 			]
 		}
 	}
