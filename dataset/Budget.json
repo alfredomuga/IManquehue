@@ -1,0 +1,41 @@
+{
+	"name": "Budget",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataLake/Planificacion"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Budget",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ControlHitos.xlsx",
+				"folderPath": "Automatizaciones/Control de Hitos",
+				"fileSystem": "imsa-files"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	}
+}
