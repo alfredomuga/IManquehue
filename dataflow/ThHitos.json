@@ -2,7 +2,7 @@
 	"name": "ThHitos",
 	"properties": {
 		"folder": {
-			"name": "Hitos"
+			"name": "HitosActualizacionAutomatica"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
