@@ -2,17 +2,17 @@
 	"name": "ThHitos",
 	"properties": {
 		"folder": {
-			"name": "HitosActualizacionAutomatica"
+			"name": "Planificación"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DWIM",
+						"referenceName": "CSV_Datalake",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "report"
 				},
 				{
 					"dataset": {
@@ -41,8 +41,7 @@
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
+				"     ignoreNoFilesFound: false) ~> report",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",

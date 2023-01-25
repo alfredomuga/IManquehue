@@ -1,0 +1,52 @@
+{
+	"name": "ThHitosForescast",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM_IMSA",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DW/Planificacion"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "idFecha",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "idProyectoEtapa",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "idEscenario",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CodigoHito",
+				"type": "varchar"
+			},
+			{
+				"name": "OrdenHito",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Proyecto",
+				"type": "varchar"
+			},
+			{
+				"name": "Etapa",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "th",
+			"table": "HitosForecast"
+		}
+	}
+}
