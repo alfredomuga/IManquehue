@@ -58,7 +58,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "select1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          Column_1 as string,",
@@ -155,7 +159,16 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> DimHitos"
+				"     ignoreNoFilesFound: false) ~> DimHitos",
+				"Real select(mapColumn(",
+				"          Column_1,",
+				"          Column_2,",
+				"          Column_3,",
+				"          Column_4,",
+				"          Column_5",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
