@@ -11,9 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
 		},
-		"DWIM_IMSA_connectionString": {
+		"DWIM2_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWIM_IMSA'"
+			"metadata": "Secure string for 'connectionString' of 'DWIM2'"
 		},
 		"Publicar OC_properties_typeProperties_url": {
 			"type": "string",
@@ -104,6 +104,19 @@
 			"properties": {
 				"type": "SelfHosted",
 				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWIM2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('DWIM2_connectionString')]"
+				}
 			},
 			"dependsOn": []
 		},
@@ -883,25 +896,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWIM_IMSA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('DWIM_IMSA_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "DWIM",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/DWIM')]"
 			]
 		}
 	]

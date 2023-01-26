@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
 		},
+		"DWIM2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWIM2'"
+		},
 		"Publicar OC_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://apimtanner-qa.azure-api.net/enterprise/providers-portal/integration-erp-red-proveedores/api/PurchaseOrder/SavePurchaseOrder"
@@ -93,8 +97,8 @@
 					"imsadatalake_accountKey": {
 						"value": "[parameters('imsadatalake_accountKey')]"
 					},
-					"DWIM_IMSA_connectionString": {
-						"value": "[parameters('DWIM_IMSA_connectionString')]"
+					"DWIM2_connectionString": {
+						"value": "[parameters('DWIM2_connectionString')]"
 					},
 					"Publicar OC_properties_typeProperties_url": {
 						"value": "[parameters('Publicar OC_properties_typeProperties_url')]"
@@ -119,6 +123,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DWIM_IMSA_connectionString": {
+						"value": "[parameters('DWIM_IMSA_connectionString')]"
 					},
 					"IMSA_HANA_connectionString": {
 						"value": "[parameters('IMSA_HANA_connectionString')]"
@@ -177,12 +184,6 @@
 					},
 					"001 Control Hitos_properties_typeProperties_scope": {
 						"value": "[parameters('001 Control Hitos_properties_typeProperties_scope')]"
-					},
-					"001 Finiquitos_properties_typeProperties_scope": {
-						"value": "[parameters('001 Finiquitos_properties_typeProperties_scope')]"
-					},
-					"001 NominasEnFirma_properties_typeProperties_scope": {
-						"value": "[parameters('001 NominasEnFirma_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -203,6 +204,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"001 Finiquitos_properties_typeProperties_scope": {
+						"value": "[parameters('001 Finiquitos_properties_typeProperties_scope')]"
+					},
+					"001 NominasEnFirma_properties_typeProperties_scope": {
+						"value": "[parameters('001 NominasEnFirma_properties_typeProperties_scope')]"
 					},
 					"001 ReportePlazos_properties_typeProperties_scope": {
 						"value": "[parameters('001 ReportePlazos_properties_typeProperties_scope')]"

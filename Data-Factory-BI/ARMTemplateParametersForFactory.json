@@ -14,6 +14,9 @@
 		"imsadatalake_accountKey": {
 			"value": ""
 		},
+		"DWIM2_connectionString": {
+			"value": ""
+		},
 		"Publicar OC_properties_typeProperties_url": {
 			"value": "https://apimtanner-qa.azure-api.net/enterprise/providers-portal/integration-erp-red-proveedores/api/PurchaseOrder/SavePurchaseOrder"
 		},
