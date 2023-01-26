@@ -67,6 +67,15 @@
 				},
 				{
 					"name": "idEtapaProyecto"
+				},
+				{
+					"name": "idHitos"
+				},
+				{
+					"name": "idEscenario"
+				},
+				{
+					"name": "AgrEscenario"
 				}
 			],
 			"scriptLines": [
@@ -176,11 +185,20 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 filter(Hito!=\"\"||Mes!=\"\"||{Año}!=\"\") ~> NoNulos",
-				"NoNulos, DimProyectoEtapa lookup(select1@Proyecto == DimProyectoEtapa@Proyecto",
+				"AgrEscenario, DimProyectoEtapa lookup(select1@Proyecto == DimProyectoEtapa@Proyecto",
 				"     && Etapa == EtapaGestion,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> idEtapaProyecto"
+				"     broadcast: 'auto')~> idEtapaProyecto",
+				"idEtapaProyecto, DimHitos lookup(select1@Hito == DimHitos@Hito,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> idHitos",
+				"idHitos, DimEscenario lookup(AgrEscenario@Escenario == DimEscenario@Escenario,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> idEscenario",
+				"NoNulos derive(Escenario = \"0\") ~> AgrEscenario"
 			]
 		}
 	}
