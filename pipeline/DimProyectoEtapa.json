@@ -1,0 +1,134 @@
+{
+	"name": "DimProyectoEtapa",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Real",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'bronce'}.@{'real'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT *\nFROM dim.ProyectoEtapa\nwhere etapagestion is not null and act = 1 and TipoActivo = 'Proyecto Inmobiliario'\norder by idproyectoetapa desc",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE bronce.real",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Hito",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Hito",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "bronce",
+							"table": "real"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "DimDataLake"
+		},
+		"annotations": []
+	}
+}
