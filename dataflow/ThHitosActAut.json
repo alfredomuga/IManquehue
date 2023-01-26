@@ -23,13 +23,6 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "DimEscenario",
-						"type": "DatasetReference"
-					},
-					"name": "DimEscenario"
-				},
-				{
-					"dataset": {
 						"referenceName": "DimHitos",
 						"type": "DatasetReference"
 					},
@@ -48,6 +41,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "Forescast"
+				},
+				{
+					"dataset": {
+						"referenceName": "Budget",
+						"type": "DatasetReference"
+					},
+					"name": "Budget"
 				}
 			],
 			"sinks": [
@@ -71,9 +71,6 @@
 				},
 				{
 					"name": "idHitos"
-				},
-				{
-					"name": "idEscenario"
 				},
 				{
 					"name": "AgrEscenario"
@@ -101,6 +98,12 @@
 				},
 				{
 					"name": "idEscenarioFor"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "select4"
 				}
 			],
 			"scriptLines": [
@@ -156,14 +159,6 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DimProyectoEtapa",
 				"source(output(",
-				"          idEscenario as string,",
-				"          Escenario as string,",
-				"          Codigo as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> DimEscenario",
-				"source(output(",
 				"          idHito as string,",
 				"          Hito as string,",
 				"          Codigo as string,",
@@ -191,6 +186,17 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Forescast",
+				"source(output(",
+				"          Presupuesto as string,",
+				"          Proyecto as string,",
+				"          Etapa as string,",
+				"          Hito as string,",
+				"          Mes as string,",
+				"          {Año} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Budget",
 				"Real select(mapColumn(",
 				"          Proyecto,",
 				"          Etapa,",
@@ -210,14 +216,10 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idHitos",
-				"idHitos, DimEscenario lookup(AgrEscenario@Escenario == DimEscenario@Escenario,",
-				"     multiple: false,",
-				"     pickup: 'any',",
-				"     broadcast: 'auto')~> idEscenario",
 				"NoNulos derive(Escenario = '0',",
 				"          anho = {Año},",
 				"          mes = toString(toInteger(Mes)*10)) ~> AgrEscenario",
-				"idEscenario, dbfecha lookup(AgrEscenario@anho == dbfecha@Anho",
+				"idHitos, dbfecha lookup(AgrEscenario@anho == dbfecha@Anho",
 				"     && AgrEscenario@mes == NumeroMesCero,",
 				"     multiple: false,",
 				"     pickup: 'any',",
@@ -245,10 +247,14 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idHitosFor",
-				"idHitosFor, DimEscenario lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"idHitosFor, Budget lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEscenarioFor",
+				"select4 select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"Budget select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select4",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
