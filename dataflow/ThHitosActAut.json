@@ -98,6 +98,9 @@
 				},
 				{
 					"name": "idHitosFor"
+				},
+				{
+					"name": "idEscenarioFor"
 				}
 			],
 			"scriptLines": [
@@ -238,10 +241,14 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idProyectoEtapaFor",
-				"idProyectoEtapaFor, DimHitos lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"idProyectoEtapaFor, DimHitos lookup(select2@Hito == DimHitos@Hito,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idHitosFor",
+				"idHitosFor, DimEscenario lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> idEscenarioFor",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
