@@ -76,9 +76,6 @@
 				},
 				{
 					"name": "alterRow1"
-				},
-				{
-					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -189,8 +186,7 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idfecha",
-				"derivedColumn1 alterRow(insertIf(true())) ~> alterRow1",
-				"idfecha derive(idEscenario = tointeger(idExcenario)) ~> derivedColumn1",
+				"idfecha alterRow(insertIf(true())) ~> alterRow1",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
