@@ -40,6 +40,80 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Centro de Costo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Centro_de_Costo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Prorrateo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Prorrateo",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "Liquidación - Período",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Liquidación_Período",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Empleado - RUT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Empleado_RUT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Empleado - Código de Ficha",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Empleado_Código_de_Ficha",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Empleado - Nombre Completo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Empleado_Nombre_Completo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,

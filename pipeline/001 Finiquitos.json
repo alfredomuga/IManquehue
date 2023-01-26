@@ -40,6 +40,452 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Nombre",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Apellido",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Apellido",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Segundo Apellido",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Segundo_Apellido",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RUT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RUT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Código de ficha",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Código_de_ficha",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Ingreso Compañía",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Ingreso_Compañía",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Jefe",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Jefe",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Centro de Costo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Centro_de_Costo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Cargo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cargo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Área",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Área",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Departamento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Departamento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "División",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "División",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Tipo de Contrato",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Tipo_de_Contrato",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha de Retiro",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_de_Retiro",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentario Interno",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Comentario_Interno",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha Pago",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha_Pago",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Monto con remuneración pendiente",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Monto_con_remuneración_pendiente",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Monto sin remuneración pendiente",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Monto_sin_remuneración_pendiente",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Razón",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Razón",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Sueldo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Sueldo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Vacaciones",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Vacaciones",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "Remuneraciones Pendientes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Remuneraciones_Pendientes",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Impuesto Indemnización",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Impuesto_Indemnización",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Asignaciones no imponibles pendientes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Asignaciones_no_imponibles_pendientes",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Indemnización Sustitutiva Previo Aviso",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indemnización_Sustitutiva_Previo_Aviso",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Indemnización Legal Años de Servicio",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indemnización_Legal_Años_de_Servicio",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Indemnización Legal Meses de Servicio en Obra",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indemnización_Legal_Meses_de_Servicio_en_Obra",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Indemnización Pactada Contractualmente",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indemnización_Pactada_Contractualmente",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Indemnización Voluntaria",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indemnización_Voluntaria",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Indemnización Voluntaria No Renta",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indemnización_Voluntaria_No_Renta",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Indemnización por Vacaciones",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Indemnización_por_Vacaciones",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Reajuste Indemnizaciones",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Reajuste_Indemnizaciones",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Intereses Indemnizaciones",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Intereses_Indemnizaciones",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Descuento Seguro de Cesantía",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Descuento_Seguro_de_Cesantía",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Otros Descuentos Finiquito",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Otros_Descuentos_Finiquito",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
