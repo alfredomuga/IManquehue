@@ -1,5 +1,5 @@
 {
-	"name": "ThHitos",
+	"name": "ThHitosActualizacionAutomatica",
 	"properties": {
 		"folder": {
 			"name": "Planificación"
@@ -57,7 +57,15 @@
 					"name": "DimHitos"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ThHitosReal",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select1"
@@ -198,7 +206,29 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEscenario",
-				"NoNulos derive(Escenario = 0) ~> AgrEscenario"
+				"NoNulos derive(Escenario = '0') ~> AgrEscenario",
+				"idEscenario sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          idFecha as integer,",
+				"          idProyectoEtapa as integer,",
+				"          idEscenario as integer,",
+				"          CodigoHito as string,",
+				"          OrdenHito as integer,",
+				"          Proyecto as string,",
+				"          Etapa as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          idProyectoEtapa,",
+				"          Etapa",
+				"     )) ~> sink1"
 			]
 		}
 	}
