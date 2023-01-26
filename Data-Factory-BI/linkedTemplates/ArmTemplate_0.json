@@ -15,10 +15,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWIM_IMSA'"
 		},
-		"IMSA_HANA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IMSA_HANA'"
-		},
 		"Publicar OC_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://apimtanner-qa.azure-api.net/enterprise/providers-portal/integration-erp-red-proveedores/api/PurchaseOrder/SavePurchaseOrder"
@@ -112,6 +108,52 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Budget')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Budget",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CSV_Datalake')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -201,6 +243,277 @@
 					"quoteChar": "\""
 				},
 				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimEscenario')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DimEscenario",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idEscenario",
+						"type": "String"
+					},
+					{
+						"name": "Escenario",
+						"type": "String"
+					},
+					{
+						"name": "Codigo",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimHitos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DimHito",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idHito",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Codigo",
+						"type": "String"
+					},
+					{
+						"name": "Orden",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimProyectoEtapa')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DimProyectoEta",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idProyectoEtapa",
+						"type": "String"
+					},
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "EtapaComercial",
+						"type": "String"
+					},
+					{
+						"name": "EtapaFinanciera",
+						"type": "String"
+					},
+					{
+						"name": "Unidades",
+						"type": "String"
+					},
+					{
+						"name": "RutEmpresa",
+						"type": "String"
+					},
+					{
+						"name": "Segmento",
+						"type": "String"
+					},
+					{
+						"name": "ParticipacionSocios",
+						"type": "String"
+					},
+					{
+						"name": "Socio",
+						"type": "String"
+					},
+					{
+						"name": "Comuna",
+						"type": "String"
+					},
+					{
+						"name": "Constructora",
+						"type": "String"
+					},
+					{
+						"name": "CostoTotal",
+						"type": "String"
+					},
+					{
+						"name": "ValorTerreno",
+						"type": "String"
+					},
+					{
+						"name": "LineaConstruccion",
+						"type": "String"
+					},
+					{
+						"name": "ProximoHito",
+						"type": "String"
+					},
+					{
+						"name": "FechaBudget",
+						"type": "String"
+					},
+					{
+						"name": "FechaForecast",
+						"type": "String"
+					},
+					{
+						"name": "Variacion",
+						"type": "String"
+					},
+					{
+						"name": "EstadoProyecto",
+						"type": "String"
+					},
+					{
+						"name": "TipoFinanciamientoSocios",
+						"type": "String"
+					},
+					{
+						"name": "VigenciaDeuda",
+						"type": "String"
+					},
+					{
+						"name": "TipoActivo",
+						"type": "String"
+					},
+					{
+						"name": "EtapaGestion",
+						"type": "String"
+					},
+					{
+						"name": "AtrasoMeses",
+						"type": "String"
+					},
+					{
+						"name": "EtapaConstructora",
+						"type": "String"
+					},
+					{
+						"name": "Codigo",
+						"type": "String"
+					},
+					{
+						"name": "Considerar",
+						"type": "String"
+					},
+					{
+						"name": "Empresa",
+						"type": "String"
+					},
+					{
+						"name": "BancoAlzante",
+						"type": "String"
+					},
+					{
+						"name": "IVA",
+						"type": "String"
+					},
+					{
+						"name": "IFRS",
+						"type": "String"
+					},
+					{
+						"name": "Consolida",
+						"type": "String"
+					},
+					{
+						"name": "Act",
+						"type": "String"
+					},
+					{
+						"name": "Act_Comercial",
+						"type": "String"
+					},
+					{
+						"name": "Act_Masterfechas",
+						"type": "String"
+					},
+					{
+						"name": "Act_FlujoCaja",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
@@ -431,6 +744,148 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Forecast')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Forecast",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Real')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Real",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "Etapa",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Mes",
+						"type": "String"
+					},
+					{
+						"name": "Año",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dboFecha')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "dbofecha",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "String"
+					},
+					{
+						"name": "Anho",
+						"type": "String"
+					},
+					{
+						"name": "NumeroMesCero",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWIM_IMSA')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -447,339 +902,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IMSA_HANA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SapHana",
-				"typeProperties": {
-					"connectionString": "[parameters('IMSA_HANA_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationHana",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationHana')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWIM')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWIM_IMSA",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"schema": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().schema",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().table",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/HESTanner')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWIM_IMSA",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "companyRut",
-						"type": "nvarchar"
-					},
-					{
-						"name": "supplierRut",
-						"type": "nvarchar"
-					},
-					{
-						"name": "orderNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "receptionNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "amount",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "dteType",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "payDays",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "externalId",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "HESTanner"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SAP_HANA')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IMSA_HANA",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SapHanaTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IMSA_HANA')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SAP_HANA_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IMSA_HANA",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Table_Name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "SapHanaTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "SBO_MANQUEHUE",
-					"table": {
-						"value": "@dataset().Table_Name",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IMSA_HANA')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Area Empleados')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Area Empleados",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Modelo RRHH'}/@{'Areas_Empleados.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'rrhh'}.@{'diccionario_areas_empleados'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE rrhh.diccionario_areas_empleados",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Area_Empleados_DataLake",
-								"type": "DatasetReference",
-								"parameters": {
-									"FolderPath": "Modelo RRHH",
-									"FileName": "Areas_Empleados.xlsx",
-									"Sheet": "Reporte Areas Audatia"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "rrhh",
-									"table": "diccionario_areas_empleados"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "RRHH"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-13T18:14:59Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Excel_Area_Empleados_DataLake')]",
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Centro Costos')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Centro Costos",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/Modelo RRHH/Centro_Costos.xlsx"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'rrhh'}.@{'peso_centro_de_costos'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_CentroCostos_DataLake",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "rrhh",
-									"table": "peso_centro_de_costos"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "RRHH"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-13T18:14:59Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Excel_CentroCostos_DataLake')]",
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
 			]
 		}
 	]

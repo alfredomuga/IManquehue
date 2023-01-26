@@ -113,6 +113,176 @@
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Empresa - Nombre Empresa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "empresa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Nombre Completo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "empleado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - RUT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "rut",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Cargo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cargo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Rol Privado",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "rol_privado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Gerencia",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "gerencia",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - ID Área Nivel 1",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "id_area_1",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Área Nivel 1",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "area_1",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - ID Área Nivel 2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "id_area_2",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Área Nivel 2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "area_2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Familia de Cargo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "familia_cargo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Campos Personalizados de Trabajo - Rol del Colaborador",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "rol_colaborador",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Área Asignada(o)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "nombre_area_asignado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Obra",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "obra",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -202,6 +372,80 @@
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Centro de Costo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Centro_de_Costo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Prorrateo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Prorrateo",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "Liquidación - Período",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Liquidación_Período",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - RUT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Empleado_RUT",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Código de Ficha",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Empleado_Código_de_Ficha",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Nombre Completo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Empleado_Nombre_Completo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -4555,6 +4799,452 @@
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Nombre",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Nombre",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Apellido",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Apellido",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Segundo Apellido",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Segundo_Apellido",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "RUT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RUT",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Código de ficha",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Código_de_ficha",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Ingreso Compañía",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Ingreso_Compañía",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "Jefe",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Jefe",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Centro de Costo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Centro_de_Costo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empresa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Empresa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Cargo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Cargo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Área",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Área",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Departamento",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Departamento",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "División",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "División",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Tipo de Contrato",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Tipo_de_Contrato",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Fecha de Retiro",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Fecha_de_Retiro",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "Comentario Interno",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Comentario_Interno",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Fecha",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Fecha",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "Fecha Pago",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Fecha_Pago",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "Monto con remuneración pendiente",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Monto_con_remuneración_pendiente",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Monto sin remuneración pendiente",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Monto_sin_remuneración_pendiente",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Razón",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Razón",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Sueldo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Sueldo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Vacaciones",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Vacaciones",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "Remuneraciones Pendientes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Remuneraciones_Pendientes",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Impuesto Indemnización",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Impuesto_Indemnización",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Asignaciones no imponibles pendientes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Asignaciones_no_imponibles_pendientes",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Indemnización Sustitutiva Previo Aviso",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indemnización_Sustitutiva_Previo_Aviso",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Indemnización Legal Años de Servicio",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indemnización_Legal_Años_de_Servicio",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Indemnización Legal Meses de Servicio en Obra",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indemnización_Legal_Meses_de_Servicio_en_Obra",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Indemnización Pactada Contractualmente",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indemnización_Pactada_Contractualmente",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Indemnización Voluntaria",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indemnización_Voluntaria",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Indemnización Voluntaria No Renta",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indemnización_Voluntaria_No_Renta",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Indemnización por Vacaciones",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indemnización_por_Vacaciones",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Reajuste Indemnizaciones",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Reajuste_Indemnizaciones",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Intereses Indemnizaciones",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Intereses_Indemnizaciones",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Descuento Seguro de Cesantía",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Descuento_Seguro_de_Cesantía",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Otros Descuentos Finiquito",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Otros_Descuentos_Finiquito",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -10196,7 +10886,7 @@
 										}
 									}
 								],
-								"query": "SELECT \nt0.\"TransId\"                            as \"NumeroTransaccion\"\n,t1.\"TransType\"                      as \"TipoTransaccion\"\n,t0.\"RefDate\"                          as \"FechaContabilizacion\"\n,t0.\"TaxDate\"                          as \"FechaDocumento\"\n,t0.\"DueDate\"                         as \"FechaVencimiento\"\n,t1.\"BPLName\"                       as \"Sucursal\"\n,t2.\"Segment_0\"                    as \"CuentaMayor\"\n,t2.\"AcctName\"                      as \"NombreCuentaMayor\"\n,t1.\"ShortName\"                    as \"CodCliente\"\n,t3.\"CardName\"                     as \"NombreCliente\"\n--,t1.\"Account\"\n,t1.\"Debit\"                                              as \"DebitoCLP\"\n,(t1.\"Credit\" *-1)    as \"CreditoCLP\"\n,t1.\"SYSDeb\"                          as \"DebitoUF\"\n,case        when (t1.\"ContraAct\" = '_SYS00000001100') then 0\n                               when (t1.\"ContraAct\" = '_SYS00000001101') then 0\n                               when (rtrim(upper(t1.\"LineMemo\")) = 'REVALORIZACION SALDO') then 0\n                               else round((t1.\"SYSCred\" * -1),2)\nend as \"CreditoUF\"\n,case when (t1.\"Debit\" <> 0) then t1.\"Debit\"\n                else (t1.\"Credit\" *-1)\nend as \"Total Pesos\"\n, case when (t1.\"SYSDeb\" <> 0) then t1.\"SYSDeb\"\n                else\n                               case         when (t1.\"ContraAct\" = '_SYS00000001100') then 0\n                                                               when (t1.\"ContraAct\" = '_SYS00000001101') then 0\n                                                               when (rtrim(upper(t1.\"LineMemo\")) = 'REVALORIZACION SALDO') then 0\n                                                               else round((t1.\"SYSCred\" * -1),2)\n                               end          \nend as \"Total UF\"\n--,t1.\"ContraAct\"\n,t1.\"FCCurrency\"     as \"Moneda\"\n,t1.\"LineMemo\"                     as \"Comentarios\"\n,t1.\"Ref1\"                                               as \"Referencia1\"\n,t1.\"Ref2\"                                               as \"Referencia2\"\n,t1.\"Project\"                           as \"Proyecto\"\n,t0.\"TransCode\"\nFROM \"SBO_MANQUEHUE\".\"JDT1\" T1 inner join \"SBO_MANQUEHUE\".\"OJDT\" t0 on t1.\"TransId\" = t0.\"TransId\"\ninner join \"SBO_MANQUEHUE\".\"OACT\" t2 on t1.\"Account\" = t2.\"AcctCode\"\nleft join \"SBO_MANQUEHUE\".\"OCRD\" t3 on T1.\"ShortName\" = t3.\"CardCode\"\nWHERE \nT1.\"Account\" in ('_SYS00000000025', '_SYS00000000573')\nand t0.\"RefDate\" <= current_date\nAND t1.\"Credit\" > (case when t1.\"ContraAct\" = '_SYS00000000991' then -0.00001 else 0 end)\nand t2.\"Segment_0\" in ('2102117') --anticipo clientes\nand t1.\"FCCurrency\" is not null\nand t0.\"StornoToTr\" is null\nand (select T11.\"StornoToTr\" from \"SBO_MANQUEHUE\".\"OJDT\" T11 where t11.\"StornoToTr\" = T0.\"TransId\") is null\nand (t0.\"TransCode\" <> 'RDA' or t0.\"TransCode\" is null)\norder by 1, 2\n",
+								"query": " select * from \"SBO_MANQUEHUE\".\"IM_Reporte_Saldo_Deudores\"",
 								"partitionOption": "None"
 							},
 							"sink": {
@@ -11477,6 +12167,867 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Excel_Datalake')]",
 				"[concat(variables('factoryId'), '/datasets/DWIM')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimDataLake')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DimProyectoEtapa",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "@{'dim'}.@{'ProyectoEtapa'}"
+							},
+							{
+								"name": "Destination",
+								"value": "imsa-files/@{'Dimensiones'}/@{'DimProyectoEta'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT *\nFROM dim.ProyectoEtapa\nwhere etapagestion is not null and act = 1 and TipoActivo = 'Proyecto Inmobiliario'\norder by idproyectoetapa desc",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "idProyectoEtapa",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "idProyectoEtapa",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EtapaComercial",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "EtapaComercial",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EtapaFinanciera",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "EtapaFinanciera",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Unidades",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Unidades",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RutEmpresa",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "RutEmpresa",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Segmento",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Segmento",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ParticipacionSocios",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "ParticipacionSocios",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Socio",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Socio",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Comuna",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Comuna",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Constructora",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Constructora",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CostoTotal",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "CostoTotal",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ValorTerreno",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "ValorTerreno",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LineaConstruccion",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "LineaConstruccion",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProximoHito",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "ProximoHito",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FechaBudget",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "FechaBudget",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FechaForecast",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "FechaForecast",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Variacion",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "Variacion",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EstadoProyecto",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "EstadoProyecto",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TipoFinanciamientoSocios",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "TipoFinanciamientoSocios",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "VigenciaDeuda",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "VigenciaDeuda",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TipoActivo",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "TipoActivo",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EtapaGestion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "EtapaGestion",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "AtrasoMeses",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "AtrasoMeses",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EtapaConstructora",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "EtapaConstructora",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Considerar",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Considerar",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Empresa",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Empresa",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BancoAlzante",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "BancoAlzante",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IVA",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "IVA",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IFRS",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "IFRS",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Consolida",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Consolida",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Act",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Act",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Act_Comercial",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Act_Comercial",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Act_Masterfechas",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Act_Masterfechas",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Act_FlujoCaja",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Act_FlujoCaja",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "dim",
+									"table": "ProyectoEtapa"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": "Dimensiones",
+									"File": "DimProyectoEta"
+								}
+							}
+						]
+					},
+					{
+						"name": "DimHito",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "@{'dim'}.@{'Hito'}"
+							},
+							{
+								"name": "Destination",
+								"value": "imsa-files/@{'Dimensiones'}/@{'DimHito'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT *\nFROM dim.Hito",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "idHito",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "idHito",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Orden",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Orden",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "dim",
+									"table": "Hito"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": "Dimensiones",
+									"File": "DimHito"
+								}
+							}
+						]
+					},
+					{
+						"name": "DimEscenario",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "@{'dim'}.@{'Escenario'}"
+							},
+							{
+								"name": "Destination",
+								"value": "imsa-files/@{'Dimensiones'}/@{'DimEscenario'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT *\nFROM dim.Escenario",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "idEscenario",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "idEscenario",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Escenario",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Escenario",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "dim",
+									"table": "Escenario"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": "Dimensiones",
+									"File": "DimEscenario"
+								}
+							}
+						]
+					},
+					{
+						"name": "dboFecha",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "@{'dbo'}.@{'Fecha'}"
+							},
+							{
+								"name": "Destination",
+								"value": "imsa-files/@{'Dimensiones'}/@{'dbofecha'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT max(idFecha) as idFecha,\ncast(Anho as Int) as Anho,\nNumeroMesCero\nFROM dbo.Fecha\nGROUP BY Anho, NumeroMesCero",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "idFecha",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "idFecha",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Anho",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Anho",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NumeroMesCero",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NumeroMesCero",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "dbo",
+									"table": "Fecha"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": "Dimensiones",
+									"File": "dbofecha"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DimDataLake"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DWIM')]",
+				"[concat(variables('factoryId'), '/datasets/CSV_Datalake')]"
 			]
 		},
 		{
@@ -83479,6 +85030,52 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Budget')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Budget",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CSV_Datalake')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -83606,6 +85203,277 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimEscenario')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DimEscenario",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idEscenario",
+						"type": "String"
+					},
+					{
+						"name": "Escenario",
+						"type": "String"
+					},
+					{
+						"name": "Codigo",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimHitos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DimHito",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idHito",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Codigo",
+						"type": "String"
+					},
+					{
+						"name": "Orden",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimProyectoEtapa')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DimProyectoEta",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idProyectoEtapa",
+						"type": "String"
+					},
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "EtapaComercial",
+						"type": "String"
+					},
+					{
+						"name": "EtapaFinanciera",
+						"type": "String"
+					},
+					{
+						"name": "Unidades",
+						"type": "String"
+					},
+					{
+						"name": "RutEmpresa",
+						"type": "String"
+					},
+					{
+						"name": "Segmento",
+						"type": "String"
+					},
+					{
+						"name": "ParticipacionSocios",
+						"type": "String"
+					},
+					{
+						"name": "Socio",
+						"type": "String"
+					},
+					{
+						"name": "Comuna",
+						"type": "String"
+					},
+					{
+						"name": "Constructora",
+						"type": "String"
+					},
+					{
+						"name": "CostoTotal",
+						"type": "String"
+					},
+					{
+						"name": "ValorTerreno",
+						"type": "String"
+					},
+					{
+						"name": "LineaConstruccion",
+						"type": "String"
+					},
+					{
+						"name": "ProximoHito",
+						"type": "String"
+					},
+					{
+						"name": "FechaBudget",
+						"type": "String"
+					},
+					{
+						"name": "FechaForecast",
+						"type": "String"
+					},
+					{
+						"name": "Variacion",
+						"type": "String"
+					},
+					{
+						"name": "EstadoProyecto",
+						"type": "String"
+					},
+					{
+						"name": "TipoFinanciamientoSocios",
+						"type": "String"
+					},
+					{
+						"name": "VigenciaDeuda",
+						"type": "String"
+					},
+					{
+						"name": "TipoActivo",
+						"type": "String"
+					},
+					{
+						"name": "EtapaGestion",
+						"type": "String"
+					},
+					{
+						"name": "AtrasoMeses",
+						"type": "String"
+					},
+					{
+						"name": "EtapaConstructora",
+						"type": "String"
+					},
+					{
+						"name": "Codigo",
+						"type": "String"
+					},
+					{
+						"name": "Considerar",
+						"type": "String"
+					},
+					{
+						"name": "Empresa",
+						"type": "String"
+					},
+					{
+						"name": "BancoAlzante",
+						"type": "String"
+					},
+					{
+						"name": "IVA",
+						"type": "String"
+					},
+					{
+						"name": "IFRS",
+						"type": "String"
+					},
+					{
+						"name": "Consolida",
+						"type": "String"
+					},
+					{
+						"name": "Act",
+						"type": "String"
+					},
+					{
+						"name": "Act_Comercial",
+						"type": "String"
+					},
+					{
+						"name": "Act_Masterfechas",
+						"type": "String"
+					},
+					{
+						"name": "Act_FlujoCaja",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
 			]
 		},
 		{
@@ -83833,6 +85701,52 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Forecast')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Forecast",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/HESTanner')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -83890,6 +85804,57 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Real')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Real",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "Etapa",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Mes",
+						"type": "String"
+					},
+					{
+						"name": "Año",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SAP_HANA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -83934,6 +85899,222 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/IMSA_HANA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ThHitosBudget')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM_IMSA",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW/Planificacion"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosBudget"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ThHitosForescast')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM_IMSA",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW/Planificacion"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosForecast"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ThHitosReal')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM_IMSA",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW/Planificacion"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosReal"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dboFecha')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "dbofecha",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "String"
+					},
+					{
+						"name": "Anho",
+						"type": "String"
+					},
+					{
+						"name": "NumeroMesCero",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
 			]
 		},
 		{
@@ -84589,6 +86770,225 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ThHitosActAut')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Planificación"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Real",
+								"type": "DatasetReference"
+							},
+							"name": "Real"
+						},
+						{
+							"dataset": {
+								"referenceName": "DimProyectoEtapa",
+								"type": "DatasetReference"
+							},
+							"name": "DimProyectoEtapa"
+						},
+						{
+							"dataset": {
+								"referenceName": "DimEscenario",
+								"type": "DatasetReference"
+							},
+							"name": "DimEscenario"
+						},
+						{
+							"dataset": {
+								"referenceName": "DimHitos",
+								"type": "DatasetReference"
+							},
+							"name": "DimHitos"
+						},
+						{
+							"dataset": {
+								"referenceName": "dboFecha",
+								"type": "DatasetReference"
+							},
+							"name": "dbfecha"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Datalake",
+								"type": "DatasetReference"
+							},
+							"name": "HitosReal"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "NoNulos"
+						},
+						{
+							"name": "idEtapaProyecto"
+						},
+						{
+							"name": "idHitos"
+						},
+						{
+							"name": "idEscenario"
+						},
+						{
+							"name": "AgrEscenario"
+						},
+						{
+							"name": "idfecha"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Proyecto as string,",
+						"          Etapa as string,",
+						"          Hito as string,",
+						"          Mes as string,",
+						"          {Año} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Real",
+						"source(output(",
+						"          idProyectoEtapa as integer,",
+						"          Proyecto as string,",
+						"          EtapaComercial as string,",
+						"          EtapaFinanciera as string,",
+						"          Unidades as integer,",
+						"          RutEmpresa as string,",
+						"          Segmento as string,",
+						"          ParticipacionSocios as double,",
+						"          Socio as string,",
+						"          Comuna as string,",
+						"          Constructora as string,",
+						"          CostoTotal as double,",
+						"          ValorTerreno as double,",
+						"          LineaConstruccion as double,",
+						"          ProximoHito as string,",
+						"          FechaBudget as date,",
+						"          FechaForecast as date,",
+						"          Variacion as double,",
+						"          EstadoProyecto as string,",
+						"          TipoFinanciamientoSocios as string,",
+						"          VigenciaDeuda as string,",
+						"          TipoActivo as string,",
+						"          EtapaGestion as string,",
+						"          AtrasoMeses as integer,",
+						"          EtapaConstructora as string,",
+						"          Codigo as string,",
+						"          Considerar as string,",
+						"          Empresa as string,",
+						"          BancoAlzante as string,",
+						"          IVA as double,",
+						"          IFRS as double,",
+						"          Consolida as string,",
+						"          Act as integer,",
+						"          Act_Comercial as integer,",
+						"          Act_Masterfechas as string,",
+						"          Act_FlujoCaja as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> DimProyectoEtapa",
+						"source(output(",
+						"          idEscenario as string,",
+						"          Escenario as string,",
+						"          Codigo as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> DimEscenario",
+						"source(output(",
+						"          idHito as string,",
+						"          Hito as string,",
+						"          Codigo as string,",
+						"          Orden as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> DimHitos",
+						"source(output(",
+						"          idFecha as string,",
+						"          Anho as string,",
+						"          NumeroMesCero as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> dbfecha",
+						"Real select(mapColumn(",
+						"          Proyecto,",
+						"          Etapa,",
+						"          Hito,",
+						"          Mes,",
+						"          {Año}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 filter(Hito!=\"\"||Mes!=\"\"||{Año}!=\"\") ~> NoNulos",
+						"AgrEscenario, DimProyectoEtapa lookup(select1@Proyecto == DimProyectoEtapa@Proyecto",
+						"     && Etapa == EtapaGestion,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> idEtapaProyecto",
+						"idEtapaProyecto, DimHitos lookup(select1@Hito == DimHitos@Hito,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> idHitos",
+						"idHitos, DimEscenario lookup(AgrEscenario@Escenario == DimEscenario@Escenario,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> idEscenario",
+						"NoNulos derive(Escenario = '0',",
+						"          anho = {Año},",
+						"          mes = toString(toInteger(Mes)*10)) ~> AgrEscenario",
+						"idEscenario, dbfecha lookup(AgrEscenario@anho == dbfecha@Anho",
+						"     && AgrEscenario@mes == NumeroMesCero,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> idfecha",
+						"idfecha alterRow(insertIf(true())) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          idFecha,",
+						"          idProyectoEtapa,",
+						"          idEscenario = idProyectoEtapa,",
+						"          CodigoHito = select1@Proyecto,",
+						"          Proyecto = select1@Proyecto,",
+						"          Etapa",
+						"     ),",
+						"     format: 'table') ~> HitosReal"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Real')]",
+				"[concat(variables('factoryId'), '/datasets/DimProyectoEtapa')]",
+				"[concat(variables('factoryId'), '/datasets/DimEscenario')]",
+				"[concat(variables('factoryId'), '/datasets/DimHitos')]",
+				"[concat(variables('factoryId'), '/datasets/dboFecha')]",
+				"[concat(variables('factoryId'), '/datasets/CSV_Datalake')]"
+			]
 		}
 	]
 }

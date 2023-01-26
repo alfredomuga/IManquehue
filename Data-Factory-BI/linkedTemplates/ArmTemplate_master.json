@@ -96,9 +96,6 @@
 					"DWIM_IMSA_connectionString": {
 						"value": "[parameters('DWIM_IMSA_connectionString')]"
 					},
-					"IMSA_HANA_connectionString": {
-						"value": "[parameters('IMSA_HANA_connectionString')]"
-					},
 					"Publicar OC_properties_typeProperties_url": {
 						"value": "[parameters('Publicar OC_properties_typeProperties_url')]"
 					},
@@ -122,6 +119,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"IMSA_HANA_connectionString": {
+						"value": "[parameters('IMSA_HANA_connectionString')]"
 					}
 				}
 			},
@@ -183,6 +183,26 @@
 					},
 					"001 NominasEnFirma_properties_typeProperties_scope": {
 						"value": "[parameters('001 NominasEnFirma_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "Data-Factory-BI_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"001 ReportePlazos_properties_typeProperties_scope": {
 						"value": "[parameters('001 ReportePlazos_properties_typeProperties_scope')]"
@@ -193,7 +213,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_2')]"
+				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_3')]"
 			]
 		}
 	]
