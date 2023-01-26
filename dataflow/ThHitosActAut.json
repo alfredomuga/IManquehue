@@ -70,6 +70,9 @@
 				},
 				{
 					"name": "AgrEscenario"
+				},
+				{
+					"name": "idfecha"
 				}
 			],
 			"scriptLines": [
@@ -173,7 +176,11 @@
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEscenario",
 				"NoNulos derive(Escenario = '0') ~> AgrEscenario",
-				"idEscenario sink(allowSchemaDrift: true,",
+				"idEscenario, dbfecha lookup(Etapa == Anho,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> idfecha",
+				"idfecha sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          idFecha as integer,",
@@ -190,12 +197,7 @@
 				"     upsertable:false,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     mapColumn(",
-				"          idFecha,",
-				"          idProyectoEtapa,",
-				"          Etapa",
-				"     )) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
