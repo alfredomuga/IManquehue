@@ -22,18 +22,23 @@
 		},
 		"schema": [
 			{
+				"name": "Proyecto",
 				"type": "String"
 			},
 			{
+				"name": "Etapa",
 				"type": "String"
 			},
 			{
+				"name": "Hito",
 				"type": "String"
 			},
 			{
+				"name": "Mes",
 				"type": "String"
 			},
 			{
+				"name": "Año",
 				"type": "String"
 			}
 		]
