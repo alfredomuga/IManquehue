@@ -46,7 +46,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ThHitosReal",
+						"referenceName": "CSV_Datalake",
 						"type": "DatasetReference"
 					},
 					"name": "HitosReal"
@@ -189,20 +189,9 @@
 				"idfecha alterRow(insertIf(true())) ~> alterRow1",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          idFecha as integer,",
-				"          idProyectoEtapa as integer,",
-				"          idEscenario as integer,",
-				"          CodigoHito as string,",
-				"          OrdenHito as integer,",
-				"          Proyecto as string,",
-				"          Etapa as string",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
@@ -212,7 +201,8 @@
 				"          CodigoHito = select1@Proyecto,",
 				"          Proyecto = select1@Proyecto,",
 				"          Etapa",
-				"     )) ~> HitosReal"
+				"     ),",
+				"     format: 'table') ~> HitosReal"
 			]
 		}
 	}
