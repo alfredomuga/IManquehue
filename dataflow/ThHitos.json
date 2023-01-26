@@ -63,7 +63,7 @@
 					"name": "select1"
 				},
 				{
-					"name": "nonulos"
+					"name": "NoNulos"
 				},
 				{
 					"name": "idEtapaProyecto"
@@ -175,8 +175,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 filter(Hito!=\"\"||Mes!=\"\"||{Año}!=\"\") ~> nonulos",
-				"nonulos, DimProyectoEtapa lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"select1 filter(Hito!=\"\"||Mes!=\"\"||{Año}!=\"\") ~> NoNulos",
+				"NoNulos, DimProyectoEtapa lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEtapaProyecto"
