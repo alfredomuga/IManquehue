@@ -199,6 +199,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
+				"          idFecha,",
 				"          idProyectoEtapa,",
 				"          Etapa",
 				"     )) ~> sink1"
