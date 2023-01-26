@@ -41,6 +41,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "dbfecha"
+				},
+				{
+					"dataset": {
+						"referenceName": "Forecast",
+						"type": "DatasetReference"
+					},
+					"name": "Forescast"
 				}
 			],
 			"sinks": [
@@ -158,6 +165,17 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> dbfecha",
+				"source(output(",
+				"          Periodo as string,",
+				"          Proyecto as string,",
+				"          Etapa as string,",
+				"          Hito as string,",
+				"          Mes as string,",
+				"          {Año} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Forescast",
 				"Real select(mapColumn(",
 				"          Proyecto,",
 				"          Etapa,",
