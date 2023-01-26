@@ -176,7 +176,8 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 filter(Hito!=\"\"||Mes!=\"\"||{Año}!=\"\") ~> NoNulos",
-				"NoNulos, DimProyectoEtapa lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"NoNulos, DimProyectoEtapa lookup(select1@Proyecto == DimProyectoEtapa@Proyecto",
+				"     && Etapa == EtapaGestion,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEtapaProyecto"
