@@ -16,11 +16,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+						"value": "@{'dim'}.@{'ProyectoEtapa'}"
 					},
 					{
 						"name": "Destination",
-						"value": "@{'bronce'}.@{'real'}"
+						"value": "imsa-files/@{'Dimensiones'}/@{'DimProyectoEta'}"
 					}
 				],
 				"typeProperties": {
@@ -520,11 +520,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+						"value": "@{'dim'}.@{'Hito'}"
 					},
 					{
 						"name": "Destination",
-						"value": "@{'bronce'}.@{'real'}"
+						"value": "imsa-files/@{'Dimensiones'}/@{'DimHito'}"
 					}
 				],
 				"typeProperties": {
@@ -640,11 +640,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+						"value": "@{'dim'}.@{'Escenario'}"
 					},
 					{
 						"name": "Destination",
-						"value": "@{'bronce'}.@{'real'}"
+						"value": "imsa-files/@{'Dimensiones'}/@{'DimEscenario'}"
 					}
 				],
 				"typeProperties": {
@@ -730,6 +730,114 @@
 						"parameters": {
 							"Folder": "Dimensiones",
 							"File": "DimEscenario"
+						}
+					}
+				]
+			},
+			{
+				"name": "dboFecha",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "@{'dbo'}.@{'Fecha'}"
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{'Dimensiones'}/@{'dbofecha'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT max(idFecha) as idFecha,\ncast(Anho as Int) as Anho,\nNumeroMesCero\nFROM dbo.Fecha\nGROUP BY Anho, NumeroMesCero",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "idFecha",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "idFecha",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Anho",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Anho",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NumeroMesCero",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "NumeroMesCero",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "dbo",
+							"table": "Fecha"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Dimensiones",
+							"File": "dbofecha"
 						}
 					}
 				]
