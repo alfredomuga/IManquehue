@@ -97,7 +97,7 @@
 					"name": "idProyectoEtapaFor"
 				},
 				{
-					"name": "lookup1"
+					"name": "idHitosFor"
 				}
 			],
 			"scriptLines": [
@@ -241,7 +241,7 @@
 				"idProyectoEtapaFor, DimHitos lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1",
+				"     broadcast: 'auto')~> idHitosFor",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
