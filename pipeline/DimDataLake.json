@@ -1,9 +1,9 @@
 {
-	"name": "DimProyectoEtapa",
+	"name": "DimDataLake",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Real",
+				"name": "DimProyectoEtapa",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -31,10 +31,15 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "SqlServerSink",
-						"preCopyScript": "TRUNCATE TABLE bronce.real",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
 					},
 					"enableStaging": false,
 					"translator": {
@@ -42,62 +47,434 @@
 						"mappings": [
 							{
 								"source": {
+									"name": "idProyectoEtapa",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "idProyectoEtapa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
 									"name": "Proyecto",
 									"type": "String",
 									"physicalType": "String"
-								},
-								"sink": {
-									"name": "Proyecto",
-									"type": "String",
-									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
-									"name": "Etapa",
+									"name": "EtapaComercial",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Etapa",
+									"name": "EtapaComercial",
 									"type": "String",
-									"physicalType": "nvarchar"
+									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Hito",
+									"name": "EtapaFinanciera",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Hito",
+									"name": "EtapaFinanciera",
 									"type": "String",
-									"physicalType": "nvarchar"
+									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Mes",
-									"type": "String",
-									"physicalType": "String"
+									"name": "Unidades",
+									"type": "Int32",
+									"physicalType": "int"
 								},
 								"sink": {
-									"name": "Mes",
+									"name": "Unidades",
 									"type": "String",
-									"physicalType": "nvarchar"
+									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Año",
+									"name": "RutEmpresa",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Año",
+									"name": "RutEmpresa",
 									"type": "String",
-									"physicalType": "nvarchar"
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ParticipacionSocios",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "ParticipacionSocios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Socio",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Socio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Comuna",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Comuna",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Constructora",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Constructora",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CostoTotal",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "CostoTotal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ValorTerreno",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "ValorTerreno",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LineaConstruccion",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "LineaConstruccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ProximoHito",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ProximoHito",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaBudget",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "FechaBudget",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaForecast",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "FechaForecast",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Variacion",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "Variacion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EstadoProyecto",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EstadoProyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoFinanciamientoSocios",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "TipoFinanciamientoSocios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "VigenciaDeuda",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "VigenciaDeuda",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoActivo",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "TipoActivo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EtapaGestion",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EtapaGestion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AtrasoMeses",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "AtrasoMeses",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EtapaConstructora",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EtapaConstructora",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Codigo",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Codigo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Considerar",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Considerar",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BancoAlzante",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "BancoAlzante",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IVA",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "IVA",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IFRS",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "IFRS",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Consolida",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Consolida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Act",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act_Comercial",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Act_Comercial",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act_Masterfechas",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Act_Masterfechas",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act_FlujoCaja",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Act_FlujoCaja",
+									"type": "String",
+									"physicalType": "String"
 								}
 							}
 						],
@@ -111,16 +488,524 @@
 				"inputs": [
 					{
 						"referenceName": "DWIM",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "dim",
+							"table": "ProyectoEtapa"
+						}
 					}
 				],
 				"outputs": [
 					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Dimensiones",
+							"File": "DimProyectoEta"
+						}
+					}
+				]
+			},
+			{
+				"name": "DimHito",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'bronce'}.@{'real'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT *\nFROM dim.Hito",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "idProyectoEtapa",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "idProyectoEtapa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EtapaComercial",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EtapaComercial",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EtapaFinanciera",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EtapaFinanciera",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Unidades",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Unidades",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RutEmpresa",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "RutEmpresa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ParticipacionSocios",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "ParticipacionSocios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Socio",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Socio",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Comuna",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Comuna",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Constructora",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Constructora",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CostoTotal",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "CostoTotal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ValorTerreno",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "ValorTerreno",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LineaConstruccion",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "LineaConstruccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ProximoHito",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ProximoHito",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaBudget",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "FechaBudget",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaForecast",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "FechaForecast",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Variacion",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "Variacion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EstadoProyecto",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EstadoProyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoFinanciamientoSocios",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "TipoFinanciamientoSocios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "VigenciaDeuda",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "VigenciaDeuda",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoActivo",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "TipoActivo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EtapaGestion",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EtapaGestion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AtrasoMeses",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "AtrasoMeses",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EtapaConstructora",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "EtapaConstructora",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Codigo",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Codigo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Considerar",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Considerar",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BancoAlzante",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "BancoAlzante",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IVA",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "IVA",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IFRS",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "IFRS",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Consolida",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Consolida",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Act",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act_Comercial",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Act_Comercial",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act_Masterfechas",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Act_Masterfechas",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Act_FlujoCaja",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Act_FlujoCaja",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
 						"referenceName": "DWIM",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "bronce",
-							"table": "real"
+							"schema": "dim",
+							"table": "Hito"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Dimensiones",
+							"File": "DimProyectoEta"
 						}
 					}
 				]
