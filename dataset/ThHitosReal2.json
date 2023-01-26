@@ -1,0 +1,52 @@
+{
+	"name": "ThHitosReal2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DW2"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "idFecha",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "idProyectoEtapa",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "idEscenario",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CodigoHito",
+				"type": "varchar"
+			},
+			{
+				"name": "OrdenHito",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Proyecto",
+				"type": "varchar"
+			},
+			{
+				"name": "Etapa",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "th",
+			"table": "HitosReal"
+		}
+	}
+}

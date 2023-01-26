@@ -46,7 +46,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ThHitosReal",
+						"referenceName": "ThHitosReal2",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -204,7 +204,8 @@
 				"     upsertable:false,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
