@@ -198,7 +198,7 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEscenario",
-				"NoNulos derive(Escenario = \"0\") ~> AgrEscenario"
+				"NoNulos derive(Escenario = 0) ~> AgrEscenario"
 			]
 		}
 	}
