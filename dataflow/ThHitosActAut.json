@@ -16,13 +16,6 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "dboFecha",
-						"type": "DatasetReference"
-					},
-					"name": "dboFecha"
-				},
-				{
-					"dataset": {
 						"referenceName": "DimProyectoEtapa",
 						"type": "DatasetReference"
 					},
@@ -41,6 +34,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "DimHitos"
+				},
+				{
+					"dataset": {
+						"referenceName": "dboFecha",
+						"type": "DatasetReference"
+					},
+					"name": "dbfecha"
 				}
 			],
 			"sinks": [
@@ -70,9 +70,6 @@
 				},
 				{
 					"name": "AgrEscenario"
-				},
-				{
-					"name": "idfecha"
 				}
 			],
 			"scriptLines": [
@@ -86,14 +83,6 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Real",
-				"source(output(",
-				"          idFecha as string,",
-				"          Anho as string,",
-				"          NumeroMesCero as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> dboFecha",
 				"source(output(",
 				"          idProyectoEtapa as integer,",
 				"          Proyecto as string,",
@@ -152,6 +141,14 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DimHitos",
+				"source(output(",
+				"          idFecha as string,",
+				"          Anho as string,",
+				"          NumeroMesCero as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dbfecha",
 				"Real select(mapColumn(",
 				"          Proyecto,",
 				"          Etapa,",
@@ -176,11 +173,7 @@
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEscenario",
 				"NoNulos derive(Escenario = '0') ~> AgrEscenario",
-				"idEscenario, dboFecha lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
-				"     multiple: false,",
-				"     pickup: 'any',",
-				"     broadcast: 'auto')~> idfecha",
-				"idfecha sink(allowSchemaDrift: true,",
+				"idEscenario sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          idFecha as integer,",
