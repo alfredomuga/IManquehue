@@ -30,7 +30,7 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "dbofecha",
+						"referenceName": "dboFecha",
 						"type": "DatasetReference"
 					},
 					"name": "dboFecha"
@@ -48,14 +48,17 @@
 						"type": "DatasetReference"
 					},
 					"name": "DimEscenario"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimHitos",
+						"type": "DatasetReference"
+					},
+					"name": "DimHitos"
 				}
 			],
 			"sinks": [],
-			"transformations": [
-				{
-					"name": "filter1"
-				}
-			],
+			"transformations": [],
 			"scriptLines": [
 				"source(output(",
 				"          Column_1 as string,",
@@ -88,37 +91,13 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Forecast",
 				"source(output(",
-				"          idFecha as integer,",
-				"          FechaCompleta as date,",
+				"          idFecha as string,",
 				"          Anho as string,",
-				"          AnhoMes as string,",
-				"          Semestre as string,",
-				"          Trimestre as string,",
-				"          MesIngles as string,",
-				"          MesEspanhol as string,",
-				"          MesAbreviado as string,",
-				"          NumeroMes as integer,",
-				"          NumeroMesCero as string,",
-				"          Quincena as string,",
-				"          NumeroSemana as string,",
-				"          DiaIngles as string,",
-				"          DiaEspanol as string,",
-				"          DiaAbreviado as string,",
-				"          NumeroDiaSemana as string,",
-				"          NumeroDiaMes as string,",
-				"          NumeroDiaMesCero as string,",
-				"          MesDia as string,",
-				"          Considerar1 as integer,",
-				"          Considerar2 as integer,",
-				"          ConsiderarFiltroPeriodo as integer,",
-				"          ConsiderarEscrituracion as integer,",
-				"          ConsiderarPromesas as integer,",
-				"          ConsiderarReservas as integer",
+				"          NumeroMesCero as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> dboFecha",
+				"     ignoreNoFilesFound: false) ~> dboFecha",
 				"source(output(",
 				"          idProyectoEtapa as integer,",
 				"          Proyecto as string,",
@@ -159,19 +138,24 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: 'SELECT *\\nFROM DWIM.dim.ProyectoEtapa\\n',",
-				"     format: 'query') ~> DimProyectoEtapa",
+				"     ignoreNoFilesFound: false) ~> DimProyectoEtapa",
 				"source(output(",
-				"          idEscenario as integer,",
+				"          idEscenario as string,",
 				"          Escenario as string,",
 				"          Codigo as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> DimEscenario",
-				"DimProyectoEtapa filter(EstadoProyecto!=\"\") ~> filter1"
+				"     ignoreNoFilesFound: false) ~> DimEscenario",
+				"source(output(",
+				"          idHito as string,",
+				"          Hito as string,",
+				"          Codigo as string,",
+				"          Orden as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> DimHitos"
 			]
 		}
 	}

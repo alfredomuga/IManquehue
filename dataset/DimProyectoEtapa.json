@@ -1,0 +1,172 @@
+{
+	"name": "DimProyectoEtapa",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataLake/Dimensiones"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DimProyectoEta",
+				"folderPath": "Dimensiones",
+				"fileSystem": "imsa-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "idProyectoEtapa",
+				"type": "String"
+			},
+			{
+				"name": "Proyecto",
+				"type": "String"
+			},
+			{
+				"name": "EtapaComercial",
+				"type": "String"
+			},
+			{
+				"name": "EtapaFinanciera",
+				"type": "String"
+			},
+			{
+				"name": "Unidades",
+				"type": "String"
+			},
+			{
+				"name": "RutEmpresa",
+				"type": "String"
+			},
+			{
+				"name": "Segmento",
+				"type": "String"
+			},
+			{
+				"name": "ParticipacionSocios",
+				"type": "String"
+			},
+			{
+				"name": "Socio",
+				"type": "String"
+			},
+			{
+				"name": "Comuna",
+				"type": "String"
+			},
+			{
+				"name": "Constructora",
+				"type": "String"
+			},
+			{
+				"name": "CostoTotal",
+				"type": "String"
+			},
+			{
+				"name": "ValorTerreno",
+				"type": "String"
+			},
+			{
+				"name": "LineaConstruccion",
+				"type": "String"
+			},
+			{
+				"name": "ProximoHito",
+				"type": "String"
+			},
+			{
+				"name": "FechaBudget",
+				"type": "String"
+			},
+			{
+				"name": "FechaForecast",
+				"type": "String"
+			},
+			{
+				"name": "Variacion",
+				"type": "String"
+			},
+			{
+				"name": "EstadoProyecto",
+				"type": "String"
+			},
+			{
+				"name": "TipoFinanciamientoSocios",
+				"type": "String"
+			},
+			{
+				"name": "VigenciaDeuda",
+				"type": "String"
+			},
+			{
+				"name": "TipoActivo",
+				"type": "String"
+			},
+			{
+				"name": "EtapaGestion",
+				"type": "String"
+			},
+			{
+				"name": "AtrasoMeses",
+				"type": "String"
+			},
+			{
+				"name": "EtapaConstructora",
+				"type": "String"
+			},
+			{
+				"name": "Codigo",
+				"type": "String"
+			},
+			{
+				"name": "Considerar",
+				"type": "String"
+			},
+			{
+				"name": "Empresa",
+				"type": "String"
+			},
+			{
+				"name": "BancoAlzante",
+				"type": "String"
+			},
+			{
+				"name": "IVA",
+				"type": "String"
+			},
+			{
+				"name": "IFRS",
+				"type": "String"
+			},
+			{
+				"name": "Consolida",
+				"type": "String"
+			},
+			{
+				"name": "Act",
+				"type": "String"
+			},
+			{
+				"name": "Act_Comercial",
+				"type": "String"
+			},
+			{
+				"name": "Act_Masterfechas",
+				"type": "String"
+			},
+			{
+				"name": "Act_FlujoCaja",
+				"type": "String"
+			}
+		]
+	}
+}

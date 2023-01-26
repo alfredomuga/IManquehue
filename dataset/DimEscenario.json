@@ -1,0 +1,40 @@
+{
+	"name": "DimEscenario",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataLake/Dimensiones"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DimEscenario",
+				"folderPath": "Dimensiones",
+				"fileSystem": "imsa-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "idEscenario",
+				"type": "String"
+			},
+			{
+				"name": "Escenario",
+				"type": "String"
+			},
+			{
+				"name": "Codigo",
+				"type": "String"
+			}
+		]
+	}
+}

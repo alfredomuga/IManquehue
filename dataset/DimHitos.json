@@ -1,0 +1,44 @@
+{
+	"name": "DimHitos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataLake/Dimensiones"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DimHito",
+				"folderPath": "Dimensiones",
+				"fileSystem": "imsa-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "idHito",
+				"type": "String"
+			},
+			{
+				"name": "Hito",
+				"type": "String"
+			},
+			{
+				"name": "Codigo",
+				"type": "String"
+			},
+			{
+				"name": "Orden",
+				"type": "String"
+			}
+		]
+	}
+}
