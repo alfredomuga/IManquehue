@@ -176,8 +176,8 @@
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> idEscenario",
 				"NoNulos derive(Escenario = '0',",
-				"          anho = toInteger({Año}),",
-				"          mes = toInteger(Mes)*10) ~> AgrEscenario",
+				"          anho = {Año},",
+				"          mes = toString(toInteger(Mes)*10)) ~> AgrEscenario",
 				"idEscenario, dbfecha lookup(AgrEscenario@anho == dbfecha@Anho",
 				"     && AgrEscenario@mes == NumeroMesCero,",
 				"     multiple: false,",
@@ -198,7 +198,13 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
-				"     format: 'table') ~> HitosReal"
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          each(match(/* All input columns */ true()),",
+				"               /* Input name */ $$ = $$)",
+				"     )) ~> HitosReal"
 			]
 		}
 	}
