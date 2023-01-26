@@ -49,7 +49,7 @@
 						"referenceName": "ThHitosReal",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "HitosReal"
 				}
 			],
 			"transformations": [
@@ -196,8 +196,10 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     mapColumn(",
+				"          each(match(ERROR_FUNCTION('')),",
+				"               ERROR_FUNCTION('') = $$)",
+				"     )) ~> HitosReal"
 			]
 		}
 	}
