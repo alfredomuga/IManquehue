@@ -92,6 +92,12 @@
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "idProyectoEtapaFor"
+				},
+				{
+					"name": "lookup1"
 				}
 			],
 			"scriptLines": [
@@ -227,6 +233,15 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
 				"select2 filter(Hito!=\"\"||Mes!=\"\"||{Año}!=\"\") ~> filter1",
+				"filter1, DimProyectoEtapa lookup(select2@Proyecto == DimProyectoEtapa@Proyecto",
+				"     && Etapa == EtapaGestion,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> idProyectoEtapaFor",
+				"idProyectoEtapaFor, DimHitos lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
