@@ -40,10 +40,15 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "SqlServerSink",
-						"preCopyScript": "TRUNCATE TABLE sap.DeudoresInmobiliarios",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
 					},
 					"enableStaging": false,
 					"translator": {
@@ -285,12 +290,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DWIM2",
-						"type": "DatasetReference",
-						"parameters": {
-							"schema": "sap",
-							"table": "DeudoresInmobiliarios"
-						}
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference"
 					}
 				]
 			}
