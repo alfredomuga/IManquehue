@@ -21,7 +21,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files/@{concat('SAP/Proveedores/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'Proveedores_Constructora.csv'}"
+						"value": "@{'sap'}.@{'DeudoresInmobiliarios'}"
 					}
 				],
 				"typeProperties": {
