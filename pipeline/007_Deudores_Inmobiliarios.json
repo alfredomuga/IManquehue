@@ -21,7 +21,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios'}"
+						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios.csv'}"
 					}
 				],
 				"typeProperties": {
@@ -308,17 +308,6 @@
 									"type": "String",
 									"physicalType": "String"
 								}
-							},
-							{
-								"source": {
-									"name": "Fecha_Snapshot",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Fecha_Snapshot",
-									"type": "String",
-									"physicalType": "String"
-								}
 							}
 						],
 						"typeConversion": true,
@@ -380,7 +369,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": "SAP/Deudores",
-							"wildcardFileName": "DeudoresInmobiliarios.csv",
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
