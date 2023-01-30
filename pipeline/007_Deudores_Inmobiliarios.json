@@ -389,7 +389,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": "SAP/Deudores",
-							"wildcardFileName": "*",
+							"wildcardFileName": "DeudoresInmobiliarios.csv",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
