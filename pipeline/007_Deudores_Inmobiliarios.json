@@ -359,7 +359,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "@{'sap'}.@{'DeudoresInmobiliarios'}"
+						"value": "sap.DeudoresInmobiliarios"
 					}
 				],
 				"typeProperties": {
@@ -377,7 +377,7 @@
 						}
 					},
 					"sink": {
-						"type": "SqlServerSink",
+						"type": "AzureSqlSink",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
@@ -615,6 +615,18 @@
 							},
 							{
 								"source": {
+									"name": "Unidad",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Unidad",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
 									"name": "TransCode",
 									"type": "String",
 									"physicalType": "String"
@@ -645,12 +657,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DWIM2",
-						"type": "DatasetReference",
-						"parameters": {
-							"schema": "sap",
-							"table": "DeudoresInmobiliarios"
-						}
+						"referenceName": "sapDeudoresInmobiliarios",
+						"type": "DatasetReference"
 					}
 				]
 			}
