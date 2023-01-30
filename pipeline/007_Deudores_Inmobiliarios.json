@@ -387,7 +387,9 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"fileListPath": "imsa-files/SAP/Deudores/DeudoresInmobiliarios.csv",
+							"recursive": true,
+							"wildcardFolderPath": "SAP/Deudores",
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
