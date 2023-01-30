@@ -400,8 +400,7 @@
 						"type": "SqlServerSink",
 						"preCopyScript": "TRUNCATE TABLE sap.DeudoresInmobiliarios",
 						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate"
+						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
 					"translator": {
