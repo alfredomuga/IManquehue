@@ -20,7 +20,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files//"
+						"value": "imsa-files/@{'Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios'}/@{'BD Histórica Flujos Caja.csv'}"
 					}
 				],
 				"typeProperties": {
@@ -250,7 +250,16 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios'}/@{'BD Histórica Flujos Caja.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "@{'finanzas'}.@{'flujos_de_caja'}"
+					}
+				],
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
@@ -275,7 +284,7 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "RUT;Empresa;Proyecto;Segmento;Fecha; Importe ;Importe UF;Proyecto;Etapa;NombreProyecto;Item CC;Nombre Item(CC);Texto de la transacción;Descripcion del Diario;Mes;Año",
+									"name": "RUT",
 									"type": "String",
 									"physicalType": "String"
 								},
@@ -287,7 +296,7 @@
 							},
 							{
 								"source": {
-									"name": "RUT;Empresa;Proyecto;Segmento;Fecha; Importe ;Importe UF;Proyecto;Etapa;NombreProyecto;Item CC;Nombre Item(CC);Texto de la transacción;Descripcion del Diario;Mes;Año",
+									"name": "Empresa",
 									"type": "String",
 									"physicalType": "String"
 								},
@@ -298,6 +307,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Proyecto2",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Proyecto",
 									"type": "String",
@@ -305,6 +319,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Segmento",
 									"type": "String",
@@ -312,6 +331,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Fecha",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Fecha",
 									"type": "DateTime",
@@ -319,6 +343,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": " Importe ",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Importe",
 									"type": "String",
@@ -326,6 +355,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Importe UF",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Importe_UF",
 									"type": "Double",
@@ -333,6 +367,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Proyecto7",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "ID_Proyecto",
 									"type": "String",
@@ -340,6 +379,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Etapa",
 									"type": "String",
@@ -347,6 +391,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "NombreProyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "NombreProyecto",
 									"type": "String",
@@ -354,6 +403,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Item CC",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Item_CC",
 									"type": "String",
@@ -361,6 +415,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Nombre Item(CC)",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Nombre_Item_CC",
 									"type": "String",
@@ -368,6 +427,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Texto de la transacción",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Texto_de_la_transacción",
 									"type": "String",
@@ -375,6 +439,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Descripcion del Diario",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Descripcion_del_Diario",
 									"type": "String",
@@ -382,6 +451,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Mes",
 									"type": "String",
@@ -389,6 +463,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Año",
 									"type": "String",
@@ -406,7 +485,11 @@
 				"inputs": [
 					{
 						"referenceName": "CSV_Datalake_Inmob",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FolderPath": "Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios",
+							"FileName": "BD Histórica Flujos Caja.csv"
+						}
 					}
 				],
 				"outputs": [
