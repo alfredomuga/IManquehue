@@ -1,0 +1,43 @@
+{
+	"name": "CSV_Datalake_Inmob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FolderPath": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().FolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": "imsa-files"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "RUT;Empresa;Proyecto;Segmento;Fecha; Importe ;Importe UF;Proyecto;Etapa;NombreProyecto;Item CC;Nombre Item(CC);Texto de la transacción;Descripcion del Diario;Mes;Año",
+				"type": "String"
+			}
+		]
+	}
+}

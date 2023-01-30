@@ -20,7 +20,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files/@{'Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios'}/@{'BD Histórica Flujos Caja.csv'}"
+						"value": "imsa-files//"
 					}
 				],
 				"typeProperties": {
@@ -223,11 +223,199 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_Datalake",
+						"referenceName": "CSV_Datalake_Inmob",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder": "Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios",
-							"File": "BD Histórica Flujos Caja.csv"
+							"FolderPath": "Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios",
+							"FileName": "BD Histórica Flujos Caja.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy CSV",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy BD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE finanzas.flujos_de_caja",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "RUT;Empresa;Proyecto;Segmento;Fecha; Importe ;Importe UF;Proyecto;Etapa;NombreProyecto;Item CC;Nombre Item(CC);Texto de la transacción;Descripcion del Diario;Mes;Año",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RUT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "RUT;Empresa;Proyecto;Segmento;Fecha; Importe ;Importe UF;Proyecto;Etapa;NombreProyecto;Item CC;Nombre Item(CC);Texto de la transacción;Descripcion del Diario;Mes;Año",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Fecha",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"sink": {
+									"name": "Importe",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Importe_UF",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"sink": {
+									"name": "ID_Proyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "NombreProyecto",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Item_CC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Nombre_Item_CC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Texto_de_la_transacción",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Descripcion_del_Diario",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake_Inmob",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "finanzas",
+							"table": "flujos_de_caja"
 						}
 					}
 				]
