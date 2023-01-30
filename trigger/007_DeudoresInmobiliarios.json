@@ -14,10 +14,18 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Minute",
-				"interval": 15,
-				"startTime": "2023-01-30T14:59:00Z",
-				"timeZone": "UTC"
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-01-30T14:59:00",
+				"timeZone": "Pacific SA Standard Time",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						6
+					]
+				}
 			}
 		}
 	}
