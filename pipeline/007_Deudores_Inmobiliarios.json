@@ -278,6 +278,93 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Base DeudoresInmobiliarios SAP to Datalake_copy1",
+				"description": "",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Base DeudoresInmobiliarios SAP to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios'}"
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE sap.DeudoresInmobiliarios",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Deudores",
+							"File": "DeudoresInmobiliarios"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWIM2",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "sap",
+							"table": "DeudoresInmobiliarios"
+						}
+					}
+				]
 			}
 		],
 		"folder": {
