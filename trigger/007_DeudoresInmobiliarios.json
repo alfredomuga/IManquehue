@@ -1,0 +1,24 @@
+{
+	"name": "007_DeudoresInmobiliarios",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "007_Deudores_Inmobiliarios",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2023-01-30T14:59:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
