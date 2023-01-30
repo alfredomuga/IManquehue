@@ -660,7 +660,7 @@
 						"referenceName": "CSV_Datalake",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder": "SAP/deudores",
+							"Folder": "SAP/Deudores",
 							"File": "DeudoresInmobiliarios.csv"
 						}
 					}
