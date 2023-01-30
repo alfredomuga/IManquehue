@@ -353,7 +353,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios.csv'}"
+						"value": "sap.DeudoresInmobiliarios"
 					}
 				],
 				"typeProperties": {
@@ -381,7 +381,7 @@
 								"sink": {
 									"name": "NumeroTransaccion",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -392,7 +392,7 @@
 								"sink": {
 									"name": "TipoTransaccion",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -403,7 +403,7 @@
 								"sink": {
 									"name": "FechaContabilizacion",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -414,7 +414,7 @@
 								"sink": {
 									"name": "FechaDocumento",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -425,7 +425,7 @@
 								"sink": {
 									"name": "FechaVencimiento",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -436,7 +436,7 @@
 								"sink": {
 									"name": "Sucursal",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -447,7 +447,7 @@
 								"sink": {
 									"name": "CuentaMayor",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -458,7 +458,7 @@
 								"sink": {
 									"name": "NombreCuentaMayor",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -469,7 +469,7 @@
 								"sink": {
 									"name": "CodCliente",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -480,7 +480,7 @@
 								"sink": {
 									"name": "NombreCliente",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -491,7 +491,7 @@
 								"sink": {
 									"name": "DebitoCLP",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -502,7 +502,7 @@
 								"sink": {
 									"name": "CreditoCLP",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -513,7 +513,7 @@
 								"sink": {
 									"name": "DebitoUF",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -524,7 +524,7 @@
 								"sink": {
 									"name": "CreditoUF",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -533,9 +533,9 @@
 									"type": "Decimal"
 								},
 								"sink": {
-									"name": "Total Pesos",
+									"name": "TotalPesos",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -544,9 +544,9 @@
 									"type": "Decimal"
 								},
 								"sink": {
-									"name": "Total UF",
+									"name": "TotalUF",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -557,7 +557,7 @@
 								"sink": {
 									"name": "Moneda",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -568,7 +568,7 @@
 								"sink": {
 									"name": "Comentarios",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -579,7 +579,7 @@
 								"sink": {
 									"name": "Referencia1",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -590,7 +590,7 @@
 								"sink": {
 									"name": "Referencia2",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -601,7 +601,7 @@
 								"sink": {
 									"name": "Proyecto",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -610,9 +610,9 @@
 									"type": "String"
 								},
 								"sink": {
-									"name": "Nombre Proyecto",
+									"name": "NombreProyecto",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -623,7 +623,7 @@
 								"sink": {
 									"name": "Unidad",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							},
 							{
@@ -634,7 +634,7 @@
 								"sink": {
 									"name": "TransCode",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "nvarchar"
 								}
 							}
 						],
