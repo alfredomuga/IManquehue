@@ -375,7 +375,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "."
+						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios.csv'}"
 					},
 					{
 						"name": "Destination",
@@ -406,7 +406,8 @@
 							{
 								"source": {
 									"name": "NumeroTransaccion",
-									"type": "Int32"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "NumeroTransaccion",
@@ -417,7 +418,8 @@
 							{
 								"source": {
 									"name": "TipoTransaccion",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "TipoTransaccion",
@@ -428,7 +430,8 @@
 							{
 								"source": {
 									"name": "FechaContabilizacion",
-									"type": "DateTime"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "FechaContabilizacion",
@@ -439,7 +442,8 @@
 							{
 								"source": {
 									"name": "FechaDocumento",
-									"type": "DateTime"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "FechaDocumento",
@@ -450,7 +454,8 @@
 							{
 								"source": {
 									"name": "FechaVencimiento",
-									"type": "DateTime"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "FechaVencimiento",
@@ -461,7 +466,8 @@
 							{
 								"source": {
 									"name": "Sucursal",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Sucursal",
@@ -472,7 +478,8 @@
 							{
 								"source": {
 									"name": "CuentaMayor",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "CuentaMayor",
@@ -483,7 +490,8 @@
 							{
 								"source": {
 									"name": "NombreCuentaMayor",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "NombreCuentaMayor",
@@ -494,7 +502,8 @@
 							{
 								"source": {
 									"name": "CodCliente",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "CodCliente",
@@ -505,7 +514,8 @@
 							{
 								"source": {
 									"name": "NombreCliente",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "NombreCliente",
@@ -516,7 +526,8 @@
 							{
 								"source": {
 									"name": "DebitoCLP",
-									"type": "Decimal"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "DebitoCLP",
@@ -527,7 +538,8 @@
 							{
 								"source": {
 									"name": "CreditoCLP",
-									"type": "Decimal"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "CreditoCLP",
@@ -538,7 +550,8 @@
 							{
 								"source": {
 									"name": "DebitoUF",
-									"type": "Decimal"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "DebitoUF",
@@ -549,7 +562,8 @@
 							{
 								"source": {
 									"name": "CreditoUF",
-									"type": "Decimal"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "CreditoUF",
@@ -560,7 +574,8 @@
 							{
 								"source": {
 									"name": "Moneda",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Moneda",
@@ -571,7 +586,8 @@
 							{
 								"source": {
 									"name": "Comentarios",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Comentarios",
@@ -582,7 +598,8 @@
 							{
 								"source": {
 									"name": "Referencia1",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Referencia1",
@@ -593,7 +610,8 @@
 							{
 								"source": {
 									"name": "Referencia2",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Referencia2",
@@ -604,7 +622,8 @@
 							{
 								"source": {
 									"name": "Proyecto",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Proyecto",
@@ -615,10 +634,18 @@
 							{
 								"source": {
 									"name": "TransCode",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "TransCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "FechaSnapshot",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
