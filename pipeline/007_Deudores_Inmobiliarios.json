@@ -691,15 +691,11 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table sap.DeudoresInmobiliarios",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -985,12 +981,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_Datalake",
-						"type": "DatasetReference",
-						"parameters": {
-							"Folder": "SAP/Deudores",
-							"File": "DeudoresInmobiliarios.csv"
-						}
+						"referenceName": "sapDeudoresInmobiliarios",
+						"type": "DatasetReference"
 					}
 				]
 			}
