@@ -4,16 +4,16 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory name",
+			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "Data-Factory-BI"
-		},
-		"imsadatalake_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
 		},
 		"DWIM2_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWIM2'"
+			"metadata": "Cadena protegida para \"connectionString\"de \"DWIM2\""
+		},
+		"imsadatalake_accountKey": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accountKey\"de \"imsadatalake\""
 		},
 		"Publicar OC_properties_typeProperties_url": {
 			"type": "string",
@@ -28,6 +28,19 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DWIM2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('DWIM2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Publicar OC')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -87,6 +100,34 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/007_DeudoresInmobiliarios')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2023-01-30T14:59:00",
+						"timeZone": "Pacific SA Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWIM')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -108,17 +149,547 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DWIM2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/BaseVentas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/DeudoresInmobiliarios"
+				},
 				"annotations": [],
-				"type": "AzureSqlDatabase",
+				"type": "Excel",
 				"typeProperties": {
-					"connectionString": "[parameters('DWIM2_connectionString')]"
-				}
+					"sheetName": "Base",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "BaseVentas.xlsx",
+						"folderPath": "ModeloDeudoresInmobiliarios",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "PROPIEDAD",
+						"type": "String"
+					},
+					{
+						"name": "ESTADO",
+						"type": "String"
+					},
+					{
+						"name": "PROYECTO",
+						"type": "String"
+					},
+					{
+						"name": "ETAPA",
+						"type": "String"
+					},
+					{
+						"name": "SUBAGRUPACIÓN",
+						"type": "String"
+					},
+					{
+						"name": "FEECHA RECEPCIÓN MUNICIPAL",
+						"type": "String"
+					},
+					{
+						"name": "MANZANA",
+						"type": "String"
+					},
+					{
+						"name": "SITIO",
+						"type": "String"
+					},
+					{
+						"name": "M2",
+						"type": "String"
+					},
+					{
+						"name": "MT2 TERRENO",
+						"type": "String"
+					},
+					{
+						"name": "MODELO",
+						"type": "String"
+					},
+					{
+						"name": "PROGRAMA",
+						"type": "String"
+					},
+					{
+						"name": "ESTAC.",
+						"type": "String"
+					},
+					{
+						"name": "BODEGA",
+						"type": "String"
+					},
+					{
+						"name": "NOMBRE PRODUCTO ADICIONAL (*)",
+						"type": "String"
+					},
+					{
+						"name": "NOMBRE",
+						"type": "String"
+					},
+					{
+						"name": "APELLIDO PATERNO",
+						"type": "String"
+					},
+					{
+						"name": "APELLIDO MATERNO",
+						"type": "String"
+					},
+					{
+						"name": "RUT CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "GÉNERO",
+						"type": "String"
+					},
+					{
+						"name": "OCUPACIÓN",
+						"type": "String"
+					},
+					{
+						"name": "ESTADO CIVIL",
+						"type": "String"
+					},
+					{
+						"name": "PEP",
+						"type": "String"
+					},
+					{
+						"name": "RELACIONADO CON PEP",
+						"type": "String"
+					},
+					{
+						"name": "MEDIO LLEGADA",
+						"type": "String"
+					},
+					{
+						"name": "VALOR LISTA PROD. PRINCIPAL (*)",
+						"type": "String"
+					},
+					{
+						"name": "PRECIO BASE",
+						"type": "String"
+					},
+					{
+						"name": "DCTO. UF PROD. PRINCIPAL (*)",
+						"type": "String"
+					},
+					{
+						"name": "DCTO. SUB TOTAL",
+						"type": "String"
+					},
+					{
+						"name": "VALOR PROD. PRINCIPAL CON DCTO. (*)",
+						"type": "String"
+					},
+					{
+						"name": "IVA PROD. PRINCIPAL  (*)",
+						"type": "String"
+					},
+					{
+						"name": "VALOR TOTAL Bodega(*)",
+						"type": "String"
+					},
+					{
+						"name": "IVA Bodega. (*)",
+						"type": "String"
+					},
+					{
+						"name": "PRECIO BASE Bodega.",
+						"type": "String"
+					},
+					{
+						"name": "VALOR TOTAL EST (*)",
+						"type": "String"
+					},
+					{
+						"name": "IVA EST. (*)",
+						"type": "String"
+					},
+					{
+						"name": "PRECIO BASE EST.",
+						"type": "String"
+					},
+					{
+						"name": "TOTAL NETO (*)",
+						"type": "String"
+					},
+					{
+						"name": "IVA VALOR TOTAL (*)",
+						"type": "String"
+					},
+					{
+						"name": "TOTAL BRUTO (*)",
+						"type": "String"
+					},
+					{
+						"name": "VALOR TOTAL PROD. ADICIONAL (*)",
+						"type": "String"
+					},
+					{
+						"name": "VALOR LISTA PROD. PRINCIPAL UF/MT2 ",
+						"type": "String"
+					},
+					{
+						"name": "VALOR PROD. PRINCIPAL CON DCTO. UF/MT2",
+						"type": "String"
+					},
+					{
+						"name": "TOTAL",
+						"type": "String"
+					},
+					{
+						"name": "APLICA IVA",
+						"type": "String"
+					},
+					{
+						"name": "TIPO DE CARGA DE PRECIO",
+						"type": "String"
+					},
+					{
+						"name": "VALOR TERRENO TOTAL (*)",
+						"type": "String"
+					},
+					{
+						"name": "FONDO DE RESERVA",
+						"type": "String"
+					},
+					{
+						"name": "RESERVA (*)",
+						"type": "String"
+					},
+					{
+						"name": "CONTADO CONTRA PROMESA (*)",
+						"type": "String"
+					},
+					{
+						"name": "CUOTA PERIODO DE CONSTRUCCION (*)",
+						"type": "String"
+					},
+					{
+						"name": "SALDO CONTRA ESCRITURA (*)",
+						"type": "String"
+					},
+					{
+						"name": "TIPO SUBSIDIO",
+						"type": "String"
+					},
+					{
+						"name": "MONTO SUBSIDIO BASE (*)",
+						"type": "String"
+					},
+					{
+						"name": "MONTO SUBSIDIO INTEGRACION(*)",
+						"type": "String"
+					},
+					{
+						"name": "MONTO SUBSIDIO CAPTACION (*)",
+						"type": "String"
+					},
+					{
+						"name": "ESTADO SUBSIDIO",
+						"type": "String"
+					},
+					{
+						"name": "NUMERO DE SUBSIDIO",
+						"type": "String"
+					},
+					{
+						"name": "MONTO AHORRO (*)",
+						"type": "String"
+					},
+					{
+						"name": "MONTO CREDITO HIPOTECARIO (*)",
+						"type": "String"
+					},
+					{
+						"name": "ABONO (*)",
+						"type": "String"
+					},
+					{
+						"name": "FECHA CREACIÓN RESERVA",
+						"type": "String"
+					},
+					{
+						"name": "PAC",
+						"type": "String"
+					},
+					{
+						"name": "FECHA AUTORIZACIÓN RESERVA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA APROBACIÓN RESERVA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA ÚLTIMA MODIFICACIÓN PROMESA",
+						"type": "String"
+					},
+					{
+						"name": "FIRMA DEL COMPRADOR",
+						"type": "String"
+					},
+					{
+						"name": "NOMBRE ASEGURADORA",
+						"type": "String"
+					},
+					{
+						"name": "NÚMERO PÓLIZA",
+						"type": "String"
+					},
+					{
+						"name": "VALOR PÓLIZA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA VENCIMIENTO PÓLIZA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA NOTARIA PROMESA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA ENTREGA CLIENTE PROMESA",
+						"type": "String"
+					},
+					{
+						"name": "VB CONTABILIDAD PROMESA",
+						"type": "String"
+					},
+					{
+						"name": "BANCO APROBACIÓN COMERCIAL",
+						"type": "String"
+					},
+					{
+						"name": "FECHA ENVÍO DATOS DE VENTA AL BANCO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA APROBACIÓN DEL BANCO",
+						"type": "String"
+					},
+					{
+						"name": "TASA INTERÉS (%)",
+						"type": "String"
+					},
+					{
+						"name": "AÑOS PLAZO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA APROBACIÓN ESTUDIO DE TÍTULOS",
+						"type": "String"
+					},
+					{
+						"name": "FECHA TASACIÓN ESTUDIO DE TÍTULOS",
+						"type": "String"
+					},
+					{
+						"name": "NOMBRE NOTARIA CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "NÚMERO REPERTORIO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA ESCRITURA",
+						"type": "String"
+					},
+					{
+						"name": "NÚMERO RESOLUCIÓN SERVIU",
+						"type": "String"
+					},
+					{
+						"name": "FECHA RESOLUCIÓN SERVIU",
+						"type": "String"
+					},
+					{
+						"name": "FECHA ENVIO BORRADOR ESCRITURA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA FIRMA CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO INMOBILIARIA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO ABOGADO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA VB ABOGADO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO CORRECCIONES",
+						"type": "String"
+					},
+					{
+						"name": "FECHA SALIDA CORRECCIONES",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO A FIRMA GERENCIA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA FIRMA INMOBILIARIA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO ESCRITURA FIRMADA NOTARIA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA ENVIO BANCO CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "FECHA EMISION CARTA DE RESGUARDO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO BANCO ALZANTE",
+						"type": "String"
+					},
+					{
+						"name": "FECHA SALIDA BANCO ALZANTE",
+						"type": "String"
+					},
+					{
+						"name": "FIRMA BANCO ALZANTE",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO NOTARIA POST ALZAMIENTO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO BANCO CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "FECHA SALIDA BANCO CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "FECHA CIERRE COPIAS",
+						"type": "String"
+					},
+					{
+						"name": "PPTO CONSERVADOR",
+						"type": "String"
+					},
+					{
+						"name": "NÚMERO DE CARATULA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO CBR",
+						"type": "String"
+					},
+					{
+						"name": "FECHA SALIDA CBR",
+						"type": "String"
+					},
+					{
+						"name": "FECHA RECEPCION ESCRITURA INMOBILIARIA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO COBRO SERVIU",
+						"type": "String"
+					},
+					{
+						"name": "NÚMERO LIBRETA COBRO AHORRO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA INGRESO COBRO AHORRO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA PAGO INSTRUCCION NOTARIAL",
+						"type": "String"
+					},
+					{
+						"name": "FECHA PAGO CREDITO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA PAGO SUBSIDIO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA PAGO AHORRO",
+						"type": "String"
+					},
+					{
+						"name": "FECHA ENVIO VB",
+						"type": "String"
+					},
+					{
+						"name": "FECHA DE ENTREGA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA FINALIZADO",
+						"type": "String"
+					},
+					{
+						"name": "COMENTARIO PAGO",
+						"type": "String"
+					},
+					{
+						"name": "COMENTARIO NEGOCIO",
+						"type": "String"
+					},
+					{
+						"name": "VENDEDOR",
+						"type": "String"
+					},
+					{
+						"name": "RAZÓN DE COMPRA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA CREACIÓN PROMESA ORIGINAL",
+						"type": "String"
+					},
+					{
+						"name": "ID PRODUCTO PRINCIPAL",
+						"type": "String"
+					},
+					{
+						"name": "ID PRODUCTOS SECUNDARIOS ESTACIONAMIENTO",
+						"type": "String"
+					},
+					{
+						"name": "ID PRODUCTOS SECUNDARIOS BODEGA",
+						"type": "String"
+					}
+				]
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Budget')]",
@@ -146,18 +717,27 @@
 				},
 				"schema": [
 					{
+						"name": "Presupuesto",
 						"type": "String"
 					},
 					{
+						"name": "Proyecto",
 						"type": "String"
 					},
 					{
+						"name": "Etapa",
 						"type": "String"
 					},
 					{
+						"name": "Hito",
 						"type": "String"
 					},
 					{
+						"name": "Mes",
+						"type": "String"
+					},
+					{
+						"name": "Año",
 						"type": "String"
 					}
 				]
@@ -256,6 +836,54 @@
 					"quoteChar": "\""
 				},
 				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_Datalake_Inmob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FolderPath": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().FolderPath",
+							"type": "Expression"
+						},
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "RUT;Empresa;Proyecto;Segmento;Fecha; Importe ;Importe UF;Proyecto;Etapa;NombreProyecto;Item CC;Nombre Item(CC);Texto de la transacción;Descripcion del Diario;Mes;Año",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
@@ -748,148 +1376,6 @@
 				"schema": [
 					{
 						"name": "Libro: Finiquitos",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Forecast')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/Planificacion"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Forecast",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "ControlHitos.xlsx",
-						"folderPath": "Automatizaciones/Control de Hitos",
-						"fileSystem": "imsa-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Real')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/Planificacion"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Real",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "ControlHitos.xlsx",
-						"folderPath": "Automatizaciones/Control de Hitos",
-						"fileSystem": "imsa-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Proyecto",
-						"type": "String"
-					},
-					{
-						"name": "Etapa",
-						"type": "String"
-					},
-					{
-						"name": "Hito",
-						"type": "String"
-					},
-					{
-						"name": "Mes",
-						"type": "String"
-					},
-					{
-						"name": "Año",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dboFecha')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/Dimensiones"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "dbofecha",
-						"folderPath": "Dimensiones",
-						"fileSystem": "imsa-files"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "idFecha",
-						"type": "String"
-					},
-					{
-						"name": "Anho",
-						"type": "String"
-					},
-					{
-						"name": "NumeroMesCero",
 						"type": "String"
 					}
 				]

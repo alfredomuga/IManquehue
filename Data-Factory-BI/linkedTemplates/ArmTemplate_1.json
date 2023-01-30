@@ -4,16 +4,16 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory name",
+			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "Data-Factory-BI"
 		},
 		"DWIM_IMSA_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWIM_IMSA'"
+			"metadata": "Cadena protegida para \"connectionString\"de \"DWIM_IMSA\""
 		},
 		"IMSA_HANA_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IMSA_HANA'"
+			"metadata": "Cadena protegida para \"connectionString\"de \"IMSA_HANA\""
 		}
 	},
 	"variables": {
@@ -21,36 +21,179 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/DWIM_IMSA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/Excel_Flujo_Caja_Inmobiliario')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('DWIM_IMSA_connectionString')]"
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
 				},
-				"connectVia": {
-					"referenceName": "DWIM",
-					"type": "IntegrationRuntimeReference"
-				}
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "BD Histórica Flujos Caja.xlsx",
+						"folderPath": "Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios",
+						"fileSystem": "imsa-files"
+					},
+					"sheetIndex": 0,
+					"range": "A2:P1000000",
+					"firstRowAsHeader": false
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IMSA_HANA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/Forecast')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"type": "SapHana",
-				"typeProperties": {
-					"connectionString": "[parameters('IMSA_HANA_connectionString')]"
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
 				},
-				"connectVia": {
-					"referenceName": "integrationHana",
-					"type": "IntegrationRuntimeReference"
-				}
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Forecast",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Periodo",
+						"type": "String"
+					},
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "Etapa",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Mes",
+						"type": "String"
+					},
+					{
+						"name": "Año",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Real')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Planificacion"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Real",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ControlHitos.xlsx",
+						"folderPath": "Automatizaciones/Control de Hitos",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "Etapa",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Mes",
+						"type": "String"
+					},
+					{
+						"name": "Año",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": []
 		},
@@ -105,6 +248,138 @@
 				"typeProperties": {
 					"schema": "th",
 					"table": "HitosReal"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dboFecha')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/Dimensiones"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "dbofecha",
+						"folderPath": "Dimensiones",
+						"fileSystem": "imsa-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "String"
+					},
+					{
+						"name": "Anho",
+						"type": "String"
+					},
+					{
+						"name": "NumeroMesCero",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sapDeudoresInmobiliarios')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "sap",
+					"table": "DeudoresInmobiliarios"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWIM_IMSA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('DWIM_IMSA_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "DWIM",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IMSA_HANA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SapHana",
+				"typeProperties": {
+					"connectionString": "[parameters('IMSA_HANA_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationHana",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": []
@@ -417,237 +692,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ThHitosActAut')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "Planificación"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Real",
-								"type": "DatasetReference"
-							},
-							"name": "Real"
-						},
-						{
-							"dataset": {
-								"referenceName": "DimProyectoEtapa",
-								"type": "DatasetReference"
-							},
-							"name": "DimProyectoEtapa"
-						},
-						{
-							"dataset": {
-								"referenceName": "DimEscenario",
-								"type": "DatasetReference"
-							},
-							"name": "DimEscenario"
-						},
-						{
-							"dataset": {
-								"referenceName": "DimHitos",
-								"type": "DatasetReference"
-							},
-							"name": "DimHitos"
-						},
-						{
-							"dataset": {
-								"referenceName": "dboFecha",
-								"type": "DatasetReference"
-							},
-							"name": "dbfecha"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ThHitosReal2",
-								"type": "DatasetReference"
-							},
-							"name": "ThHitosReal"
-						}
-					],
-					"transformations": [
-						{
-							"name": "select1"
-						},
-						{
-							"name": "NoNulos"
-						},
-						{
-							"name": "idEtapaProyecto"
-						},
-						{
-							"name": "idHitos"
-						},
-						{
-							"name": "idEscenario"
-						},
-						{
-							"name": "AgrEscenario"
-						},
-						{
-							"name": "idfecha"
-						},
-						{
-							"name": "alterRow1"
-						},
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Proyecto as string,",
-						"          Etapa as string,",
-						"          Hito as string,",
-						"          Mes as string,",
-						"          {Año} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Real",
-						"source(output(",
-						"          idProyectoEtapa as integer,",
-						"          Proyecto as string,",
-						"          EtapaComercial as string,",
-						"          EtapaFinanciera as string,",
-						"          Unidades as integer,",
-						"          RutEmpresa as string,",
-						"          Segmento as string,",
-						"          ParticipacionSocios as double,",
-						"          Socio as string,",
-						"          Comuna as string,",
-						"          Constructora as string,",
-						"          CostoTotal as double,",
-						"          ValorTerreno as double,",
-						"          LineaConstruccion as double,",
-						"          ProximoHito as string,",
-						"          FechaBudget as date,",
-						"          FechaForecast as date,",
-						"          Variacion as double,",
-						"          EstadoProyecto as string,",
-						"          TipoFinanciamientoSocios as string,",
-						"          VigenciaDeuda as string,",
-						"          TipoActivo as string,",
-						"          EtapaGestion as string,",
-						"          AtrasoMeses as integer,",
-						"          EtapaConstructora as string,",
-						"          Codigo as string,",
-						"          Considerar as string,",
-						"          Empresa as string,",
-						"          BancoAlzante as string,",
-						"          IVA as double,",
-						"          IFRS as double,",
-						"          Consolida as string,",
-						"          Act as integer,",
-						"          Act_Comercial as integer,",
-						"          Act_Masterfechas as string,",
-						"          Act_FlujoCaja as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> DimProyectoEtapa",
-						"source(output(",
-						"          idEscenario as string,",
-						"          Escenario as string,",
-						"          Codigo as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> DimEscenario",
-						"source(output(",
-						"          idHito as string,",
-						"          Hito as string,",
-						"          Codigo as string,",
-						"          Orden as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> DimHitos",
-						"source(output(",
-						"          idFecha as string,",
-						"          Anho as string,",
-						"          NumeroMesCero as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> dbfecha",
-						"Real select(mapColumn(",
-						"          Proyecto,",
-						"          Etapa,",
-						"          Hito,",
-						"          Mes,",
-						"          {Año}",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 filter(Hito!=\"\"||Mes!=\"\"||{Año}!=\"\") ~> NoNulos",
-						"AgrEscenario, DimProyectoEtapa lookup(select1@Proyecto == DimProyectoEtapa@Proyecto",
-						"     && Etapa == EtapaGestion,",
-						"     multiple: false,",
-						"     pickup: 'any',",
-						"     broadcast: 'auto')~> idEtapaProyecto",
-						"idEtapaProyecto, DimHitos lookup(select1@Hito == DimHitos@Hito,",
-						"     multiple: false,",
-						"     pickup: 'any',",
-						"     broadcast: 'auto')~> idHitos",
-						"idHitos, DimEscenario lookup(AgrEscenario@Escenario == DimEscenario@Escenario,",
-						"     multiple: false,",
-						"     pickup: 'any',",
-						"     broadcast: 'auto')~> idEscenario",
-						"NoNulos derive(Escenario = '0',",
-						"          anho = {Año},",
-						"          mes = toString(toInteger(Mes)*10)) ~> AgrEscenario",
-						"idEscenario, dbfecha lookup(AgrEscenario@anho == dbfecha@Anho",
-						"     && AgrEscenario@mes == NumeroMesCero,",
-						"     multiple: false,",
-						"     pickup: 'any',",
-						"     broadcast: 'auto')~> idfecha",
-						"derivedColumn1 alterRow(insertIf(true())) ~> alterRow1",
-						"idfecha derive(idFecha = toInteger(idFecha),",
-						"          idEscenario = toInteger(idEscenario)) ~> derivedColumn1",
-						"alterRow1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          idFecha as integer,",
-						"          idProyectoEtapa as integer,",
-						"          idEscenario as integer,",
-						"          CodigoHito as string,",
-						"          OrdenHito as integer,",
-						"          Proyecto as string,",
-						"          Etapa as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     preSQLs:['truncate table th.HitosReal'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          idFecha,",
-						"          idProyectoEtapa,",
-						"          idEscenario,",
-						"          CodigoHito = DimHitos@Codigo,",
-						"          OrdenHito = Orden,",
-						"          Proyecto = Etapa",
-						"     )) ~> ThHitosReal"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ThHitosReal2')]"
 			]
 		},
 		{
@@ -4141,1719 +4185,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-10-13T20:38:51Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Copia Flujo Caja Inmobiliaria')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Nominas en Firma",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Automatizaciones/Nóminas en Firma'}/@{'Nominas_En_Firma.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'bronce'}.@{'NominasEnFirma'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE bronce.NominasEnFirma",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Banco",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Banco",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Ejecucion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Ejecucion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Ejecucion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Ejecucion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Status",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Status",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Tipo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Tipo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DocNum",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DocNum",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "FolioNum",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "FolioNum",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ModPago",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ModPago",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "RutProveedor",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "RutProveedor",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "NombreProveedor",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "NombreProveedor",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Moneda",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Moneda",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Monto",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Monto",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TipoDte",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TipoDte",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Automatizaciones/Nóminas en Firma",
-									"File": "Nominas_En_Firma.xlsx",
-									"Sheet": "Sheet1"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "bronce",
-									"table": "NominasEnFirma"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Automatizaciones"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-12-28T15:59:15Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Copia Nominas en Firma')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Nominas en Firma",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Automatizaciones/Nóminas en Firma'}/@{'Nominas_En_Firma.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'bronce'}.@{'NominasEnFirma'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE bronce.NominasEnFirma",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Banco",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Banco",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Ejecucion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Ejecucion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Ejecucion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Ejecucion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Status",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Status",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Tipo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Tipo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DocNum",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DocNum",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "FolioNum",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "FolioNum",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ModPago",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ModPago",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "RutProveedor",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "RutProveedor",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "NombreProveedor",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "NombreProveedor",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Moneda",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Moneda",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Monto",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Monto",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TipoDte",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TipoDte",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Automatizaciones/Nóminas en Firma",
-									"File": "Nominas_En_Firma.xlsx",
-									"Sheet": "Sheet1"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "bronce",
-									"table": "NominasEnFirma"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Automatizaciones"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-10T14:19:50Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Copia Reporte Plazos')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Reporte Plazos SAP",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Automatizaciones/Reporte Plazos'}/@{'Base_Conjunta_Reporte_Plazos.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'bronce'}.@{'ReportePlazosSAP'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE bronce.ReportePlazosSAP",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Num Doc SAP",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Num Doc SAP",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Folio Factura",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Folio Factura",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo DTE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Codigo DTE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Tipo Documento",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Tipo Documento",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Total",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Total",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Recepcion FEX",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Recepcion FEX",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Aceptacion DTE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Aceptacion DTE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Dias Aprobacion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Dias Aprobacion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Documento",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Documento",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Contabilizacion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Contabilizacion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Dias Registro",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Dias Registro",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha de Pago",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha de Pago",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Dias Pago",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Dias Pago",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Proveedor",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Proveedor",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Grupo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Grupo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Ares de Negocio",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Areas de Negocio",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Area de Negocio",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Nombre Area de Negocio",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Total_Plazo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Total_Plazo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Automatizaciones/Reporte Plazos",
-									"File": "Base_Conjunta_Reporte_Plazos.xlsx",
-									"Sheet": "SAP"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "bronce",
-									"table": "ReportePlazosSAP"
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy Reporte Plazos AX",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Automatizaciones/Reporte Plazos'}/@{'Base_Conjunta_Reporte_Plazos.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'bronce'}.@{'ReportePlazosAX'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE bronce.ReportePlazosAX",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "#",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Num Doc SAP",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Num Doc SAP",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Folio Factura",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Folio Factura",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo DTE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Codigo DTE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Tipo Documento",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Tipo Documento",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Total",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Total",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Recepcion FEX",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Recepcion FEX",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Aceptacion DTE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Aceptacion DTE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Dias Aprobacion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Dias Aprobacion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Documento",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Documento",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Contabilizacion",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha Contabilizacion",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Dias Registro",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Dias Registro",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha de Pago",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha de Pago",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Dias Pago",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Dias Pago",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Proveedor",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Proveedor",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Grupo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Grupo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Ares de Negocio",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Areas de Negocio",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Area de Negocio",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Nombre Area de Negocio",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Total_Plazo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Total_Plazo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Automatizaciones/Reporte Plazos",
-									"File": "Base_Conjunta_Reporte_Plazos.xlsx",
-									"Sheet": "AX"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "bronce",
-									"table": "ReportePlazosAX"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Automatizaciones"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-11T14:39:09Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Finiquitos')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Finiquitos",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/Modelo RRHH/Finiquitos.xlsx"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'rrhh'}.@{'historico_finiquitos'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Nombre",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Nombre",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Apellido",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Apellido",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Segundo Apellido",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Segundo_Apellido",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "RUT",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "RUT",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Código de ficha",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Código_de_ficha",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Ingreso Compañía",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Ingreso_Compañía",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "Jefe",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Jefe",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Centro de Costo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Centro_de_Costo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Empresa",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Empresa",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Cargo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Cargo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Área",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Área",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Departamento",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Departamento",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "División",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "División",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Tipo de Contrato",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Tipo_de_Contrato",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha de Retiro",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha_de_Retiro",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "Comentario Interno",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Comentario_Interno",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha Pago",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha_Pago",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "Monto con remuneración pendiente",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Monto_con_remuneración_pendiente",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Monto sin remuneración pendiente",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Monto_sin_remuneración_pendiente",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Razón",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Razón",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Sueldo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Sueldo",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Vacaciones",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Vacaciones",
-											"type": "Double",
-											"physicalType": "float"
-										}
-									},
-									{
-										"source": {
-											"name": "Remuneraciones Pendientes",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Remuneraciones_Pendientes",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Impuesto Indemnización",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Impuesto_Indemnización",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Asignaciones no imponibles pendientes",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Asignaciones_no_imponibles_pendientes",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Indemnización Sustitutiva Previo Aviso",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indemnización_Sustitutiva_Previo_Aviso",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Indemnización Legal Años de Servicio",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indemnización_Legal_Años_de_Servicio",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Indemnización Legal Meses de Servicio en Obra",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indemnización_Legal_Meses_de_Servicio_en_Obra",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Indemnización Pactada Contractualmente",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indemnización_Pactada_Contractualmente",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Indemnización Voluntaria",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indemnización_Voluntaria",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Indemnización Voluntaria No Renta",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indemnización_Voluntaria_No_Renta",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Indemnización por Vacaciones",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indemnización_por_Vacaciones",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Reajuste Indemnizaciones",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Reajuste_Indemnizaciones",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Intereses Indemnizaciones",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Intereses_Indemnizaciones",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Descuento Seguro de Cesantía",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Descuento_Seguro_de_Cesantía",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Otros Descuentos Finiquito",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Otros_Descuentos_Finiquito",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Finiquitos_DataLake",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "rrhh",
-									"table": "historico_finiquitos"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "RRHH"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-13T18:14:59Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DWIM')]"

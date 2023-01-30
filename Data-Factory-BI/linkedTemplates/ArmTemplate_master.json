@@ -4,24 +4,24 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory name",
+			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "Data-Factory-BI"
-		},
-		"DWIM_IMSA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWIM_IMSA'"
-		},
-		"IMSA_HANA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IMSA_HANA'"
-		},
-		"imsadatalake_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
 		},
 		"DWIM2_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWIM2'"
+			"metadata": "Cadena protegida para \"connectionString\"de \"DWIM2\""
+		},
+		"DWIM_IMSA_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"connectionString\"de \"DWIM_IMSA\""
+		},
+		"IMSA_HANA_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"connectionString\"de \"IMSA_HANA\""
+		},
+		"imsadatalake_accountKey": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accountKey\"de \"imsadatalake\""
 		},
 		"Publicar OC_properties_typeProperties_url": {
 			"type": "string",
@@ -55,6 +55,10 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
 		},
+		"001 Flujo Caja Inmobiliario_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
 		"001 NominasEnFirma_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
@@ -67,13 +71,17 @@
 			"type": "string",
 			"defaultValue": "2022/07/01"
 		},
+		"trigger1_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cce7fd63-64f9-4a9e-ad02-103328390e1f/resourceGroups/BI_IM_MAS/providers/Microsoft.Storage/storageAccounts/imsadatalake"
+		},
 		"containerUri": {
 			"type": "string",
-			"metadata": "URI to storage account containing linked ARM templates"
+			"metadata": "URI de la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas."
 		},
 		"containerSasToken": {
 			"type": "string",
-			"metadata": "Sas token to storage account containing linked ARM templates"
+			"metadata": "Token de SAS para la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas"
 		}
 	},
 	"variables": {
@@ -94,11 +102,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"imsadatalake_accountKey": {
-						"value": "[parameters('imsadatalake_accountKey')]"
-					},
 					"DWIM2_connectionString": {
 						"value": "[parameters('DWIM2_connectionString')]"
+					},
+					"imsadatalake_accountKey": {
+						"value": "[parameters('imsadatalake_accountKey')]"
 					},
 					"Publicar OC_properties_typeProperties_url": {
 						"value": "[parameters('Publicar OC_properties_typeProperties_url')]"
@@ -169,21 +177,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"001 Areas Empleados_properties_typeProperties_scope": {
-						"value": "[parameters('001 Areas Empleados_properties_typeProperties_scope')]"
-					},
-					"001 Balance Scorecard_properties_typeProperties_scope": {
-						"value": "[parameters('001 Balance Scorecard_properties_typeProperties_scope')]"
-					},
-					"001 Base DC_properties_typeProperties_scope": {
-						"value": "[parameters('001 Base DC_properties_typeProperties_scope')]"
-					},
-					"001 Centro Costos_properties_typeProperties_scope": {
-						"value": "[parameters('001 Centro Costos_properties_typeProperties_scope')]"
-					},
-					"001 Control Hitos_properties_typeProperties_scope": {
-						"value": "[parameters('001 Control Hitos_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -205,8 +198,26 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"001 Areas Empleados_properties_typeProperties_scope": {
+						"value": "[parameters('001 Areas Empleados_properties_typeProperties_scope')]"
+					},
+					"001 Balance Scorecard_properties_typeProperties_scope": {
+						"value": "[parameters('001 Balance Scorecard_properties_typeProperties_scope')]"
+					},
+					"001 Base DC_properties_typeProperties_scope": {
+						"value": "[parameters('001 Base DC_properties_typeProperties_scope')]"
+					},
+					"001 Centro Costos_properties_typeProperties_scope": {
+						"value": "[parameters('001 Centro Costos_properties_typeProperties_scope')]"
+					},
+					"001 Control Hitos_properties_typeProperties_scope": {
+						"value": "[parameters('001 Control Hitos_properties_typeProperties_scope')]"
+					},
 					"001 Finiquitos_properties_typeProperties_scope": {
 						"value": "[parameters('001 Finiquitos_properties_typeProperties_scope')]"
+					},
+					"001 Flujo Caja Inmobiliario_properties_typeProperties_scope": {
+						"value": "[parameters('001 Flujo Caja Inmobiliario_properties_typeProperties_scope')]"
 					},
 					"001 NominasEnFirma_properties_typeProperties_scope": {
 						"value": "[parameters('001 NominasEnFirma_properties_typeProperties_scope')]"
@@ -216,6 +227,9 @@
 					},
 					"001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio": {
 						"value": "[parameters('001_Daily_Proveedores_properties_002_Base_Costos_parameters_fch_inicio')]"
+					},
+					"trigger1_properties_typeProperties_scope": {
+						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
 					}
 				}
 			},
