@@ -502,6 +502,33 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "SP Flujos de Caja",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy CSV",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[000_Flujo_Caja]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DWIM_IMSA",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
