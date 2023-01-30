@@ -355,7 +355,7 @@
 				]
 			},
 			{
-				"name": "HanaDeudores a DW2",
+				"name": "DeudoresInmobiliariosLake a DW2",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -641,13 +641,6 @@
 								},
 								"sink": {
 									"name": "TransCode",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"sink": {
-									"name": "FechaSnapshot",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
