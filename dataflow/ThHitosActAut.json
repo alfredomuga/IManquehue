@@ -104,6 +104,12 @@
 				},
 				{
 					"name": "select4"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "alterRow2"
 				}
 			],
 			"scriptLines": [
@@ -255,6 +261,8 @@
 				"     skipDuplicateMapOutputs: true) ~> select3",
 				"Budget select(skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select4",
+				"idEscenarioFor derive() ~> derivedColumn2",
+				"derivedColumn2 alterRow() ~> alterRow2",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
