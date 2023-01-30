@@ -661,6 +661,338 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Base DeudoresInmobiliarios SAP to Datalake_copy1",
+				"description": "",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios.csv'}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"query": " select * from \"SBO_MANQUEHUE\".\"IM_Reporte_Saldo_Deudores\"",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "NumeroTransaccion",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "NumeroTransaccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TipoTransaccion",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TipoTransaccion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaContabilizacion",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "FechaContabilizacion",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaDocumento",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "FechaDocumento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FechaVencimiento",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "FechaVencimiento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CuentaMayor",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CuentaMayor",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreCuentaMayor",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NombreCuentaMayor",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CodCliente",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CodCliente",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreCliente",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NombreCliente",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DebitoCLP",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "DebitoCLP",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditoCLP",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CreditoCLP",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DebitoUF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "DebitoUF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditoUF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CreditoUF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Total Pesos",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Total Pesos",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Total UF",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Total UF",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Moneda",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Moneda",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Comentarios",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Comentarios",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Referencia1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Referencia1",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Referencia2",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Referencia2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Proyecto",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Nombre Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Unidad",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Unidad",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TransCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TransCode",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Deudores",
+							"File": "DeudoresInmobiliarios.csv"
+						}
+					}
+				]
 			}
 		],
 		"folder": {
