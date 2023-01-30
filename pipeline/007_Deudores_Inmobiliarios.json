@@ -375,11 +375,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "imsa-files/@{'SAP/Costos Constructora'}/@{'Costos_Constructora_p1.csv'}"
+						"value": "imsa-files/@{'SAP/Deudores'}/@{'DeudoresInmobiliarios.csv'}"
 					},
 					{
 						"name": "Destination",
-						"value": "@{'sap'}.@{'costos_constructora'}"
+						"value": "@{'sap'}.@{'DeudoresInmobiliarios'}"
 					}
 				],
 				"typeProperties": {
