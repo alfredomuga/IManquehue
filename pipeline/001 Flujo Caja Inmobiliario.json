@@ -13,7 +13,16 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "imsa-files/Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios/BD Histórica Flujos Caja.xlsx"
+					},
+					{
+						"name": "Destination",
+						"value": "imsa-files/@{'Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios'}/@{'BD Histórica Flujos de Caja.csv'}"
+					}
+				],
 				"typeProperties": {
 					"source": {
 						"type": "ExcelSource",
@@ -23,12 +32,229 @@
 							"enablePartitionDiscovery": false
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "RUT",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RUT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Empresa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Segmento",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Fecha",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Importe",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Importe",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Importe UF",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Importe_UF",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Proyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ID_Proyecto",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Etapa",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NombreProyecto",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NombreProyecto",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Item CC",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Item_CC",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Nombre Item(CC)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Nombre_Item_CC",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Texto de la transacción",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Texto_de_la_transacción",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Descripcion del Diario",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Descripcion_del_Diario",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Mes",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Año",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "Excel_Flujo_Caja_Inmobiliario",
 						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_Datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios",
+							"File": "BD Histórica Flujos de Caja.csv"
+						}
 					}
 				]
 			}
