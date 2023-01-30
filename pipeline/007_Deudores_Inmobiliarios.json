@@ -27,15 +27,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "SapHanaSource",
-						"additionalColumns": [
-							{
-								"name": "Fecha_Snapshot",
-								"value": {
-									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
-									"type": "Expression"
-								}
-							}
-						],
 						"query": " select * from \"SBO_MANQUEHUE\".\"IM_Reporte_Saldo_Deudores\"",
 						"partitionOption": "None"
 					},
