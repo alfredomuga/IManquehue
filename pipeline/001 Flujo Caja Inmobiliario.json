@@ -20,7 +20,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files/@{'Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios'}/@{'BD Histórica Flujos de Caja.csv'}"
+						"value": "imsa-files/@{'Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios'}/@{'BD Histórica Flujos Caja.csv'}"
 					}
 				],
 				"typeProperties": {
@@ -227,7 +227,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"Folder": "Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios",
-							"File": "BD Histórica Flujos de Caja.csv"
+							"File": "BD Histórica Flujos Caja.csv"
 						}
 					}
 				]
