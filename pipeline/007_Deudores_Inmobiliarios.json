@@ -56,8 +56,7 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "NumeroTransaccion",
-									"type": "Int32"
+									"name": ""
 								},
 								"sink": {
 									"name": "NumeroTransaccion",
@@ -67,8 +66,7 @@
 							},
 							{
 								"source": {
-									"name": "TipoTransaccion",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "TipoTransaccion",
@@ -78,8 +76,7 @@
 							},
 							{
 								"source": {
-									"name": "FechaContabilizacion",
-									"type": "DateTime"
+									"name": ""
 								},
 								"sink": {
 									"name": "FechaContabilizacion",
@@ -89,8 +86,7 @@
 							},
 							{
 								"source": {
-									"name": "FechaDocumento",
-									"type": "DateTime"
+									"name": ""
 								},
 								"sink": {
 									"name": "FechaDocumento",
@@ -100,8 +96,7 @@
 							},
 							{
 								"source": {
-									"name": "FechaVencimiento",
-									"type": "DateTime"
+									"name": ""
 								},
 								"sink": {
 									"name": "FechaVencimiento",
@@ -111,8 +106,7 @@
 							},
 							{
 								"source": {
-									"name": "Sucursal",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "Sucursal",
@@ -122,8 +116,7 @@
 							},
 							{
 								"source": {
-									"name": "CuentaMayor",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "CuentaMayor",
@@ -133,8 +126,7 @@
 							},
 							{
 								"source": {
-									"name": "NombreCuentaMayor",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "NombreCuentaMayor",
@@ -144,8 +136,7 @@
 							},
 							{
 								"source": {
-									"name": "CodCliente",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "CodCliente",
@@ -155,8 +146,7 @@
 							},
 							{
 								"source": {
-									"name": "NombreCliente",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "NombreCliente",
@@ -166,8 +156,7 @@
 							},
 							{
 								"source": {
-									"name": "DebitoCLP",
-									"type": "Decimal"
+									"name": ""
 								},
 								"sink": {
 									"name": "DebitoCLP",
@@ -177,8 +166,7 @@
 							},
 							{
 								"source": {
-									"name": "CreditoCLP",
-									"type": "Decimal"
+									"name": ""
 								},
 								"sink": {
 									"name": "CreditoCLP",
@@ -188,8 +176,7 @@
 							},
 							{
 								"source": {
-									"name": "DebitoUF",
-									"type": "Decimal"
+									"name": ""
 								},
 								"sink": {
 									"name": "DebitoUF",
@@ -199,8 +186,7 @@
 							},
 							{
 								"source": {
-									"name": "CreditoUF",
-									"type": "Decimal"
+									"name": ""
 								},
 								"sink": {
 									"name": "CreditoUF",
@@ -210,8 +196,7 @@
 							},
 							{
 								"source": {
-									"name": "Moneda",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "Moneda",
@@ -221,8 +206,7 @@
 							},
 							{
 								"source": {
-									"name": "Comentarios",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "Comentarios",
@@ -232,8 +216,7 @@
 							},
 							{
 								"source": {
-									"name": "Referencia1",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "Referencia1",
@@ -243,8 +226,7 @@
 							},
 							{
 								"source": {
-									"name": "Referencia2",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "Referencia2",
@@ -254,8 +236,7 @@
 							},
 							{
 								"source": {
-									"name": "Proyecto",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "Proyecto",
@@ -265,8 +246,7 @@
 							},
 							{
 								"source": {
-									"name": "TransCode",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "TransCode",
@@ -291,7 +271,11 @@
 				"outputs": [
 					{
 						"referenceName": "CSV_Datalake",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "SAP/Deudores",
+							"File": "DeudoresInmobiliarios"
+						}
 					}
 				]
 			}
