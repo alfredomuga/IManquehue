@@ -14,6 +14,64 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Carga Fallida",
+				"type": "WebHook",
+				"dependsOn": [
+					{
+						"activity": "Informe",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-08.westus.logic.azure.com:443/workflows/e6bb091a12dc4f90b56a718824c369ab/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Q4xHScM1CXFO3xE3p4jYGB4Z3amVwlesL-L-XO1rfHI",
+					"method": "POST",
+					"body": {
+						"headers": {
+							"Connection": "Keep-Alive",
+							"Accept-Encoding": "gzip,deflate",
+							"Host": "prod-08.westus.logic.azure.com:443",
+							"User-Agent": "Apache-HttpClient/4.5.3,(Java/1.8.0_321)",
+							"vBody": "Carga Fallida Pipeline Deudores Inmobiliarios",
+							"Content-Length": "0",
+							"Content-Type": "text/xml; UTF-8"
+						}
+					},
+					"timeout": "00:10:00"
+				}
+			},
+			{
+				"name": "Carga Exitosa",
+				"type": "WebHook",
+				"dependsOn": [
+					{
+						"activity": "Informe",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-08.westus.logic.azure.com:443/workflows/e6bb091a12dc4f90b56a718824c369ab/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Q4xHScM1CXFO3xE3p4jYGB4Z3amVwlesL-L-XO1rfHI",
+					"method": "POST",
+					"body": {
+						"headers": {
+							"Connection": "Keep-Alive",
+							"Accept-Encoding": "gzip,deflate",
+							"Host": "prod-08.westus.logic.azure.com:443",
+							"User-Agent": "Apache-HttpClient/4.5.3,(Java/1.8.0_321)",
+							"vBody": "Carga Exitosa Pipeline Deudores Inmobiliarios 🟢",
+							"Content-Length": "0",
+							"Content-Type": "text/xml; UTF-8"
+						}
+					},
+					"timeout": "00:10:00"
+				}
 			}
 		],
 		"annotations": []
