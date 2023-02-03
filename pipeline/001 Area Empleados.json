@@ -176,18 +176,6 @@
 							},
 							{
 								"source": {
-									"name": "Campos Personalizados de Trabajo - Rol del Colaborador",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "rol_colaborador",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
 									"name": "Trabajo - Nombre Área Asignada(o)",
 									"type": "String",
 									"physicalType": "String"
