@@ -35,7 +35,7 @@
 				},
 				"fileSystem": "imsa-files"
 			},
-			"range": "A5:N1000",
+			"range": "A5:M1000",
 			"firstRowAsHeader": true
 		},
 		"schema": []
