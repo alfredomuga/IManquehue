@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Nombre de instancia de Data Factory",
+			"metadata": "Data Factory name",
 			"defaultValue": "Data-Factory-BI"
 		}
 	},

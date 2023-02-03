@@ -4,16 +4,16 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Nombre de instancia de Data Factory",
+			"metadata": "Data Factory name",
 			"defaultValue": "Data-Factory-BI"
 		},
 		"DWIM2_connectionString": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"DWIM2\""
+			"metadata": "Secure string for 'connectionString' of 'DWIM2'"
 		},
 		"imsadatalake_accountKey": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"accountKey\"de \"imsadatalake\""
+			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
 		},
 		"Publicar OC_properties_typeProperties_url": {
 			"type": "string",
