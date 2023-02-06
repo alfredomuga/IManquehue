@@ -949,7 +949,12 @@
 							"url": "https://prod-138.westus.logic.azure.com:443/workflows/d81b126acfee4a51b11143230b300da9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qRrQqJGIgRxU7SjT7CDQsA39DYR9NXhpZEVmXGAvIUo",
 							"method": "POST",
 							"headers": {},
-							"body": "{\"Recurso\":\"AzureBI\",Tarea\":\"001_Area_Empleados\",\"Estado\":\"OK\"}"
+							"body": {
+								"Recurso": "AzureBI",
+								"Pipeline": "RRHH",
+								"Tarea": "001_Area_Empleados",
+								"Estado": "OK"
+							}
 						}
 					},
 					{
