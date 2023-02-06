@@ -189,7 +189,6 @@
 							{
 								"source": {
 									"name": "Trabajo - Obra",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
