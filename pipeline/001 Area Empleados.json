@@ -239,6 +239,66 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Ok Carga 001 Area Empleados",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy Area Empleados",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-138.westus.logic.azure.com:443/workflows/d81b126acfee4a51b11143230b300da9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qRrQqJGIgRxU7SjT7CDQsA39DYR9NXhpZEVmXGAvIUo",
+					"method": "POST",
+					"body": {
+						"Recurso": "AzureBI",
+						"Pipeline": "RRHH",
+						"Tarea": "001_Area_Empleados",
+						"Estado": "OK"
+					}
+				}
+			},
+			{
+				"name": "Error Carga 001 Area Empleados",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy Area Empleados",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-138.westus.logic.azure.com:443/workflows/d81b126acfee4a51b11143230b300da9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qRrQqJGIgRxU7SjT7CDQsA39DYR9NXhpZEVmXGAvIUo",
+					"method": "POST",
+					"body": {
+						"Recurso": "AzureBI",
+						"Pipeline": "RRHH",
+						"Tarea": "001_Area_Empleados",
+						"Estado": "Error"
+					}
+				}
 			}
 		],
 		"folder": {
