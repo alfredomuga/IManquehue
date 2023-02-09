@@ -4,24 +4,24 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Nombre de instancia de Data Factory",
+			"metadata": "Data Factory name",
 			"defaultValue": "Data-Factory-BI"
 		},
 		"DWIM2_connectionString": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"DWIM2\""
+			"metadata": "Secure string for 'connectionString' of 'DWIM2'"
 		},
 		"DWIM_IMSA_connectionString": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"DWIM_IMSA\""
+			"metadata": "Secure string for 'connectionString' of 'DWIM_IMSA'"
 		},
 		"IMSA_HANA_connectionString": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"IMSA_HANA\""
+			"metadata": "Secure string for 'connectionString' of 'IMSA_HANA'"
 		},
 		"imsadatalake_accountKey": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"accountKey\"de \"imsadatalake\""
+			"metadata": "Secure string for 'accountKey' of 'imsadatalake'"
 		},
 		"Publicar OC_properties_typeProperties_url": {
 			"type": "string",
@@ -77,11 +77,11 @@
 		},
 		"containerUri": {
 			"type": "string",
-			"metadata": "URI de la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas."
+			"metadata": "URI to storage account containing linked ARM templates"
 		},
 		"containerSasToken": {
 			"type": "string",
-			"metadata": "Token de SAS para la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas"
+			"metadata": "Sas token to storage account containing linked ARM templates"
 		}
 	},
 	"variables": {
