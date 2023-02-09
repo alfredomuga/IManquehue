@@ -34,7 +34,18 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"Centro_de_Costo",
+								"Prorrateo",
+								"Liquidación_Período",
+								"Empleado_RUT",
+								"Empleado_Código_de_Ficha",
+								"Empleado_Nombre_Completo"
+							]
+						},
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
