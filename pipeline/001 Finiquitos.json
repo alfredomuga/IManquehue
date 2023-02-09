@@ -34,7 +34,30 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"Nombre",
+								"Apellido",
+								"Segundo_Apellido",
+								"RUT",
+								"Código_de_ficha",
+								"Ingreso_Compañía",
+								"Jefe",
+								"Centro_de_Costo",
+								"Empresa",
+								"Cargo",
+								"Área",
+								"Departamento",
+								"División",
+								"Tipo_de_Contrato",
+								"Fecha_de_Retiro",
+								"Comentario_Interno",
+								"Fecha",
+								"Fecha_Pago"
+							]
+						},
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
