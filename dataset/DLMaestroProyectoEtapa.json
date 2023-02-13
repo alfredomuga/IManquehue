@@ -1,17 +1,17 @@
 {
-	"name": "DLBudget",
+	"name": "DLMaestroProyectoEtapa",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "imsadatalake",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DataLake/MasterFecha"
+			"name": "DataLake/Dimensiones"
 		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Budget",
+			"sheetName": "Forecast",
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "Base Control de Hitos Relevantes.xlsx",
@@ -22,7 +22,7 @@
 		},
 		"schema": [
 			{
-				"name": "Presupuesto",
+				"name": "Periodo",
 				"type": "String"
 			},
 			{

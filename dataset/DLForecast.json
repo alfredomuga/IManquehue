@@ -1,5 +1,5 @@
 {
-	"name": "Forecast",
+	"name": "DLForecast",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "imsadatalake",
