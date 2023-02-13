@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DW2"
+			"name": "DW2/MasterFecha"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
@@ -32,6 +32,11 @@
 			},
 			{
 				"name": "OrdenHito",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Periodo",
 				"type": "int",
 				"precision": 10
 			},

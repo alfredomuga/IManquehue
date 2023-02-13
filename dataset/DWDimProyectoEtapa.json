@@ -1,0 +1,176 @@
+{
+	"name": "DWDimProyectoEtapa",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DW2/Dimensiones"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "idProyectoEtapa",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Proyecto",
+				"type": "varchar"
+			},
+			{
+				"name": "EtapaComercial",
+				"type": "varchar"
+			},
+			{
+				"name": "EtapaFinanciera",
+				"type": "varchar"
+			},
+			{
+				"name": "Unidades",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RutEmpresa",
+				"type": "varchar"
+			},
+			{
+				"name": "Segmento",
+				"type": "varchar"
+			},
+			{
+				"name": "ParticipacionSocios",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Socio",
+				"type": "varchar"
+			},
+			{
+				"name": "Comuna",
+				"type": "varchar"
+			},
+			{
+				"name": "Constructora",
+				"type": "varchar"
+			},
+			{
+				"name": "CostoTotal",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "ValorTerreno",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "LineaConstruccion",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "ProximoHito",
+				"type": "varchar"
+			},
+			{
+				"name": "FechaBudget",
+				"type": "date"
+			},
+			{
+				"name": "FechaForecast",
+				"type": "date"
+			},
+			{
+				"name": "Variacion",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "EstadoProyecto",
+				"type": "varchar"
+			},
+			{
+				"name": "TipoFinanciamientoSocios",
+				"type": "varchar"
+			},
+			{
+				"name": "VigenciaDeuda",
+				"type": "varchar"
+			},
+			{
+				"name": "TipoActivo",
+				"type": "varchar"
+			},
+			{
+				"name": "EtapaGestion",
+				"type": "varchar"
+			},
+			{
+				"name": "AtrasoMeses",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EtapaConstructora",
+				"type": "varchar"
+			},
+			{
+				"name": "Codigo",
+				"type": "varchar"
+			},
+			{
+				"name": "Considerar",
+				"type": "varchar"
+			},
+			{
+				"name": "Empresa",
+				"type": "varchar"
+			},
+			{
+				"name": "BancoAlzante",
+				"type": "varchar"
+			},
+			{
+				"name": "IVA",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "IFRS",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Consolida",
+				"type": "varchar"
+			},
+			{
+				"name": "Act",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Act_Comercial",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Act_Masterfechas",
+				"type": "varchar"
+			},
+			{
+				"name": "Act_FlujoCaja",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dim",
+			"table": "ProyectoEtapa"
+		}
+	}
+}

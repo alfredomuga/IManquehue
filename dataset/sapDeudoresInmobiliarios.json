@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DW2"
+			"name": "DW2/DeudoresInmobiliarios"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
