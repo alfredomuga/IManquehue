@@ -132,7 +132,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DW2"
+					"name": "DW2/MasterFecha"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -187,7 +187,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DW2"
+					"name": "DW2/DeudoresInmobiliarios"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -329,7 +329,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DW2"
+					"name": "DW2/MasterFecha"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -359,6 +359,11 @@
 						"precision": 10
 					},
 					{
+						"name": "Periodo",
+						"type": "int",
+						"precision": 10
+					},
+					{
 						"name": "Proyecto",
 						"type": "varchar"
 					},
@@ -384,7 +389,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DW2"
+					"name": "DW2/MasterFecha"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -430,6 +435,185 @@
 				"typeProperties": {
 					"schema": "th",
 					"table": "HitosForecast"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWDimProyectoEtapa')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/Dimensiones"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "EtapaComercial",
+						"type": "varchar"
+					},
+					{
+						"name": "EtapaFinanciera",
+						"type": "varchar"
+					},
+					{
+						"name": "Unidades",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RutEmpresa",
+						"type": "varchar"
+					},
+					{
+						"name": "Segmento",
+						"type": "varchar"
+					},
+					{
+						"name": "ParticipacionSocios",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Socio",
+						"type": "varchar"
+					},
+					{
+						"name": "Comuna",
+						"type": "varchar"
+					},
+					{
+						"name": "Constructora",
+						"type": "varchar"
+					},
+					{
+						"name": "CostoTotal",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "ValorTerreno",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "LineaConstruccion",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "ProximoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "FechaBudget",
+						"type": "date"
+					},
+					{
+						"name": "FechaForecast",
+						"type": "date"
+					},
+					{
+						"name": "Variacion",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "EstadoProyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "TipoFinanciamientoSocios",
+						"type": "varchar"
+					},
+					{
+						"name": "VigenciaDeuda",
+						"type": "varchar"
+					},
+					{
+						"name": "TipoActivo",
+						"type": "varchar"
+					},
+					{
+						"name": "EtapaGestion",
+						"type": "varchar"
+					},
+					{
+						"name": "AtrasoMeses",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "EtapaConstructora",
+						"type": "varchar"
+					},
+					{
+						"name": "Codigo",
+						"type": "varchar"
+					},
+					{
+						"name": "Considerar",
+						"type": "varchar"
+					},
+					{
+						"name": "Empresa",
+						"type": "varchar"
+					},
+					{
+						"name": "BancoAlzante",
+						"type": "varchar"
+					},
+					{
+						"name": "IVA",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "IFRS",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Consolida",
+						"type": "varchar"
+					},
+					{
+						"name": "Act",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Act_Comercial",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Act_Masterfechas",
+						"type": "varchar"
+					},
+					{
+						"name": "Act_FlujoCaja",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dim",
+					"table": "ProyectoEtapa"
 				}
 			},
 			"dependsOn": []
@@ -1944,217 +2128,6 @@
 					"name": "Automatizaciones"
 				},
 				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWIM')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/001 Copia Balance Scorecard')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Balance Scorecard",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Automatizaciones/Balance Scorecard'}/@{'Mock Up CMI.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'bronce'}.@{'BalanceScorecard'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE bronce.BalanceScorecard",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "N°",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "N",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Pespectiva",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Pespectiva",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Indicador",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Indicador",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Real",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Real",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Meta",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Meta",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Periodicidad",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Periodicidad",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Meta Auxiliar (Verde)",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Meta Auxiliar Verde",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Meta Auxiliar (Amarilla)",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Meta Auxiliar Amarilla",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Alarma Auxiliar",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Alarma Auxiliar",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Alarma",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Alarma",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Automatizaciones/Balance Scorecard",
-									"File": "Mock Up CMI.xlsx",
-									"Sheet": "TdG"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "bronce",
-									"table": "BalanceScorecard"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Automatizaciones"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-04T13:48:36Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DWIM')]"

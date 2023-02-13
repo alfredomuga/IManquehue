@@ -13,6 +13,215 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/001 Copia Balance Scorecard')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Balance Scorecard",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/@{'Automatizaciones/Balance Scorecard'}/@{'Mock Up CMI.xlsx'}"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'BalanceScorecard'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.BalanceScorecard",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "N°",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "N",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Pespectiva",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Pespectiva",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Indicador",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Indicador",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Real",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Real",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Meta",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Meta",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Periodicidad",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Periodicidad",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Meta Auxiliar (Verde)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Meta Auxiliar Verde",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Meta Auxiliar (Amarilla)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Meta Auxiliar Amarilla",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Alarma Auxiliar",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Alarma Auxiliar",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Alarma",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Alarma",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": "Automatizaciones/Balance Scorecard",
+									"File": "Mock Up CMI.xlsx",
+									"Sheet": "TdG"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "BalanceScorecard"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Automatizaciones"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-04T13:48:36Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/001 Copia Base DC')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -20224,834 +20433,6 @@
 								"parameters": {
 									"schema": "sap",
 									"table": "IGN1"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "SAP/Tablas Raw"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-09-20T00:19:41Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IQR1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Base IQR1 to Datalake",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "SBO_MANQUEHUE.@{'IQR1'}"
-							},
-							{
-								"name": "Destination",
-								"value": "imsa-files/@{concat(concat('SAP/Tablas Raw'),'/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'IQR1.csv'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SapHanaSource",
-								"additionalColumns": [
-									{
-										"name": "Fecha_Snapshot",
-										"value": {
-											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
-											"type": "Expression"
-										}
-									}
-								],
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SAP_HANA_Table",
-								"type": "DatasetReference",
-								"parameters": {
-									"Table_Name": "IQR1"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CSV_Datalake_Fechas",
-								"type": "DatasetReference",
-								"parameters": {
-									"ano": {
-										"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy')",
-										"type": "Expression"
-									},
-									"mes": {
-										"value": "@formatDateTime(addhours(utcnow(),-4), 'MM')",
-										"type": "Expression"
-									},
-									"dia": {
-										"value": "@formatDateTime(addhours(utcnow(),-4), 'dd')",
-										"type": "Expression"
-									},
-									"FolderPath": {
-										"value": "@concat('SAP/Tablas Raw')",
-										"type": "Expression"
-									},
-									"FileName": "IQR1.csv"
-								}
-							}
-						]
-					},
-					{
-						"name": "IQR1 to DW",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Base IQR1 to Datalake",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')}/@{'IQR1.csv'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'sap'}.@{'IQR1'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE sap.IQR1",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "DocEntry",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DocEntry",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DocLineNum",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DocLineNum",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ItemCode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ItemCode",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ItemName",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ItemName",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "InvntryUom",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "InvntryUom",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "OnHandBef",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "OnHandBef",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Price",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Price",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Quantity",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Quantity",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Currency",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Currency",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Rate",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Rate",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "IOffIncAcc",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "IOffIncAcc",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DOffDecAcc",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DOffDecAcc",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "OcrCode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "OcrCode",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "WhsCode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "WhsCode",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DocTotal",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DocTotal",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DocTotalFC",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DocTotalFC",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DocTotalSy",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DocTotalSy",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "OcrCode2",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "OcrCode2",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "OcrCode3",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "OcrCode3",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "OcrCode4",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "OcrCode4",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "OcrCode5",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "OcrCode5",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ObjType",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ObjType",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Project",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Project",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BarCode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BarCode",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "InvUoM",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "InvUoM",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BinEntry",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BinEntry",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "FirmCode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "FirmCode",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "SuppCatNum",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SuppCatNum",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "CardCode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CardCode",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "CountDate",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CountDate",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "CountTime",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CountTime",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DiffPercnt",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DiffPercnt",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseRef",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BaseRef",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseType",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BaseType",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseEntry",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BaseEntry",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseLine",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BaseLine",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "CountQty",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CountQty",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Remark",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Remark",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "LogInstanc",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "LogInstanc",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "CpyCount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CpyCount",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BinNegQty",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BinNegQty",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "VisOrder",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "VisOrder",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "UgpEntry",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "UgpEntry",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "IUomEntry",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "IUomEntry",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "UomCode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "UomCode",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ItmsPerUnt",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ItmsPerUnt",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "UomQty",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "UomQty",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ActPrice",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ActPrice",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "PostValueL",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "PostValueL",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "PostValueS",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "PostValueS",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "U_obra",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "U_obra",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "U_partida",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "U_partida",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha_Snapshot",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha_Snapshot",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "CSV_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": {
-										"value": "@concat('SAP/Tablas Raw/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'),'/')",
-										"type": "Expression"
-									},
-									"File": "IQR1.csv"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "sap",
-									"table": "IQR1"
 								}
 							}
 						]
