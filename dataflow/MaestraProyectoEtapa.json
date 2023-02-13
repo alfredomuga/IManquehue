@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "MaestraProyectoEtapa",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
