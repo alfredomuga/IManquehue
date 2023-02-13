@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Otros"
+			"name": "DataLake/MasterFecha"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
