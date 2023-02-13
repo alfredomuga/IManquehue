@@ -763,6 +763,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -815,6 +818,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -857,6 +863,9 @@
 					"FileName": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -995,6 +1004,9 @@
 						"PayDays": "Value"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "RestResource",
 				"typeProperties": {},
@@ -1023,6 +1035,9 @@
 					"Sheet": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -1060,6 +1075,9 @@
 				"linkedServiceName": {
 					"referenceName": "imsadatalake",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -1101,6 +1119,9 @@
 					"Range": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -1147,6 +1168,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
@@ -1183,6 +1207,9 @@
 					"referenceName": "imsadatalake",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
@@ -1215,6 +1242,9 @@
 				"linkedServiceName": {
 					"referenceName": "imsadatalake",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",

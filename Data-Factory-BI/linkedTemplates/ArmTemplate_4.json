@@ -57,6 +57,150 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SAP_Tanner_HES')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LeerHes",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.1:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "dbo.HESTanner"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "00:03:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "RestSink",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": 10,
+								"requestMethod": "POST",
+								"writeBatchSize": "100",
+								"httpCompressionType": "none"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "companyRut",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CompanyRut']"
+										}
+									},
+									{
+										"source": {
+											"name": "supplierRut",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['SupplierRUT']"
+										}
+									},
+									{
+										"source": {
+											"name": "orderNumber",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['OrderNumber']"
+										}
+									},
+									{
+										"source": {
+											"name": "receptionNumber",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['ReceptionNumber']"
+										}
+									},
+									{
+										"source": {
+											"name": "amount",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['Amount']"
+										}
+									},
+									{
+										"source": {
+											"name": "dteType",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['DTEType']"
+										}
+									},
+									{
+										"source": {
+											"name": "payDays",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['PayDays']"
+										}
+									},
+									{
+										"source": {
+											"name": "externalId",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['ExternalId']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "HESTanner",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "EscribirHES",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "SAP"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-22T15:12:19Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",

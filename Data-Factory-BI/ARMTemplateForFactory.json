@@ -85857,6 +85857,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -85909,6 +85912,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -85951,6 +85957,9 @@
 					"FileName": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -85999,6 +86008,9 @@
 					"table": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -86124,6 +86136,9 @@
 						"PayDays": "Value"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "RestResource",
 				"typeProperties": {},
@@ -86152,6 +86167,9 @@
 					"Sheet": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -86189,6 +86207,9 @@
 				"linkedServiceName": {
 					"referenceName": "imsadatalake",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -86230,6 +86251,9 @@
 					"Range": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -86276,6 +86300,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
@@ -86312,6 +86339,9 @@
 					"referenceName": "imsadatalake",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
@@ -86344,6 +86374,9 @@
 				"linkedServiceName": {
 					"referenceName": "imsadatalake",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -86477,6 +86510,9 @@
 					"referenceName": "DWIM_IMSA",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "SqlServerTable",
 				"schema": [
@@ -86585,6 +86621,9 @@
 					"referenceName": "IMSA_HANA",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Otros"
+				},
 				"annotations": [],
 				"type": "SapHanaTable",
 				"schema": [],
@@ -86607,6 +86646,9 @@
 					"Table_Name": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Otros"
 				},
 				"annotations": [],
 				"type": "SapHanaTable",
@@ -87770,7 +87812,69 @@
 				],
 				"typeProperties": {
 					"schema": "th",
-					"table": "HitosReal"
+					"table": "HitosBudget"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWThHitosForecast')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Periodo",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosForecast"
 				}
 			},
 			"dependsOn": [
