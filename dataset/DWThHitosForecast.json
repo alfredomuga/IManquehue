@@ -1,5 +1,5 @@
 {
-	"name": "DWThHitosBudget",
+	"name": "DWThHitosForecast",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DWIM2",
@@ -46,7 +46,7 @@
 		],
 		"typeProperties": {
 			"schema": "th",
-			"table": "HitosBudget"
+			"table": "HitosForecast"
 		}
 	}
 }
