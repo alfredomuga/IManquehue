@@ -1,6 +1,9 @@
 {
 	"name": "MaestraProyectoEtapa",
 	"properties": {
+		"folder": {
+			"name": "Dimensiones"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
