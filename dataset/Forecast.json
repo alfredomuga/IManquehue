@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DataLake/Planificacion"
+			"name": "DataLake/MasterFecha"
 		},
 		"annotations": [],
 		"type": "Excel",
@@ -14,8 +14,8 @@
 			"sheetName": "Forecast",
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "ControlHitos.xlsx",
-				"folderPath": "Automatizaciones/Control de Hitos",
+				"fileName": "Base Control de Hitos Relevantes.xlsx",
+				"folderPath": "NuevoMasterFecha",
 				"fileSystem": "imsa-files"
 			},
 			"firstRowAsHeader": true
