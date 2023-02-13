@@ -5,6 +5,9 @@
 			"referenceName": "IMSA_HANA",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Otros"
+		},
 		"annotations": [],
 		"type": "SapHanaTable",
 		"schema": []
