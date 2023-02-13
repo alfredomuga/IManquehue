@@ -12,8 +12,25 @@
 					"name": "DLMaestroProyectoEtapa"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"name": "DWDimProyectoEtapa"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SeleccionarColumnas"
+				},
+				{
+					"name": "TrimUpper"
+				},
+				{
+					"name": "HashProyectoEtapa"
+				},
+				{
+					"name": "CrearActualizar"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          Periodo as string,",
@@ -25,7 +42,26 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> DLMaestroProyectoEtapa"
+				"     ignoreNoFilesFound: false) ~> DLMaestroProyectoEtapa",
+				"DLMaestroProyectoEtapa select(mapColumn(",
+				"          Periodo,",
+				"          Proyecto,",
+				"          Etapa,",
+				"          Hito,",
+				"          Mes,",
+				"          {Año}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SeleccionarColumnas",
+				"SeleccionarColumnas derive() ~> TrimUpper",
+				"TrimUpper derive() ~> HashProyectoEtapa",
+				"HashProyectoEtapa exists(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     negate:true,",
+				"     broadcast: 'auto')~> CrearActualizar",
+				"CrearActualizar sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DWDimProyectoEtapa"
 			]
 		}
 	}
