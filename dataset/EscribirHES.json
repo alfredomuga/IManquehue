@@ -8,6 +8,9 @@
 				"PayDays": "Value"
 			}
 		},
+		"folder": {
+			"name": "Otros"
+		},
 		"annotations": [],
 		"type": "RestResource",
 		"schema": []

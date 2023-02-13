@@ -5,6 +5,9 @@
 			"referenceName": "DWIM_IMSA",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Otros"
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [

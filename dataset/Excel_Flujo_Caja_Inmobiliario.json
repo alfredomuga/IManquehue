@@ -5,6 +5,9 @@
 			"referenceName": "imsadatalake",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Otros"
+		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {

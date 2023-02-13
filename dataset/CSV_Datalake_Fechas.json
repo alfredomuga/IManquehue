@@ -22,6 +22,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Otros"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
