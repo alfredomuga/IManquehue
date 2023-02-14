@@ -11,10 +11,10 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Forecast",
+			"sheetName": "Proyecto Etapa",
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "Base Control de Hitos Relevantes.xlsx",
+				"fileName": "Maestro Proyecto Etapa.xlsx",
 				"folderPath": "NuevoMasterFecha",
 				"fileSystem": "imsa-files"
 			},
@@ -22,27 +22,111 @@
 		},
 		"schema": [
 			{
-				"name": "Periodo",
+				"name": "Activo",
 				"type": "String"
 			},
 			{
-				"name": "Proyecto",
+				"name": "Etapa Comercial",
 				"type": "String"
 			},
 			{
-				"name": "Etapa",
+				"name": "Etapa Financiera",
 				"type": "String"
 			},
 			{
-				"name": "Hito",
+				"name": "Unidades",
 				"type": "String"
 			},
 			{
-				"name": "Mes",
+				"name": "Rut Empresa",
 				"type": "String"
 			},
 			{
-				"name": "Año",
+				"name": "Vigencia de Deuda",
+				"type": "String"
+			},
+			{
+				"name": "Segmento",
+				"type": "String"
+			},
+			{
+				"name": "Participacion Socios",
+				"type": "String"
+			},
+			{
+				"name": "Socio",
+				"type": "String"
+			},
+			{
+				"name": "Comuna",
+				"type": "String"
+			},
+			{
+				"name": "Constructora",
+				"type": "String"
+			},
+			{
+				"name": "Considerar Balance Inmobiliario",
+				"type": "String"
+			},
+			{
+				"name": "Costo Total",
+				"type": "String"
+			},
+			{
+				"name": "Valor Terreno",
+				"type": "String"
+			},
+			{
+				"name": "Linea Construccion Aprobada",
+				"type": "String"
+			},
+			{
+				"name": " Tipo Activo",
+				"type": "String"
+			},
+			{
+				"name": "Etapa Gestión",
+				"type": "String"
+			},
+			{
+				"name": "Etapa Constructora",
+				"type": "String"
+			},
+			{
+				"name": "Código",
+				"type": "String"
+			},
+			{
+				"name": "IVA",
+				"type": "String"
+			},
+			{
+				"name": "IFRS",
+				"type": "String"
+			},
+			{
+				"name": "Banco Alzante",
+				"type": "String"
+			},
+			{
+				"name": "Considerar Reportes Comerciales",
+				"type": "String"
+			},
+			{
+				"name": "Considerar Masterfechas",
+				"type": "String"
+			},
+			{
+				"name": "Considerar Flujo Caja",
+				"type": "String"
+			},
+			{
+				"name": "CodigoSAP",
+				"type": "String"
+			},
+			{
+				"name": "CodigoPlanOK",
 				"type": "String"
 			}
 		]
