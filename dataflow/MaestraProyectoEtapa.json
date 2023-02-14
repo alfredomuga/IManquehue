@@ -165,7 +165,10 @@
 				"          Constructora,",
 				"          CostoTotal = {Costo Total},",
 				"          ValorTerreno = {Valor Terreno},",
-				"          LineaConstruccion = {Linea Construccion Aprobada}",
+				"          LineaConstruccion = {Linea Construccion Aprobada},",
+				"          Act_Comercial = {Considerar Reportes Comerciales},",
+				"          Act_Masterfechas = {Considerar Masterfechas},",
+				"          Act_FlujoCaja = {Considerar Flujo Caja}",
 				"     )) ~> DWDimProyectoEtapa"
 			]
 		}
