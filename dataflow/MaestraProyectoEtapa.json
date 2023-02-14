@@ -13,17 +13,14 @@
 						"type": "DatasetReference"
 					},
 					"name": "DLMaestroProyectoEtapa"
-				},
+				}
+			],
+			"sinks": [
 				{
 					"dataset": {
 						"referenceName": "DWDimProyectoEtapa",
 						"type": "DatasetReference"
 					},
-					"name": "DwDimProyectoEtapa2"
-				}
-			],
-			"sinks": [
-				{
 					"name": "DWDimProyectoEtapa"
 				}
 			],
@@ -32,13 +29,10 @@
 					"name": "SeleccionarColumnas"
 				},
 				{
-					"name": "TrimUpper"
+					"name": "Modificarfila1"
 				},
 				{
-					"name": "HashProyectoEtapa"
-				},
-				{
-					"name": "CrearActualizar"
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -74,7 +68,46 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DLMaestroProyectoEtapa",
-				"source(output(",
+				"DLMaestroProyectoEtapa select(mapColumn(",
+				"          Activo,",
+				"          {Etapa Comercial},",
+				"          {Etapa Financiera},",
+				"          Unidades,",
+				"          {Rut Empresa},",
+				"          {Vigencia de Deuda},",
+				"          Segmento,",
+				"          {Participacion Socios},",
+				"          Socio,",
+				"          Comuna,",
+				"          Constructora,",
+				"          {Considerar Balance Inmobiliario},",
+				"          {Costo Total},",
+				"          {Valor Terreno},",
+				"          {Linea Construccion Aprobada},",
+				"          { Tipo Activo},",
+				"          {Etapa Gestión},",
+				"          {Etapa Constructora},",
+				"          {Código},",
+				"          IVA,",
+				"          IFRS,",
+				"          {Banco Alzante},",
+				"          {Considerar Reportes Comerciales},",
+				"          {Considerar Masterfechas},",
+				"          {Considerar Flujo Caja},",
+				"          CodigoSAP,",
+				"          CodigoPlanOK",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SeleccionarColumnas",
+				"derivedColumn1 alterRow(upsertIf(true())) ~> Modificarfila1",
+				"SeleccionarColumnas derive(Unidades = toInteger(Unidades),",
+				"          {Participacion Socios} = toFloat({Participacion Socios}),",
+				"          {Costo Total} = toFloat({Costo Total}),",
+				"          {Valor Terreno} = toFloat({Valor Terreno}),",
+				"          {Linea Construccion Aprobada} = toFloat({Linea Construccion Aprobada})) ~> derivedColumn1",
+				"Modificarfila1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
 				"          idProyectoEtapa as integer,",
 				"          Proyecto as string,",
 				"          EtapaComercial as string,",
@@ -112,29 +145,28 @@
 				"          Act_Masterfechas as string,",
 				"          Act_FlujoCaja as string",
 				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> DwDimProyectoEtapa2",
-				"DLMaestroProyectoEtapa select(mapColumn(",
-				"          Periodo,",
-				"          Proyecto,",
-				"          Etapa,",
-				"          Hito,",
-				"          Mes,",
-				"          {Año}",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> SeleccionarColumnas",
-				"SeleccionarColumnas derive() ~> TrimUpper",
-				"TrimUpper derive() ~> HashProyectoEtapa",
-				"HashProyectoEtapa exists(') == ERROR_FUNCTION(',",
-				"     negate:true,",
-				"     broadcast: 'auto')~> CrearActualizar",
-				"CrearActualizar sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DWDimProyectoEtapa"
+				"     deletable:true,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['truncate table ProyectoEtapa'],",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Proyecto = Activo,",
+				"          EtapaComercial = {Etapa Comercial},",
+				"          EtapaFinanciera = {Etapa Financiera},",
+				"          Unidades,",
+				"          RutEmpresa = {Rut Empresa},",
+				"          Segmento,",
+				"          ParticipacionSocios = {Participacion Socios},",
+				"          Socio,",
+				"          Comuna,",
+				"          Constructora,",
+				"          CostoTotal = {Costo Total},",
+				"          ValorTerreno = {Valor Terreno},",
+				"          LineaConstruccion = {Linea Construccion Aprobada}",
+				"     )) ~> DWDimProyectoEtapa"
 			]
 		}
 	}
