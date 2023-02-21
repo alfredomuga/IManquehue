@@ -1,0 +1,65 @@
+{
+	"name": "DWDimSapCuenta",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DW2/Dimensiones"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "idSapCuenta",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CodigoCuenta1",
+				"type": "varchar"
+			},
+			{
+				"name": "NombreCuenta1",
+				"type": "varchar"
+			},
+			{
+				"name": "CodigoCuenta2",
+				"type": "varchar"
+			},
+			{
+				"name": "NombreCuenta2",
+				"type": "varchar"
+			},
+			{
+				"name": "CodigoCuenta3",
+				"type": "varchar"
+			},
+			{
+				"name": "NombreCuenta3",
+				"type": "varchar"
+			},
+			{
+				"name": "CodigoCuenta4",
+				"type": "varchar"
+			},
+			{
+				"name": "NombreCuenta4",
+				"type": "varchar"
+			},
+			{
+				"name": "CodigoCuenta5",
+				"type": "varchar"
+			},
+			{
+				"name": "NombreCuenta5",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dim",
+			"table": "SapCuenta"
+		}
+	}
+}
