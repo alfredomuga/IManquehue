@@ -1,5 +1,5 @@
 {
-	"name": "008_MaestraCtasSap",
+	"name": "008_DimSapCuenta",
 	"properties": {
 		"activities": [
 			{
@@ -27,7 +27,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SapHanaSource",
-						"query": " select * from \"SBO_MANQUEHUE\".\"IM_Reporte_Saldo_Deudores\"",
+						"query": " select * from \"SBO_MANQUEHUE\".\"IM_Arbol_Cuentas_Contales\"",
 						"partitionOption": "None"
 					},
 					"sink": {
