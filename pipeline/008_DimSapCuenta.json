@@ -142,7 +142,7 @@
 							},
 							{
 								"source": {
-									"name": "Codigo Cuenta 5",
+									"name": "Nombre Cuenta 5",
 									"type": "String"
 								},
 								"sink": {
