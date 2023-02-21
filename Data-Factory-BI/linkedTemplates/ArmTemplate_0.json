@@ -692,61 +692,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DLBudget')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/MasterFecha"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Budget",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "Base Control de Hitos Relevantes.xlsx",
-						"folderPath": "NuevoMasterFecha",
-						"fileSystem": "imsa-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Presupuesto",
-						"type": "String"
-					},
-					{
-						"name": "Proyecto",
-						"type": "String"
-					},
-					{
-						"name": "Etapa",
-						"type": "String"
-					},
-					{
-						"name": "Hito",
-						"type": "String"
-					},
-					{
-						"name": "Mes",
-						"type": "String"
-					},
-					{
-						"name": "Año",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/CSV_Datalake')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -899,7 +844,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DimEscenario')]",
+			"name": "[concat(parameters('factoryName'), '/DLBudget')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -908,33 +853,43 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DataLake/Dimensiones"
+					"name": "DataLake/MasterFecha"
 				},
 				"annotations": [],
-				"type": "DelimitedText",
+				"type": "Excel",
 				"typeProperties": {
+					"sheetName": "Budget",
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "DimEscenario",
-						"folderPath": "Dimensiones",
+						"fileName": "Base Control de Hitos Relevantes.xlsx",
+						"folderPath": "NuevoMasterFecha",
 						"fileSystem": "imsa-files"
 					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"firstRowAsHeader": true
 				},
 				"schema": [
 					{
-						"name": "idEscenario",
+						"name": "Presupuesto",
 						"type": "String"
 					},
 					{
-						"name": "Escenario",
+						"name": "Proyecto",
 						"type": "String"
 					},
 					{
-						"name": "Codigo",
+						"name": "Etapa",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Mes",
+						"type": "String"
+					},
+					{
+						"name": "Año",
 						"type": "String"
 					}
 				]
@@ -944,7 +899,62 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DimHitos')]",
+			"name": "[concat(parameters('factoryName'), '/DLForecast')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/MasterFecha"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Forecast",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Base Control de Hitos Relevantes.xlsx",
+						"folderPath": "NuevoMasterFecha",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Periodo",
+						"type": "String"
+					},
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "Etapa",
+						"type": "String"
+					},
+					{
+						"name": "Hito",
+						"type": "String"
+					},
+					{
+						"name": "Mes",
+						"type": "String"
+					},
+					{
+						"name": "Año",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DLMaestroProyectoEtapa')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -956,22 +966,163 @@
 					"name": "DataLake/Dimensiones"
 				},
 				"annotations": [],
-				"type": "DelimitedText",
+				"type": "Excel",
 				"typeProperties": {
+					"sheetName": "Proyecto Etapa",
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "DimHito",
-						"folderPath": "Dimensiones",
+						"fileName": "Maestro Proyecto Etapa.xlsx",
+						"folderPath": "NuevoMasterFecha",
 						"fileSystem": "imsa-files"
 					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"firstRowAsHeader": true
 				},
 				"schema": [
 					{
-						"name": "idHito",
+						"name": "Activo",
+						"type": "String"
+					},
+					{
+						"name": "Etapa Comercial",
+						"type": "String"
+					},
+					{
+						"name": "Etapa Financiera",
+						"type": "String"
+					},
+					{
+						"name": "Unidades",
+						"type": "String"
+					},
+					{
+						"name": "Rut Empresa",
+						"type": "String"
+					},
+					{
+						"name": "Vigencia de Deuda",
+						"type": "String"
+					},
+					{
+						"name": "Segmento",
+						"type": "String"
+					},
+					{
+						"name": "Participacion Socios",
+						"type": "String"
+					},
+					{
+						"name": "Socio",
+						"type": "String"
+					},
+					{
+						"name": "Comuna",
+						"type": "String"
+					},
+					{
+						"name": "Constructora",
+						"type": "String"
+					},
+					{
+						"name": "Considerar Balance Inmobiliario",
+						"type": "String"
+					},
+					{
+						"name": "Costo Total",
+						"type": "String"
+					},
+					{
+						"name": "Valor Terreno",
+						"type": "String"
+					},
+					{
+						"name": "Linea Construccion Aprobada",
+						"type": "String"
+					},
+					{
+						"name": " Tipo Activo",
+						"type": "String"
+					},
+					{
+						"name": "Etapa Gestión",
+						"type": "String"
+					},
+					{
+						"name": "Etapa Constructora",
+						"type": "String"
+					},
+					{
+						"name": "Código",
+						"type": "String"
+					},
+					{
+						"name": "IVA",
+						"type": "String"
+					},
+					{
+						"name": "IFRS",
+						"type": "String"
+					},
+					{
+						"name": "Banco Alzante",
+						"type": "String"
+					},
+					{
+						"name": "Considerar Reportes Comerciales",
+						"type": "String"
+					},
+					{
+						"name": "Considerar Masterfechas",
+						"type": "String"
+					},
+					{
+						"name": "Considerar Flujo Caja",
+						"type": "String"
+					},
+					{
+						"name": "CodigoSAP",
+						"type": "String"
+					},
+					{
+						"name": "CodigoPlanOK",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DLReal')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/MasterFecha"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Real",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Base Control de Hitos Relevantes.xlsx",
+						"folderPath": "NuevoMasterFecha",
+						"fileSystem": "imsa-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Proyecto",
+						"type": "String"
+					},
+					{
+						"name": "Etapa",
 						"type": "String"
 					},
 					{
@@ -979,17 +1130,379 @@
 						"type": "String"
 					},
 					{
-						"name": "Codigo",
+						"name": "Mes",
 						"type": "String"
 					},
 					{
-						"name": "Orden",
+						"name": "Año",
 						"type": "String"
 					}
 				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWDimProyectoEtapa')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/Dimensiones"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "EtapaComercial",
+						"type": "varchar"
+					},
+					{
+						"name": "EtapaFinanciera",
+						"type": "varchar"
+					},
+					{
+						"name": "Unidades",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RutEmpresa",
+						"type": "varchar"
+					},
+					{
+						"name": "Segmento",
+						"type": "varchar"
+					},
+					{
+						"name": "ParticipacionSocios",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Socio",
+						"type": "varchar"
+					},
+					{
+						"name": "Comuna",
+						"type": "varchar"
+					},
+					{
+						"name": "Constructora",
+						"type": "varchar"
+					},
+					{
+						"name": "CostoTotal",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "ValorTerreno",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "LineaConstruccion",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "ProximoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "FechaBudget",
+						"type": "date"
+					},
+					{
+						"name": "FechaForecast",
+						"type": "date"
+					},
+					{
+						"name": "Variacion",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "EstadoProyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "TipoFinanciamientoSocios",
+						"type": "varchar"
+					},
+					{
+						"name": "VigenciaDeuda",
+						"type": "varchar"
+					},
+					{
+						"name": "TipoActivo",
+						"type": "varchar"
+					},
+					{
+						"name": "EtapaGestion",
+						"type": "varchar"
+					},
+					{
+						"name": "AtrasoMeses",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "EtapaConstructora",
+						"type": "varchar"
+					},
+					{
+						"name": "Codigo",
+						"type": "varchar"
+					},
+					{
+						"name": "Considerar",
+						"type": "varchar"
+					},
+					{
+						"name": "Empresa",
+						"type": "varchar"
+					},
+					{
+						"name": "BancoAlzante",
+						"type": "varchar"
+					},
+					{
+						"name": "IVA",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "IFRS",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Consolida",
+						"type": "varchar"
+					},
+					{
+						"name": "Act",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Act_Comercial",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Act_Masterfechas",
+						"type": "varchar"
+					},
+					{
+						"name": "Act_FlujoCaja",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dim",
+					"table": "ProyectoEtapa"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWThHitosBudget')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/MasterFecha"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Periodo",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosBudget"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWThHitosForecast')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/MasterFecha"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Periodo",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosForecast"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWThHitosReal')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/MasterFecha"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosReal"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
 			]
 		},
 		{
@@ -1062,253 +1575,6 @@
 					"firstRowAsHeader": true
 				},
 				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Excel_CentroCostos_DataLake')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Otros"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Audatia (Nomina por Peso y PY-C",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "Centro_Costos.xlsx",
-						"folderPath": "Modelo RRHH",
-						"fileSystem": "imsa-files"
-					},
-					"range": "A5:F1000",
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Libro: Audatia (Nomina por Peso y PY-CC)",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Excel_Control_Hitos_DataLake')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Sheet": {
-						"type": "string"
-					},
-					"Range": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Otros"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": {
-						"value": "@dataset().Sheet",
-						"type": "Expression"
-					},
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "ControlHitos.xlsx",
-						"folderPath": "Automatizaciones/Control de Hitos",
-						"fileSystem": "imsa-files"
-					},
-					"range": {
-						"value": "@dataset().Range",
-						"type": "Expression"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Excel_Datalake')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Folder": {
-						"type": "string"
-					},
-					"File": {
-						"type": "string"
-					},
-					"Sheet": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Otros"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": {
-						"value": "@dataset().Sheet",
-						"type": "Expression"
-					},
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().File",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@dataset().Folder",
-							"type": "Expression"
-						},
-						"fileSystem": "imsa-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Excel_Finiquitos_DataLake')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Otros"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Finiquitos",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "Finiquitos.xlsx",
-						"folderPath": "Modelo RRHH",
-						"fileSystem": "imsa-files"
-					},
-					"range": "A4:AM1000",
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Libro: Finiquitos",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Excel_Flujo_Caja_Inmobiliario')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Otros"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "BD Histórica Flujos Caja.xlsx",
-						"folderPath": "Modelo Flujo de Caja/Flujo Caja Proyectos Inmobiliarios",
-						"fileSystem": "imsa-files"
-					},
-					"sheetIndex": 0,
-					"range": "A2:P1000000",
-					"firstRowAsHeader": false
-				},
-				"schema": [
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					}
-				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
