@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Base DeudoresInmobiliarios SAP to Datalake_copy1",
+				"name": "SAP a DW2 MaestraCuenta",
 				"description": "",
 				"type": "Copy",
 				"dependsOn": [],
