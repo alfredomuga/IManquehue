@@ -20,7 +20,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files/@{concat('SAP/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'LibroMayor.csv'}"
+						"value": "imsa-files/@{concat('SAP/')}/@{'LibroMayor.csv'}"
 					}
 				],
 				"typeProperties": {
@@ -1567,6 +1567,18 @@
 							},
 							{
 								"source": {
+									"name": "Account",
+									"type": "String",
+									"physicalType": "NVARCHAR"
+								},
+								"sink": {
+									"name": "Account",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "LineMemo",
 									"type": "String",
 									"physicalType": "NVARCHAR"
@@ -1644,7 +1656,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"Folder": {
-								"value": "@concat('SAP/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))",
+								"value": "@concat('SAP/')",
 								"type": "Expression"
 							},
 							"File": "LibroMayor.csv"
