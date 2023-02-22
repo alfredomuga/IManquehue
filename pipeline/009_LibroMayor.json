@@ -35,7 +35,7 @@
 								}
 							}
 						],
-						"query": "select T0.*, T1.\"LineMemo\", T1.\"BPLName\" ,T1.\"BPLId\", T1.\"VatRegNum\"\nfrom \"SBO_MANQUEHUE\".\"OJDT\" T0\nINNER JOIN \"SBO_MANQUEHUE\".\"JDT1\" T1 \nON T0.\"TransId\" = T1.\"TransId\" \nORDER BY T0.\"RefDate\" ASC",
+						"query": "select T0.*, T1.\"Account\",  T1.\"LineMemo\", T1.\"BPLName\" ,T1.\"BPLId\", T1.\"VatRegNum\"\nfrom \"SBO_MANQUEHUE\".\"OJDT\" T0\nINNER JOIN \"SBO_MANQUEHUE\".\"JDT1\" T1 \nON T0.\"TransId\" = T1.\"TransId\" \nORDER BY T0.\"RefDate\" ASC",
 						"partitionOption": "None"
 					},
 					"sink": {
