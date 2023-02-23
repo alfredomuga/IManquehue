@@ -20,7 +20,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "imsa-files/@{concat('SAP/')}/@{'LibroMayor.csv'}"
+						"value": "th.LibroMayor"
 					}
 				],
 				"typeProperties": {
@@ -39,15 +39,11 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table th.LibroMayor",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -60,8 +56,8 @@
 								},
 								"sink": {
 									"name": "tipo",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int32",
+									"physicalType": "int"
 								}
 							},
 							{
@@ -72,7 +68,7 @@
 								"sink": {
 									"name": "Account",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -83,7 +79,7 @@
 								"sink": {
 									"name": "FormatCode",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -94,7 +90,7 @@
 								"sink": {
 									"name": "AcctName",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -104,8 +100,8 @@
 								},
 								"sink": {
 									"name": "TransId",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int32",
+									"physicalType": "int"
 								}
 							},
 							{
@@ -115,8 +111,8 @@
 								},
 								"sink": {
 									"name": "RefDate",
-									"type": "String",
-									"physicalType": "String"
+									"type": "DateTime",
+									"physicalType": "date"
 								}
 							},
 							{
@@ -126,8 +122,8 @@
 								},
 								"sink": {
 									"name": "Debit",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Double",
+									"physicalType": "float"
 								}
 							},
 							{
@@ -137,8 +133,8 @@
 								},
 								"sink": {
 									"name": "Credit",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Double",
+									"physicalType": "float"
 								}
 							},
 							{
@@ -148,8 +144,8 @@
 								},
 								"sink": {
 									"name": "SYSDebit",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Double",
+									"physicalType": "float"
 								}
 							},
 							{
@@ -159,8 +155,8 @@
 								},
 								"sink": {
 									"name": "SYSCredit",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Double",
+									"physicalType": "float"
 								}
 							},
 							{
@@ -171,7 +167,7 @@
 								"sink": {
 									"name": "LineMemo",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -182,7 +178,7 @@
 								"sink": {
 									"name": "TransType",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -193,7 +189,7 @@
 								"sink": {
 									"name": "Libro",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -203,8 +199,8 @@
 								},
 								"sink": {
 									"name": "CodSucursal",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int32",
+									"physicalType": "int"
 								}
 							},
 							{
@@ -215,7 +211,7 @@
 								"sink": {
 									"name": "Sucursal",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -226,7 +222,7 @@
 								"sink": {
 									"name": "Fecha_Snapshot",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							}
 						],
@@ -245,15 +241,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_Datalake",
-						"type": "DatasetReference",
-						"parameters": {
-							"Folder": {
-								"value": "@concat('SAP/')",
-								"type": "Expression"
-							},
-							"File": "LibroMayor.csv"
-						}
+						"referenceName": "ThLibroMayor",
+						"type": "DatasetReference"
 					}
 				]
 			}
