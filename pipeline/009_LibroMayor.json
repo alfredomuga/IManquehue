@@ -35,7 +35,7 @@
 								}
 							}
 						],
-						"query": " select * from \"SBO_MANQUEHUE\".\"IM_Vista_Mayor\"",
+						"query": "select *\nfrom \"SBO_MANQUEHUE\".\"IM_Vista_Mayor\"  ",
 						"partitionOption": "None"
 					},
 					"sink": {
@@ -55,396 +55,165 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "id_linea",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "id_linea",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_contabilizacion",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "fecha_contabilizacion",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_vencimiento",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "fecha_vencimiento",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_documento",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "fecha_documento",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "nombre_cuenta_asoc_fila",
-									"type": "String"
-								},
-								"sink": {
-									"name": "nombre_cuenta_asoc_fila",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cuenta_contable",
-									"type": "String"
-								},
-								"sink": {
-									"name": "cuenta_contable",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "nombre_proyecto",
-									"type": "String"
-								},
-								"sink": {
-									"name": "nombre_proyecto",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "tipo_documento",
-									"type": "String"
-								},
-								"sink": {
-									"name": "tipo_documento",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "numero_documento",
-									"type": "String"
-								},
-								"sink": {
-									"name": "numero_documento",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "numero_asiento",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "numero_asiento",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "numero_transaccion",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "numero_transaccion",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cuenta_mayor_cod_sn",
-									"type": "String"
-								},
-								"sink": {
-									"name": "cuenta_mayor_cod_sn",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "nombre_cuenta_mayor_cod_sn",
-									"type": "String"
-								},
-								"sink": {
-									"name": "nombre_cuenta_mayor_cod_sn",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "comentarios",
-									"type": "String"
-								},
-								"sink": {
-									"name": "comentarios",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cod_proyecto",
-									"type": "String"
-								},
-								"sink": {
-									"name": "cod_proyecto",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cuenta_contrapartida",
-									"type": "String"
-								},
-								"sink": {
-									"name": "cuenta_contrapartida",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "nombre_cuenta_contrapartida",
-									"type": "String"
-								},
-								"sink": {
-									"name": "nombre_cuenta_contrapartida",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "monto_clp",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "monto_clp",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "monto_uf",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "monto_uf",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "saldo_vencido_UF",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "saldo_vencido_UF",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "numero_folio",
-									"type": "String"
-								},
-								"sink": {
-									"name": "numero_folio",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "serie",
-									"type": "String"
-								},
-								"sink": {
-									"name": "serie",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "autor",
-									"type": "String"
-								},
-								"sink": {
-									"name": "autor",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ceco",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ceco",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "nombre_ceco",
-									"type": "String"
-								},
-								"sink": {
-									"name": "nombre_ceco",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "item_gestion",
-									"type": "String"
-								},
-								"sink": {
-									"name": "item_gestion",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "nombre_item_gestion",
-									"type": "String"
-								},
-								"sink": {
-									"name": "nombre_item_gestion",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "nombre_sociedad",
-									"type": "String"
-								},
-								"sink": {
-									"name": "nombre_sociedad",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "referencia_cabecera_1",
-									"type": "String"
-								},
-								"sink": {
-									"name": "referencia_cabecera_1",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "referencia_cabecera_2",
-									"type": "String"
-								},
-								"sink": {
-									"name": "referencia_cabecera_2",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "referencia_cabecera_3",
-									"type": "String"
-								},
-								"sink": {
-									"name": "referencia_cabecera_3",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "tipo_libro",
-									"type": "String"
-								},
-								"sink": {
-									"name": "tipo_libro",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cod_proyecto_fila",
-									"type": "String"
-								},
-								"sink": {
-									"name": "cod_proyecto_fila",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cod_sociedad",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "cod_sociedad",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_creacion_asiento",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "fecha_creacion_asiento",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "hora_creacion_asiento",
+									"name": "tipo",
 									"type": "Int16"
 								},
 								"sink": {
-									"name": "hora_creacion_asiento",
+									"name": "tipo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Account",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Account",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FormatCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FormatCode",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AcctName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AcctName",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TransId",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "TransId",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RefDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "RefDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Debit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Debit",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Credit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Credit",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SYSDebit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SYSDebit",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SYSCredit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SYSCredit",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LineMemo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LineMemo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TransType",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TransType",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Libro",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Libro",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CodSucursal",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "CodSucursal",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
 									"type": "String",
 									"physicalType": "String"
 								}

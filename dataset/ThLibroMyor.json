@@ -1,0 +1,91 @@
+{
+	"name": "ThLibroMyor",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DW2/Finanzas"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "tipo",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Account",
+				"type": "varchar"
+			},
+			{
+				"name": "FormatCode",
+				"type": "varchar"
+			},
+			{
+				"name": "AcctName",
+				"type": "varchar"
+			},
+			{
+				"name": "TransId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RefDate",
+				"type": "date"
+			},
+			{
+				"name": "Debit",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Credit",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "SYSDebit",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "SYSCredit",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "LineMemo",
+				"type": "varchar"
+			},
+			{
+				"name": "TransType",
+				"type": "varchar"
+			},
+			{
+				"name": "Libro",
+				"type": "varchar"
+			},
+			{
+				"name": "CodSucursal",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Sucursal",
+				"type": "varchar"
+			},
+			{
+				"name": "Fecha_Snapshot",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "th",
+			"table": "LibroMayor"
+		}
+	}
+}
