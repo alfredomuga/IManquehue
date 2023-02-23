@@ -11718,6 +11718,478 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/008_DimSapCuenta')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SAP a DW2 MaestraCuenta",
+						"description": "",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "."
+							},
+							{
+								"name": "Destination",
+								"value": "sap.DeudoresInmobiliarios"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SapHanaSource",
+								"query": " select * from \"SBO_MANQUEHUE\".\"IM_Arbol_Cuentas_Contales\"",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "TRUNCATE TABLE dim.SapCuenta",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Codigo Cuenta 1",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CodigoCuenta1",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Nombre Cuenta 1",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NombreCuenta1",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo Cuenta 2",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CodigoCuenta2",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Nombre Cuenta 2",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NombreCuenta2",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo Cuenta 3",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CodigoCuenta3",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Nombre Cuenta 3",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NombreCuenta3",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo Cuenta 4",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CodigoCuenta4",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Nombre Cuenta 4",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NombreCuenta4",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo Cuenta 5",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CodigoCuenta5",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Nombre Cuenta 5",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NombreCuenta5",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SAP_HANA",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWDimSapCuenta",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "SAP"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-06T18:45:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SAP_HANA')]",
+				"[concat(variables('factoryId'), '/datasets/DWDimSapCuenta')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/009_LibroMayor')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LibroMayorDetalle",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "."
+							},
+							{
+								"name": "Destination",
+								"value": "imsa-files/@{concat('SAP/')}/@{'LibroMayor.csv'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SapHanaSource",
+								"additionalColumns": [
+									{
+										"name": "Fecha_Snapshot",
+										"value": {
+											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+											"type": "Expression"
+										}
+									}
+								],
+								"query": "select *\nfrom \"SBO_MANQUEHUE\".\"IM_Vista_Mayor\"  ",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "tipo",
+											"type": "Int16"
+										},
+										"sink": {
+											"name": "tipo",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Account",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Account",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FormatCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FormatCode",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "AcctName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "AcctName",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TransId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "TransId",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RefDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "RefDate",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Debit",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Debit",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Credit",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Credit",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SYSDebit",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "SYSDebit",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SYSCredit",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "SYSCredit",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LineMemo",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LineMemo",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TransType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "TransType",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Libro",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Libro",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CodSucursal",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "CodSucursal",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sucursal",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Sucursal",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Fecha_Snapshot",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Fecha_Snapshot",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SAP_HANA",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_Datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder": {
+										"value": "@concat('SAP/')",
+										"type": "Expression"
+									},
+									"File": "LibroMayor.csv"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "SAP"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-06T18:45:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SAP_HANA')]",
+				"[concat(variables('factoryId'), '/datasets/CSV_Datalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Conexion tester')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -86419,6 +86891,76 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DWDimSapCuenta')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/Dimensiones"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idSapCuenta",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoCuenta1",
+						"type": "varchar"
+					},
+					{
+						"name": "NombreCuenta1",
+						"type": "varchar"
+					},
+					{
+						"name": "CodigoCuenta2",
+						"type": "varchar"
+					},
+					{
+						"name": "NombreCuenta2",
+						"type": "varchar"
+					},
+					{
+						"name": "CodigoCuenta3",
+						"type": "varchar"
+					},
+					{
+						"name": "NombreCuenta3",
+						"type": "varchar"
+					},
+					{
+						"name": "CodigoCuenta4",
+						"type": "varchar"
+					},
+					{
+						"name": "NombreCuenta4",
+						"type": "varchar"
+					},
+					{
+						"name": "CodigoCuenta5",
+						"type": "varchar"
+					},
+					{
+						"name": "NombreCuenta5",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dim",
+					"table": "SapCuenta"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWIM')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -88058,201 +88600,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/008_DimSapCuenta')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SAP a DW2 MaestraCuenta",
-						"description": "",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "sap.DeudoresInmobiliarios"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SapHanaSource",
-								"query": " select * from \"SBO_MANQUEHUE\".\"IM_Arbol_Cuentas_Contales\"",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "TRUNCATE TABLE dim.SapCuenta",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Codigo Cuenta 1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta1",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta1",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 2",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta2",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 2",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta2",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 3",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta3",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 3",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta3",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 4",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta4",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 4",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta4",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 5",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta5",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 5",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta5",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SAP_HANA",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWDimSapCuenta",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "SAP"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-06T18:45:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SAP_HANA')]",
-				"[concat(variables('factoryId'), '/datasets/DWDimSapCuenta')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWDimSapCuenta')]",
+			"name": "[concat(parameters('factoryName'), '/ThLibroMyor')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -88261,1737 +88609,90 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DW2/Dimensiones"
+					"name": "DW2/Finanzas"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [
 					{
-						"name": "idSapCuenta",
+						"name": "tipo",
 						"type": "int",
 						"precision": 10
 					},
 					{
-						"name": "CodigoCuenta1",
+						"name": "Account",
 						"type": "varchar"
 					},
 					{
-						"name": "NombreCuenta1",
+						"name": "FormatCode",
 						"type": "varchar"
 					},
 					{
-						"name": "CodigoCuenta2",
+						"name": "AcctName",
 						"type": "varchar"
 					},
 					{
-						"name": "NombreCuenta2",
+						"name": "TransId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RefDate",
+						"type": "date"
+					},
+					{
+						"name": "Debit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Credit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "SYSDebit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "SYSCredit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "LineMemo",
 						"type": "varchar"
 					},
 					{
-						"name": "CodigoCuenta3",
+						"name": "TransType",
 						"type": "varchar"
 					},
 					{
-						"name": "NombreCuenta3",
+						"name": "Libro",
 						"type": "varchar"
 					},
 					{
-						"name": "CodigoCuenta4",
+						"name": "CodSucursal",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Sucursal",
 						"type": "varchar"
 					},
 					{
-						"name": "NombreCuenta4",
-						"type": "varchar"
-					},
-					{
-						"name": "CodigoCuenta5",
-						"type": "varchar"
-					},
-					{
-						"name": "NombreCuenta5",
+						"name": "Fecha_Snapshot",
 						"type": "varchar"
 					}
 				],
 				"typeProperties": {
-					"schema": "dim",
-					"table": "SapCuenta"
+					"schema": "th",
+					"table": "LibroMayor"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/009_LibroMayor')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LibroMayorDetalle",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "imsa-files/@{concat('SAP/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))}/@{'LibroMayor.csv'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SapHanaSource",
-								"additionalColumns": [
-									{
-										"name": "Fecha_Snapshot",
-										"value": {
-											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
-											"type": "Expression"
-										}
-									}
-								],
-								"query": "select T0.*, T1.\"LineMemo\", T1.\"BPLName\" ,T1.\"BPLId\", T1.\"VatRegNum\"\nfrom \"SBO_MANQUEHUE\".\"OJDT\" T0\nINNER JOIN \"SBO_MANQUEHUE\".\"JDT1\" T1 \nON T0.\"TransId\" = T1.\"TransId\" \nORDER BY T0.\"RefDate\" ASC",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "BatchNum",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "BatchNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TransId",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "TransId",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BtfStatus",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "BtfStatus",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TransType",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "TransType",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseRef",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "BaseRef",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RefDate",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "RefDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Memo",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Memo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Ref1",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Ref1",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Ref2",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Ref2",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedBy",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "CreatedBy",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LocTotal",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "LocTotal",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FcTotal",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "FcTotal",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SysTotal",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "SysTotal",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TransCode",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "TransCode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OrignCurr",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "OrignCurr",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TransRate",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "TransRate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BtfLine",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "BtfLine",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TransCurr",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "TransCurr",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Project",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Project",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DueDate",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "DueDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TaxDate",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "TaxDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PCAddition",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "PCAddition",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FinncPriod",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "FinncPriod",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DataSource",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "DataSource",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UpdateDate",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "UpdateDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreateDate",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "CreateDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UserSign",
-											"type": "Int16",
-											"physicalType": "SMALLINT"
-										},
-										"sink": {
-											"name": "UserSign",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UserSign2",
-											"type": "Int16",
-											"physicalType": "SMALLINT"
-										},
-										"sink": {
-											"name": "UserSign2",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RefndRprt",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "RefndRprt",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LogInstanc",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "LogInstanc",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ObjType",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "ObjType",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Indicator",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Indicator",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AdjTran",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "AdjTran",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RevSource",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "RevSource",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StornoDate",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "StornoDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StornoToTr",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "StornoToTr",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AutoStorno",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "AutoStorno",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Corisptivi",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Corisptivi",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "VatDate",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "VatDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StampTax",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "StampTax",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Series",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "Series",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Number",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "Number",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AutoVAT",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "AutoVAT",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocSeries",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "DocSeries",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FolioPref",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "FolioPref",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FolioNum",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "FolioNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreateTime",
-											"type": "Int16",
-											"physicalType": "SMALLINT"
-										},
-										"sink": {
-											"name": "CreateTime",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BlockDunn",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "BlockDunn",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ReportEU",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "ReportEU",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Report347",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Report347",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Printed",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Printed",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocType",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "DocType",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AttNum",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "AttNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "GenRegNo",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "GenRegNo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RG23APart2",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "RG23APart2",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RG23CPart2",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "RG23CPart2",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MatType",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "MatType",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Creator",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Creator",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Approver",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Approver",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Location",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "Location",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SeqCode",
-											"type": "Int16",
-											"physicalType": "SMALLINT"
-										},
-										"sink": {
-											"name": "SeqCode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Serial",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "Serial",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SeriesStr",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "SeriesStr",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SubStr",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "SubStr",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AutoWT",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "AutoWT",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WTSum",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "WTSum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WTSumSC",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "WTSumSC",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WTSumFC",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "WTSumFC",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WTApplied",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "WTApplied",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WTAppliedS",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "WTAppliedS",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WTAppliedF",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "WTAppliedF",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseAmnt",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "BaseAmnt",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseAmntSC",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "BaseAmntSC",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseAmntFC",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "BaseAmntFC",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseVtAt",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "BaseVtAt",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseVtAtSC",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "BaseVtAtSC",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseVtAtFC",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										},
-										"sink": {
-											"name": "BaseVtAtFC",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "VersionNum",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "VersionNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BaseTrans",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "BaseTrans",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ResidenNum",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "ResidenNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OperatCode",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "OperatCode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Ref3",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Ref3",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SSIExmpt",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "SSIExmpt",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SignMsg",
-											"type": "String",
-											"physicalType": "NCLOB"
-										},
-										"sink": {
-											"name": "SignMsg",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SignDigest",
-											"type": "String",
-											"physicalType": "NCLOB"
-										},
-										"sink": {
-											"name": "SignDigest",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CertifNum",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "CertifNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "KeyVersion",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "KeyVersion",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CUP",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "CUP",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CIG",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "CIG",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SupplCode",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "SupplCode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SPSrcType",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "SPSrcType",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SPSrcID",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "SPSrcID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SPSrcDLN",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "SPSrcDLN",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DeferedTax",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "DeferedTax",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AgrNo",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "AgrNo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SeqNum",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "SeqNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ECDPosTyp",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "ECDPosTyp",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RptPeriod",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "RptPeriod",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RptMonth",
-											"type": "DateTime",
-											"physicalType": "TIMESTAMP"
-										},
-										"sink": {
-											"name": "RptMonth",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ExTransId",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "ExTransId",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PrlLinked",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "PrlLinked",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PTICode",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "PTICode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Letter",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "Letter",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FolNumFrom",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "FolNumFrom",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FolNumTo",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "FolNumTo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RepSection",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "RepSection",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ExclTaxRep",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "ExclTaxRep",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IsCoEntry",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "IsCoEntry",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SAPPassprt",
-											"type": "String",
-											"physicalType": "NCLOB"
-										},
-										"sink": {
-											"name": "SAPPassprt",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AtcEntry",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "AtcEntry",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Attachment",
-											"type": "String",
-											"physicalType": "NCLOB"
-										},
-										"sink": {
-											"name": "Attachment",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EBookable",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "EBookable",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_Libro",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_Libro",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_AntMes",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "U_AntMes",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_AntTra",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "U_AntTra",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_EP",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "U_EP",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_PresEntry",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_PresEntry",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_DocEntryProd",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_DocEntryProd",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_EXX_FVTAOINV",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "U_EXX_FVTAOINV",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_EXX_FVTACOPCH",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "U_EXX_FVTACOPCH",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_EXX_FCMPOPCH",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "U_EXX_FCMPOPCH",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_EXX_FTRACKID",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_EXX_FTRACKID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_unidad",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_unidad",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_tipoope",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_tipoope",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_numplanok",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_numplanok",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "U_conceptofc",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "U_conceptofc",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LineMemo",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "LineMemo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BPLName",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "BPLName",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BPLId",
-											"type": "Int32",
-											"physicalType": "INTEGER"
-										},
-										"sink": {
-											"name": "BPLId",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "VatRegNum",
-											"type": "String",
-											"physicalType": "NVARCHAR"
-										},
-										"sink": {
-											"name": "VatRegNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha_Snapshot",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Fecha_Snapshot",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SAP_HANA",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CSV_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": {
-										"value": "@concat('SAP/',formatDateTime(addhours(utcnow(),-4), 'yyyy'),'/',formatDateTime(addhours(utcnow(),-4), 'MM'),'/',formatDateTime(addhours(utcnow(),-4), 'dd'))",
-										"type": "Expression"
-									},
-									"File": "LibroMayor.csv"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "SAP"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-06T18:45:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SAP_HANA')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Datalake')]"
 			]
 		}
 	]
