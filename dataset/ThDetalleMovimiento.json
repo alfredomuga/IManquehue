@@ -1,0 +1,29 @@
+{
+	"name": "ThDetalleMovimiento",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DW2/Finanzas"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "TransId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LineMemo",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "th",
+			"table": "DetalleMovimiento"
+		}
+	}
+}
