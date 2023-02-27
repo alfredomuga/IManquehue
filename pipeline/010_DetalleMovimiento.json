@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LibroMayorDetalle",
+				"name": "DetalleMovimiento",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -20,7 +20,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "th.LibroMayor"
+						"value": "th.DetalleMovimiento"
 					}
 				],
 				"typeProperties": {
@@ -40,7 +40,7 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"preCopyScript": "truncate table th.LibroMayor",
+						"preCopyScript": "truncate table th.DetalleMovimiento",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
 						"disableMetricsCollection": false
@@ -51,50 +51,6 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "tipo",
-									"type": "Int16"
-								},
-								"sink": {
-									"name": "tipo",
-									"type": "Int32",
-									"physicalType": "int"
-								}
-							},
-							{
-								"source": {
-									"name": "Account",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Account",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "FormatCode",
-									"type": "String"
-								},
-								"sink": {
-									"name": "FormatCode",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "AcctName",
-									"type": "String"
-								},
-								"sink": {
-									"name": "AcctName",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
 									"name": "TransId",
 									"type": "Int32"
 								},
@@ -106,121 +62,11 @@
 							},
 							{
 								"source": {
-									"name": "RefDate",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "RefDate",
-									"type": "DateTime",
-									"physicalType": "date"
-								}
-							},
-							{
-								"source": {
-									"name": "Debit",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "Debit",
-									"type": "Double",
-									"physicalType": "float"
-								}
-							},
-							{
-								"source": {
-									"name": "Credit",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "Credit",
-									"type": "Double",
-									"physicalType": "float"
-								}
-							},
-							{
-								"source": {
-									"name": "SYSDebit",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "SYSDebit",
-									"type": "Double",
-									"physicalType": "float"
-								}
-							},
-							{
-								"source": {
-									"name": "SYSCredit",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "SYSCredit",
-									"type": "Double",
-									"physicalType": "float"
-								}
-							},
-							{
-								"source": {
 									"name": "LineMemo",
 									"type": "String"
 								},
 								"sink": {
 									"name": "LineMemo",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "TransType",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TransType",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "Libro",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Libro",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "CodSucursal",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "CodSucursal",
-									"type": "Int32",
-									"physicalType": "int"
-								}
-							},
-							{
-								"source": {
-									"name": "Sucursal",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Sucursal",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "Fecha_Snapshot",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Fecha_Snapshot",
 									"type": "String",
 									"physicalType": "varchar"
 								}
@@ -241,7 +87,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ThLibroMayor",
+						"referenceName": "ThDetalleMovimiento",
 						"type": "DatasetReference"
 					}
 				]
