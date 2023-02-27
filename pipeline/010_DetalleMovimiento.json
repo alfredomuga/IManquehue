@@ -1,0 +1,257 @@
+{
+	"name": "010_DetalleMovimiento",
+	"properties": {
+		"activities": [
+			{
+				"name": "LibroMayorDetalle",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "th.LibroMayor"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SapHanaSource",
+						"additionalColumns": [
+							{
+								"name": "Fecha_Snapshot",
+								"value": {
+									"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"query": "select *\nfrom \"SBO_MANQUEHUE\".\"JDT1\"",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table th.LibroMayor",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "tipo",
+									"type": "Int16"
+								},
+								"sink": {
+									"name": "tipo",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Account",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Account",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FormatCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FormatCode",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AcctName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AcctName",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransId",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "TransId",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "RefDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "RefDate",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Debit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Debit",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "Credit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Credit",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "SYSDebit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SYSDebit",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "SYSCredit",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SYSCredit",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "LineMemo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LineMemo",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TransType",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TransType",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Libro",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Libro",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CodSucursal",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "CodSucursal",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Sucursal",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Sucursal",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Fecha_Snapshot",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Fecha_Snapshot",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAP_HANA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ThLibroMayor",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SAP"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-06T18:45:21Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
