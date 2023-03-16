@@ -13,6 +13,645 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/001 Control Hitos')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Real",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'real'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.real",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Real",
+									"Range": "A1:E1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "real"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Budget",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'budget'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.budget",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Presupuesto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Presupuesto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Budget",
+									"Range": "A1:F1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "budget"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Forecast",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'forecast'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.forecast",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Periodo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Periodo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Proyecto",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Etapa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hito",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Mes",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Año",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Forecast",
+									"Range": "A1:F1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "forecast"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Hitos",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'hitos'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.hitos",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Hitos",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Hitos",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Orden",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Orden",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Hitos",
+									"Range": "A1:C1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "hitos"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Escenario",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Automatizaciones/Control de Hitos/ControlHitos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'bronce'}.@{'escenario'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE bronce.escenario",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Escenario",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Escenario",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Codigo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Numero Asociado",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Numero Asociado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Control_Hitos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"Sheet": "Escenario",
+									"Range": "A1:C1000"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "bronce",
+									"table": "escenario"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Automatizaciones"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/001 Copia Balance Scorecard')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -10601,7 +11240,7 @@
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "0.12:00:00",
+							"timeout": "0.00:30:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
@@ -10837,6 +11476,142 @@
 						"outputs": [
 							{
 								"referenceName": "ThLibroMayor",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "ActualizacionCorrecta",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "LibroMayorDetalle",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-126.westus.logic.azure.com:443/workflows/0caaa07409624674825ab5b13aec0982/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3e1QOQSCBQrUrkLZwLYF3aI_2WjYE3sBv5LmHc2K5ug",
+							"method": "GET",
+							"headers": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "SAP"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-06T18:45:21Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/010_DetalleMovimiento')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DetalleMovimiento",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "."
+							},
+							{
+								"name": "Destination",
+								"value": "th.DetalleMovimiento"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SapHanaSource",
+								"additionalColumns": [
+									{
+										"name": "Fecha_Snapshot",
+										"value": {
+											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+											"type": "Expression"
+										}
+									}
+								],
+								"query": "select *\nfrom \"SBO_MANQUEHUE\".\"JDT1\"",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table th.DetalleMovimiento",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "TransId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "TransId",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "LineMemo",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LineMemo",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SAP_HANA",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ThDetalleMovimiento",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -11196,1145 +11971,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-09-11T23:30:28Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copia Forecast a BBDD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Datalake to DB",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "imsa-files/@{'Modelo Flujo de Caja/Forecast/Forecast Proyectos Actuales'}/@{'BD forecast FC.xlsx'}"
-							},
-							{
-								"name": "Destination",
-								"value": "@{'forecast'}.@{'forecast_flujos_de_caja'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": "TRUNCATE TABLE [forecast].[forecast_flujos_de_caja]",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "RUT",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "RUT",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Empresa",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Empresa",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Proyecto",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Proyecto",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Segmento",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Segmento",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Fecha",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "Importe",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Importe",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Importe UF",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Importe_UF",
-											"type": "Double",
-											"physicalType": "float"
-										}
-									},
-									{
-										"source": {
-											"name": "ID_Proyecto",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ID_Proyecto",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Etapa",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Etapa",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "NombreProyecto",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "NombreProyecto",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Item CC",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Item_CC",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Item(CC)",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Nombre_Item_CC",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Texto de la transacción",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Texto_de_la_transacción",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Descripcion del Diario",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Descripcion_del_Diario",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Mes",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Mes",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Año",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Año",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Excel_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Modelo Flujo de Caja/Forecast/Forecast Proyectos Actuales",
-									"File": "BD forecast FC.xlsx",
-									"Sheet": "Base (2)"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "forecast",
-									"table": "forecast_flujos_de_caja"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Flujo de Caja"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-10-02T19:52:18Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DimDataLake')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "DimProyectoEtapa",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "@{'dim'}.@{'ProyectoEtapa'}"
-							},
-							{
-								"name": "Destination",
-								"value": "imsa-files/@{'Dimensiones'}/@{'DimProyectoEta'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT *\nFROM dim.ProyectoEtapa\nwhere etapagestion is not null and act = 1 and TipoActivo = 'Proyecto Inmobiliario'\norder by idproyectoetapa desc",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "idProyectoEtapa",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "idProyectoEtapa",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Proyecto",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Proyecto",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EtapaComercial",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "EtapaComercial",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EtapaFinanciera",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "EtapaFinanciera",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Unidades",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Unidades",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RutEmpresa",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "RutEmpresa",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Segmento",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Segmento",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ParticipacionSocios",
-											"type": "Double",
-											"physicalType": "float"
-										},
-										"sink": {
-											"name": "ParticipacionSocios",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Socio",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Socio",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Comuna",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Comuna",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Constructora",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Constructora",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CostoTotal",
-											"type": "Double",
-											"physicalType": "float"
-										},
-										"sink": {
-											"name": "CostoTotal",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ValorTerreno",
-											"type": "Double",
-											"physicalType": "float"
-										},
-										"sink": {
-											"name": "ValorTerreno",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LineaConstruccion",
-											"type": "Double",
-											"physicalType": "float"
-										},
-										"sink": {
-											"name": "LineaConstruccion",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ProximoHito",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ProximoHito",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FechaBudget",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "FechaBudget",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FechaForecast",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "FechaForecast",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Variacion",
-											"type": "Double",
-											"physicalType": "float"
-										},
-										"sink": {
-											"name": "Variacion",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EstadoProyecto",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "EstadoProyecto",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TipoFinanciamientoSocios",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "TipoFinanciamientoSocios",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "VigenciaDeuda",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "VigenciaDeuda",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TipoActivo",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "TipoActivo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EtapaGestion",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "EtapaGestion",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AtrasoMeses",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "AtrasoMeses",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EtapaConstructora",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "EtapaConstructora",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Codigo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Considerar",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Considerar",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Empresa",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Empresa",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BancoAlzante",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "BancoAlzante",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IVA",
-											"type": "Double",
-											"physicalType": "float"
-										},
-										"sink": {
-											"name": "IVA",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IFRS",
-											"type": "Double",
-											"physicalType": "float"
-										},
-										"sink": {
-											"name": "IFRS",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Consolida",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Consolida",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Act",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Act",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Act_Comercial",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Act_Comercial",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Act_Masterfechas",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Act_Masterfechas",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Act_FlujoCaja",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Act_FlujoCaja",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "dim",
-									"table": "ProyectoEtapa"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CSV_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Dimensiones",
-									"File": "DimProyectoEta"
-								}
-							}
-						]
-					},
-					{
-						"name": "DimHito",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "@{'dim'}.@{'Hito'}"
-							},
-							{
-								"name": "Destination",
-								"value": "imsa-files/@{'Dimensiones'}/@{'DimHito'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT *\nFROM dim.Hito",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "idHito",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "idHito",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Hito",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Hito",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Codigo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Orden",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Orden",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "dim",
-									"table": "Hito"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CSV_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Dimensiones",
-									"File": "DimHito"
-								}
-							}
-						]
-					},
-					{
-						"name": "DimEscenario",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "@{'dim'}.@{'Escenario'}"
-							},
-							{
-								"name": "Destination",
-								"value": "imsa-files/@{'Dimensiones'}/@{'DimEscenario'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT *\nFROM dim.Escenario",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "idEscenario",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "idEscenario",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Escenario",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Escenario",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Codigo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "dim",
-									"table": "Escenario"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CSV_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Dimensiones",
-									"File": "DimEscenario"
-								}
-							}
-						]
-					},
-					{
-						"name": "dboFecha",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "@{'dbo'}.@{'Fecha'}"
-							},
-							{
-								"name": "Destination",
-								"value": "imsa-files/@{'Dimensiones'}/@{'dbofecha'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT max(idFecha) as idFecha,\ncast(Anho as Int) as Anho,\nNumeroMesCero\nFROM dbo.Fecha\nGROUP BY Anho, NumeroMesCero",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "idFecha",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "idFecha",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Anho",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Anho",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "NumeroMesCero",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NumeroMesCero",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DWIM",
-								"type": "DatasetReference",
-								"parameters": {
-									"schema": "dbo",
-									"table": "Fecha"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CSV_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "Dimensiones",
-									"File": "dbofecha"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "DimDataLake"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		}

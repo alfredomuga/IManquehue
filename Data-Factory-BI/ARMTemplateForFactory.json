@@ -11922,7 +11922,7 @@
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "0.12:00:00",
+							"timeout": "0.00:30:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
@@ -12162,6 +12162,31 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "ActualizacionCorrecta",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "LibroMayorDetalle",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-126.westus.logic.azure.com:443/workflows/0caaa07409624674825ab5b13aec0982/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3e1QOQSCBQrUrkLZwLYF3aI_2WjYE3sBv5LmHc2K5ug",
+							"method": "GET",
+							"headers": {}
+						}
 					}
 				],
 				"policy": {
@@ -12177,6 +12202,120 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SAP_HANA')]",
 				"[concat(variables('factoryId'), '/datasets/ThLibroMayor')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/010_DetalleMovimiento')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DetalleMovimiento",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "."
+							},
+							{
+								"name": "Destination",
+								"value": "th.DetalleMovimiento"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SapHanaSource",
+								"additionalColumns": [
+									{
+										"name": "Fecha_Snapshot",
+										"value": {
+											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
+											"type": "Expression"
+										}
+									}
+								],
+								"query": "select *\nfrom \"SBO_MANQUEHUE\".\"JDT1\"",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table th.DetalleMovimiento",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "TransId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "TransId",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "LineMemo",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LineMemo",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SAP_HANA",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ThDetalleMovimiento",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "SAP"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-06T18:45:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SAP_HANA')]",
+				"[concat(variables('factoryId'), '/datasets/ThDetalleMovimiento')]"
 			]
 		},
 		{
@@ -87605,6 +87744,40 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ThDetalleMovimiento')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/Finanzas"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "TransId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LineMemo",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "DetalleMovimiento"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ThHitosBudget')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -87773,6 +87946,102 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/DWIM_IMSA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ThLibroMayor')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/Finanzas"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "tipo",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Account",
+						"type": "varchar"
+					},
+					{
+						"name": "FormatCode",
+						"type": "varchar"
+					},
+					{
+						"name": "AcctName",
+						"type": "varchar"
+					},
+					{
+						"name": "TransId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RefDate",
+						"type": "date"
+					},
+					{
+						"name": "Debit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Credit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "SYSDebit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "SYSCredit",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "LineMemo",
+						"type": "varchar"
+					},
+					{
+						"name": "TransType",
+						"type": "varchar"
+					},
+					{
+						"name": "Libro",
+						"type": "varchar"
+					},
+					{
+						"name": "CodSucursal",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Sucursal",
+						"type": "varchar"
+					},
+					{
+						"name": "Fecha_Snapshot",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "LibroMayor"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
 			]
 		},
 		{
@@ -88588,102 +88857,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ThLibroMayor')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWIM2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DW2/Finanzas"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "tipo",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Account",
-						"type": "varchar"
-					},
-					{
-						"name": "FormatCode",
-						"type": "varchar"
-					},
-					{
-						"name": "AcctName",
-						"type": "varchar"
-					},
-					{
-						"name": "TransId",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "RefDate",
-						"type": "date"
-					},
-					{
-						"name": "Debit",
-						"type": "float",
-						"precision": 15
-					},
-					{
-						"name": "Credit",
-						"type": "float",
-						"precision": 15
-					},
-					{
-						"name": "SYSDebit",
-						"type": "float",
-						"precision": 15
-					},
-					{
-						"name": "SYSCredit",
-						"type": "float",
-						"precision": 15
-					},
-					{
-						"name": "LineMemo",
-						"type": "varchar"
-					},
-					{
-						"name": "TransType",
-						"type": "varchar"
-					},
-					{
-						"name": "Libro",
-						"type": "varchar"
-					},
-					{
-						"name": "CodSucursal",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Sucursal",
-						"type": "varchar"
-					},
-					{
-						"name": "Fecha_Snapshot",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "th",
-					"table": "LibroMayor"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
-			]
 		}
 	]
 }
