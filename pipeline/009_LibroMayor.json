@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "0.12:00:00",
+					"timeout": "0.00:30:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -245,6 +245,30 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "ActualizacionCorrecta",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "LibroMayorDetalle",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-126.westus.logic.azure.com:443/workflows/0caaa07409624674825ab5b13aec0982/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3e1QOQSCBQrUrkLZwLYF3aI_2WjYE3sBv5LmHc2K5ug",
+					"method": "GET"
+				}
 			}
 		],
 		"folder": {
