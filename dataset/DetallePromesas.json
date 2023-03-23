@@ -1,5 +1,5 @@
 {
-	"name": "NegocioPromesa",
+	"name": "DetallePromesas",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "imsadatalake",
@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "NegocioPromesa",
+				"fileName": "DetallePromesas",
 				"folderPath": "PlanOK",
 				"fileSystem": "imsa-files"
 			}
