@@ -19,7 +19,15 @@
 					"name": "NegocioPromesaFirma"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ThPromesas",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "Promesa"
@@ -32,6 +40,9 @@
 				},
 				{
 					"name": "alterRow1"
+				},
+				{
+					"name": "FechaCargaBI"
 				}
 			],
 			"scriptLines": [
@@ -99,7 +110,80 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> FirmaClientePromesa",
-				"lookup1 alterRow(upsertIf(true())) ~> alterRow1"
+				"FechaCargaBI alterRow(upsertIf(true())) ~> alterRow1",
+				"lookup1 derive(FechaCargaBI = currentTimestamp()) ~> FechaCargaBI",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id as integer,",
+				"          fechaPromesa as string,",
+				"          totalLista as integer,",
+				"          {descuentoSubtotal.valor} as double,",
+				"          {descuentoSubtotal.unidadad} as string,",
+				"          totalVenta as integer,",
+				"          {productos.id} as integer,",
+				"          {productos.nombre} as string,",
+				"          {productos.tipo} as string,",
+				"          {productos.precioLista} as string,",
+				"          {productos.descuento.valor} as double,",
+				"          {productos.descuento.unidad} as string,",
+				"          {productos.precioVenta} as integer,",
+				"          {productos.proyecto.id} as integer,",
+				"          {productos.proyecto.nombre} as string,",
+				"          {productos.etapa.id} as integer,",
+				"          {productos.etapa.nombre} as string,",
+				"          {productos.subAgrupacion.id} as integer,",
+				"          {productos.subAgrupacion.nombre} as string,",
+				"          {cliente.id} as integer,",
+				"          {cliente.identificadorPersonal} as string,",
+				"          {cliente.nombre} as string,",
+				"          {cliente.telefono} as string,",
+				"          {cliente.email} as string,",
+				"          id_promesa as integer,",
+				"          id_negocio as integer,",
+				"          fecha_firma_comprador as string,",
+				"          setFechaFirmaComprador as string,",
+				"          FechaCargaBI as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['truncate table th.promesas'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          id,",
+				"          fechaPromesa,",
+				"          totalLista,",
+				"          {descuentoSubtotal.valor},",
+				"          {descuentoSubtotal.unidadad},",
+				"          totalVenta,",
+				"          {productos.id},",
+				"          {productos.nombre},",
+				"          {productos.tipo},",
+				"          {productos.descuento.valor},",
+				"          {productos.descuento.unidad},",
+				"          {productos.precioVenta},",
+				"          {productos.proyecto.id},",
+				"          {productos.proyecto.nombre},",
+				"          {productos.etapa.id},",
+				"          {productos.etapa.nombre},",
+				"          {productos.subAgrupacion.id},",
+				"          {productos.subAgrupacion.nombre},",
+				"          {cliente.id},",
+				"          {cliente.identificadorPersonal},",
+				"          {cliente.nombre},",
+				"          {cliente.telefono},",
+				"          {cliente.email},",
+				"          id_promesa,",
+				"          id_negocio,",
+				"          fecha_firma_comprador,",
+				"          setFechaFirmaComprador,",
+				"          FechaCargaBI",
+				"     )) ~> sink1"
 			]
 		}
 	}

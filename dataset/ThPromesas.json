@@ -1,0 +1,149 @@
+{
+	"name": "ThPromesas",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWIM2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DW2/Backlog"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "fechaPromesa",
+				"type": "varchar"
+			},
+			{
+				"name": "totalLista",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "descuentoSubtotal.valor",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "descuentoSubtotal.unidadad",
+				"type": "varchar"
+			},
+			{
+				"name": "totalVenta",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "productos.id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "productos.nombre",
+				"type": "varchar"
+			},
+			{
+				"name": "productos.tipo",
+				"type": "varchar"
+			},
+			{
+				"name": "productos.precioLista",
+				"type": "varchar"
+			},
+			{
+				"name": "productos.descuento.valor",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "productos.descuento.unidad",
+				"type": "varchar"
+			},
+			{
+				"name": "productos.precioVenta",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "productos.proyecto.id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "productos.proyecto.nombre",
+				"type": "varchar"
+			},
+			{
+				"name": "productos.etapa.id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "productos.etapa.nombre",
+				"type": "varchar"
+			},
+			{
+				"name": "productos.subAgrupacion.id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "productos.subAgrupacion.nombre",
+				"type": "varchar"
+			},
+			{
+				"name": "cliente.id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cliente.identificadorPersonal",
+				"type": "varchar"
+			},
+			{
+				"name": "cliente.nombre",
+				"type": "varchar"
+			},
+			{
+				"name": "cliente.telefono",
+				"type": "varchar"
+			},
+			{
+				"name": "cliente.email",
+				"type": "varchar"
+			},
+			{
+				"name": "id_promesa",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "id_negocio",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "fecha_firma_comprador",
+				"type": "varchar"
+			},
+			{
+				"name": "setFechaFirmaComprador",
+				"type": "varchar"
+			},
+			{
+				"name": "FechaCargaBI",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "th",
+			"table": "Promesas"
+		}
+	}
+}
