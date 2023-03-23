@@ -6,10 +6,10 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "NegocioPromesa",
+						"referenceName": "DetallePromesas",
 						"type": "DatasetReference"
 					},
-					"name": "NegocioPromesa"
+					"name": "DetallePromesa"
 				},
 				{
 					"dataset": {
@@ -47,7 +47,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> NegocioPromesa",
+				"     documentForm: 'documentPerLine') ~> DetallePromesa",
 				"source(output(",
 				"          id_promesa as integer,",
 				"          id_negocio as integer,",
@@ -58,7 +58,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'documentPerLine') ~> NegocioPromesaFirma",
-				"NegocioPromesa foldDown(unroll(productos),",
+				"DetallePromesa foldDown(unroll(productos),",
 				"     mapColumn(",
 				"          id,",
 				"          fechaPromesa,",
