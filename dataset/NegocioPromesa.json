@@ -1,0 +1,137 @@
+{
+	"name": "NegocioPromesa",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataLake/PlanOK"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "NegocioPromesa",
+				"folderPath": "PlanOK",
+				"fileSystem": "imsa-files"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"fechaPromesa": {
+					"type": "string"
+				},
+				"totalLista": {
+					"type": "integer"
+				},
+				"descuentoSubtotal": {
+					"type": "object",
+					"properties": {
+						"valor": {
+							"type": "number"
+						},
+						"unidad": {
+							"type": "string"
+						}
+					}
+				},
+				"totalVenta": {
+					"type": "number"
+				},
+				"productos": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "integer"
+							},
+							"nombre": {
+								"type": "string"
+							},
+							"tipo": {
+								"type": "string"
+							},
+							"precioLista": {
+								"type": "integer"
+							},
+							"descuento": {
+								"type": "object",
+								"properties": {
+									"valor": {
+										"type": "number"
+									},
+									"unidad": {
+										"type": "string"
+									}
+								}
+							},
+							"precioVenta": {
+								"type": "integer"
+							},
+							"proyecto": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"nombre": {
+										"type": "string"
+									}
+								}
+							},
+							"etapa": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"nombre": {
+										"type": "string"
+									}
+								}
+							},
+							"subAgrupacion": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"nombre": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"cliente": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "integer"
+						},
+						"identificadorPersonal": {
+							"type": "string"
+						},
+						"nombre": {
+							"type": "string"
+						},
+						"telefono": {
+							"type": "string"
+						},
+						"email": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		}
+	}
+}

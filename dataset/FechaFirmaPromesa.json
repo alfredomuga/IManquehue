@@ -1,0 +1,39 @@
+{
+	"name": "FechaFirmaPromesa",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "imsadatalake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataLake/PlanOK"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "FechaFirmaPromesa",
+				"folderPath": "PlanOK",
+				"fileSystem": "imsa-files"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"id_promesa": {
+					"type": "integer"
+				},
+				"id_negocio": {
+					"type": "integer"
+				},
+				"fecha_firma_comprador": {
+					"type": "string"
+				},
+				"setFechaFirmaComprador": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

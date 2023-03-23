@@ -1,0 +1,84 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "NegocioPromesa",
+						"type": "DatasetReference"
+					},
+					"name": "NegocioPromesa"
+				},
+				{
+					"dataset": {
+						"referenceName": "FechaFirmaPromesa",
+						"type": "DatasetReference"
+					},
+					"name": "NegocioPromesaFirma"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as integer,",
+				"          fechaPromesa as string,",
+				"          totalLista as integer,",
+				"          descuentoSubtotal as (valor as double, unidad as string),",
+				"          totalVenta as double,",
+				"          productos as (id as integer, nombre as string, tipo as string, precioLista as integer, descuento as (valor as double, unidad as string), precioVenta as integer, proyecto as (id as integer, nombre as string), etapa as (id as integer, nombre as string), subAgrupacion as (id as integer, nombre as string))[],",
+				"          cliente as (id as integer, identificadorPersonal as string, nombre as string, telefono as string, email as string)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> NegocioPromesa",
+				"source(output(",
+				"          id_promesa as integer,",
+				"          id_negocio as integer,",
+				"          fecha_firma_comprador as string,",
+				"          setFechaFirmaComprador as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> NegocioPromesaFirma",
+				"NegocioPromesa foldDown(unroll(productos),",
+				"     mapColumn(",
+				"          id,",
+				"          fechaPromesa,",
+				"          totalLista,",
+				"          {descuentoSubtotal.valor} = descuentoSubtotal.valor,",
+				"          {descuentoSubtotal.unidadad} = descuentoSubtotal.unidad,",
+				"          totalVenta,",
+				"          {productos.id} = productos.id,",
+				"          {productos.nombre} = productos.nombre,",
+				"          {productos.tipo} = productos.tipo,",
+				"          {productos.precioLista} = productos.precioLista,",
+				"          {productos.descuento.valor} = productos.descuento.valor,",
+				"          {productos.descuento.unidad} = productos.descuento.unidad,",
+				"          {productos.precioVenta} = productos.precioVenta,",
+				"          {productos.proyecto.id} = productos.proyecto.id,",
+				"          {productos.proyecto.nombre} = productos.proyecto.nombre,",
+				"          {productos.etapa.id} = productos.etapa.id,",
+				"          {productos.etapa.nombre} = productos.etapa.nombre,",
+				"          {productos.subAgrupacion.id} = productos.subAgrupacion.id,",
+				"          {productos.subAgrupacion.nombre} = productos.subAgrupacion.nombre,",
+				"          {cliente.id} = cliente.id,",
+				"          {cliente.identificadorPersonal} = cliente.identificadorPersonal,",
+				"          {cliente.nombre} = cliente.nombre,",
+				"          {cliente.telefono} = cliente.telefono,",
+				"          {cliente.email} = cliente.email",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1"
+			]
+		}
+	}
+}
