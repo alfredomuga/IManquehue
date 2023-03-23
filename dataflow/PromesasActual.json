@@ -164,6 +164,7 @@
 				"          {productos.id},",
 				"          {productos.nombre},",
 				"          {productos.tipo},",
+				"          {productos.precioLista},",
 				"          {productos.descuento.valor},",
 				"          {productos.descuento.unidad},",
 				"          {productos.precioVenta},",
