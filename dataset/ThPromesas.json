@@ -54,7 +54,8 @@
 			},
 			{
 				"name": "productos.precioLista",
-				"type": "varchar"
+				"type": "int",
+				"precision": 10
 			},
 			{
 				"name": "productos.descuento.valor",
