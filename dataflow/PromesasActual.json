@@ -87,7 +87,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> Promesa",
-				"Promesa, FirmaClientePromesa lookup(id == id_negocio,",
+				"Promesa, FirmaClientePromesa lookup(id == id_promesa,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
