@@ -29,6 +29,9 @@
 				},
 				{
 					"name": "FirmaClientePromesa"
+				},
+				{
+					"name": "alterRow1"
 				}
 			],
 			"scriptLines": [
@@ -95,7 +98,8 @@
 				"          setFechaFirmaComprador",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> FirmaClientePromesa"
+				"     skipDuplicateMapOutputs: true) ~> FirmaClientePromesa",
+				"lookup1 alterRow(upsertIf(true())) ~> alterRow1"
 			]
 		}
 	}
