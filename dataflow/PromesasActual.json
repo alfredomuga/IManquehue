@@ -39,9 +39,6 @@
 					"name": "FirmaClientePromesa"
 				},
 				{
-					"name": "alterRow1"
-				},
-				{
 					"name": "FechaCargaBI"
 				}
 			],
@@ -110,9 +107,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> FirmaClientePromesa",
-				"FechaCargaBI alterRow(upsertIf(true())) ~> alterRow1",
 				"lookup1 derive(FechaCargaBI = currentTimestamp()) ~> FechaCargaBI",
-				"alterRow1 sink(allowSchemaDrift: true,",
+				"FechaCargaBI sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          id as integer,",
@@ -149,7 +145,6 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
-				"     truncate:true,",
 				"     format: 'table',",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
