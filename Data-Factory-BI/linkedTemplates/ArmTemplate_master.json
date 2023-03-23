@@ -221,6 +221,26 @@
 					},
 					"001 NominasEnFirma_properties_typeProperties_scope": {
 						"value": "[parameters('001 NominasEnFirma_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "Data-Factory-BI_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"001 ReportePlazos_properties_typeProperties_scope": {
 						"value": "[parameters('001 ReportePlazos_properties_typeProperties_scope')]"
@@ -234,7 +254,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_3')]"
+				"[resourceId('Microsoft.Resources/deployments', 'Data-Factory-BI_ArmTemplate_4')]"
 			]
 		}
 	]

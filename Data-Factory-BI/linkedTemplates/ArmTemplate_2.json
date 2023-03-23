@@ -13,6 +13,796 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ThHitosReal')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM_IMSA",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW/Planificacion"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "HitosReal"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PromesasActual')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DetallePromesas",
+								"type": "DatasetReference"
+							},
+							"name": "DetallePromesa"
+						},
+						{
+							"dataset": {
+								"referenceName": "FechaFirmaPromesa",
+								"type": "DatasetReference"
+							},
+							"name": "NegocioPromesaFirma"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ThPromesas",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Promesa"
+						},
+						{
+							"name": "lookup1"
+						},
+						{
+							"name": "FirmaClientePromesa"
+						},
+						{
+							"name": "FechaCargaBI"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as integer,",
+						"          fechaPromesa as string,",
+						"          totalLista as integer,",
+						"          descuentoSubtotal as (valor as double, unidad as string),",
+						"          totalVenta as double,",
+						"          productos as (id as integer, nombre as string, tipo as string, precioLista as integer, descuento as (valor as double, unidad as string), precioVenta as integer, proyecto as (id as integer, nombre as string), etapa as (id as integer, nombre as string), subAgrupacion as (id as integer, nombre as string))[],",
+						"          cliente as (id as integer, identificadorPersonal as string, nombre as string, telefono as string, email as string)",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> DetallePromesa",
+						"source(output(",
+						"          id_promesa as integer,",
+						"          id_negocio as integer,",
+						"          fecha_firma_comprador as string,",
+						"          setFechaFirmaComprador as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> NegocioPromesaFirma",
+						"DetallePromesa foldDown(unroll(productos),",
+						"     mapColumn(",
+						"          id,",
+						"          fechaPromesa,",
+						"          totalLista,",
+						"          {descuentoSubtotal.valor} = descuentoSubtotal.valor,",
+						"          {descuentoSubtotal.unidadad} = descuentoSubtotal.unidad,",
+						"          totalVenta,",
+						"          {productos.id} = productos.id,",
+						"          {productos.nombre} = productos.nombre,",
+						"          {productos.tipo} = productos.tipo,",
+						"          {productos.precioLista} = productos.precioLista,",
+						"          {productos.descuento.valor} = productos.descuento.valor,",
+						"          {productos.descuento.unidad} = productos.descuento.unidad,",
+						"          {productos.precioVenta} = productos.precioVenta,",
+						"          {productos.proyecto.id} = productos.proyecto.id,",
+						"          {productos.proyecto.nombre} = productos.proyecto.nombre,",
+						"          {productos.etapa.id} = productos.etapa.id,",
+						"          {productos.etapa.nombre} = productos.etapa.nombre,",
+						"          {productos.subAgrupacion.id} = productos.subAgrupacion.id,",
+						"          {productos.subAgrupacion.nombre} = productos.subAgrupacion.nombre,",
+						"          {cliente.id} = cliente.id,",
+						"          {cliente.identificadorPersonal} = cliente.identificadorPersonal,",
+						"          {cliente.nombre} = cliente.nombre,",
+						"          {cliente.telefono} = cliente.telefono,",
+						"          {cliente.email} = cliente.email",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> Promesa",
+						"Promesa, FirmaClientePromesa lookup(id == id_promesa,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> lookup1",
+						"NegocioPromesaFirma select(mapColumn(",
+						"          id_promesa,",
+						"          id_negocio,",
+						"          fecha_firma_comprador,",
+						"          setFechaFirmaComprador",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> FirmaClientePromesa",
+						"lookup1 derive(FechaCargaBI = currentTimestamp()) ~> FechaCargaBI",
+						"FechaCargaBI sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id as integer,",
+						"          fechaPromesa as string,",
+						"          totalLista as integer,",
+						"          {descuentoSubtotal.valor} as double,",
+						"          {descuentoSubtotal.unidadad} as string,",
+						"          totalVenta as integer,",
+						"          {productos.id} as integer,",
+						"          {productos.nombre} as string,",
+						"          {productos.tipo} as string,",
+						"          {productos.precioLista} as integer,",
+						"          {productos.descuento.valor} as double,",
+						"          {productos.descuento.unidad} as string,",
+						"          {productos.precioVenta} as integer,",
+						"          {productos.proyecto.id} as integer,",
+						"          {productos.proyecto.nombre} as string,",
+						"          {productos.etapa.id} as integer,",
+						"          {productos.etapa.nombre} as string,",
+						"          {productos.subAgrupacion.id} as integer,",
+						"          {productos.subAgrupacion.nombre} as string,",
+						"          {cliente.id} as integer,",
+						"          {cliente.identificadorPersonal} as string,",
+						"          {cliente.nombre} as string,",
+						"          {cliente.telefono} as string,",
+						"          {cliente.email} as string,",
+						"          id_promesa as integer,",
+						"          id_negocio as integer,",
+						"          fecha_firma_comprador as string,",
+						"          setFechaFirmaComprador as string,",
+						"          FechaCargaBI as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          id,",
+						"          fechaPromesa,",
+						"          totalLista,",
+						"          {descuentoSubtotal.valor},",
+						"          {descuentoSubtotal.unidadad},",
+						"          totalVenta,",
+						"          {productos.id},",
+						"          {productos.nombre},",
+						"          {productos.tipo},",
+						"          {productos.precioLista},",
+						"          {productos.descuento.valor},",
+						"          {productos.descuento.unidad},",
+						"          {productos.precioVenta},",
+						"          {productos.proyecto.id},",
+						"          {productos.proyecto.nombre},",
+						"          {productos.etapa.id},",
+						"          {productos.etapa.nombre},",
+						"          {productos.subAgrupacion.id},",
+						"          {productos.subAgrupacion.nombre},",
+						"          {cliente.id},",
+						"          {cliente.identificadorPersonal},",
+						"          {cliente.nombre},",
+						"          {cliente.telefono},",
+						"          {cliente.email},",
+						"          id_promesa,",
+						"          id_negocio,",
+						"          fecha_firma_comprador,",
+						"          setFechaFirmaComprador,",
+						"          FechaCargaBI",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Area Empleados')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Area Empleados",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/@{'Modelo RRHH'}/@{'Areas_Empleados.xlsx'}"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'rrhh'}.@{'diccionario_areas_empleados'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE rrhh.diccionario_areas_empleados",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Empresa - Nombre Empresa",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "empresa",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Nombre Completo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "empleado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - RUT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "rut",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Cargo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cargo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Rol Privado",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "rol_privado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Gerencia",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "gerencia",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - ID Área Nivel 1",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "id_area_1",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Área Nivel 1",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "area_1",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - ID Área Nivel 2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "id_area_2",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Área Nivel 2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "area_2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Familia de Cargo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "familia_cargo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Campos Personalizados de Trabajo - Rol del Colaborador",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "rol_colaborador",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Nombre Área Asignada(o)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "nombre_area_asignado",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Trabajo - Obra",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "obra",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_Area_Empleados_DataLake",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderPath": "Modelo RRHH",
+									"FileName": "Areas_Empleados.xlsx",
+									"Sheet": "Reporte Areas Audatia"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "rrhh",
+									"table": "diccionario_areas_empleados"
+								}
+							}
+						]
+					},
+					{
+						"name": "Ok Carga 001 Area Empleados",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy Area Empleados",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-138.westus.logic.azure.com:443/workflows/d81b126acfee4a51b11143230b300da9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qRrQqJGIgRxU7SjT7CDQsA39DYR9NXhpZEVmXGAvIUo",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"Recurso": "AzureBI",
+								"Pipeline": "RRHH",
+								"Tarea": "001_Area_Empleados",
+								"Estado": "OK"
+							}
+						}
+					},
+					{
+						"name": "Error Carga 001 Area Empleados",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy Area Empleados",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-138.westus.logic.azure.com:443/workflows/d81b126acfee4a51b11143230b300da9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qRrQqJGIgRxU7SjT7CDQsA39DYR9NXhpZEVmXGAvIUo",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"Recurso": "AzureBI",
+								"Pipeline": "RRHH",
+								"Tarea": "001_Area_Empleados",
+								"Estado": "Error"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "RRHH"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-13T18:14:59Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/001 Centro Costos')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Centro Costos",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "imsa-files/Modelo RRHH/Centro_Costos.xlsx"
+							},
+							{
+								"name": "Destination",
+								"value": "@{'rrhh'}.@{'peso_centro_de_costos'}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"Centro_de_Costo",
+										"Prorrateo",
+										"Liquidación_Período",
+										"Empleado_RUT",
+										"Empleado_Código_de_Ficha",
+										"Empleado_Nombre_Completo"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Centro de Costo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Centro_de_Costo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Prorrateo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Prorrateo",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "Liquidación - Período",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Liquidación_Período",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - RUT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Empleado_RUT",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Código de Ficha",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Empleado_Código_de_Ficha",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Empleado - Nombre Completo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Empleado_Nombre_Completo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Excel_CentroCostos_DataLake",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWIM",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema": "rrhh",
+									"table": "peso_centro_de_costos"
+								}
+							}
+						]
+					},
+					{
+						"name": "Ok Carga 001 Centro Costos",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy Centro Costos",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-138.westus.logic.azure.com:443/workflows/d81b126acfee4a51b11143230b300da9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qRrQqJGIgRxU7SjT7CDQsA39DYR9NXhpZEVmXGAvIUo",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"Recurso": "AzureBI",
+								"Pipeline": "RRHH",
+								"Tarea": "001_Centro_Costos",
+								"Estado": "OK"
+							}
+						}
+					},
+					{
+						"name": "Error Carga 001 Centro Costos",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy Centro Costos",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-138.westus.logic.azure.com:443/workflows/d81b126acfee4a51b11143230b300da9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qRrQqJGIgRxU7SjT7CDQsA39DYR9NXhpZEVmXGAvIUo",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"Recurso": "AzureBI",
+								"Pipeline": "RRHH",
+								"Tarea": "001_Centro_Costos",
+								"Estado": "Error"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "RRHH"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-13T18:14:59Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/001 Control Hitos')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -11035,942 +11825,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2023-01-06T18:45:21Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/008_DimSapCuenta')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SAP a DW2 MaestraCuenta",
-						"description": "",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "sap.DeudoresInmobiliarios"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SapHanaSource",
-								"query": " select * from \"SBO_MANQUEHUE\".\"IM_Arbol_Cuentas_Contales\"",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "TRUNCATE TABLE dim.SapCuenta",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Codigo Cuenta 1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta1",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta1",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 2",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta2",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 2",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta2",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 3",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta3",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 3",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta3",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 4",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta4",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 4",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta4",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Codigo Cuenta 5",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CodigoCuenta5",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Nombre Cuenta 5",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NombreCuenta5",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SAP_HANA",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWDimSapCuenta",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "SAP"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-06T18:45:21Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/009_LibroMayor')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LibroMayorDetalle",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.00:30:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "th.LibroMayor"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SapHanaSource",
-								"additionalColumns": [
-									{
-										"name": "Fecha_Snapshot",
-										"value": {
-											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
-											"type": "Expression"
-										}
-									}
-								],
-								"query": "select *\nfrom \"SBO_MANQUEHUE\".\"IM_Vista_Mayor\"  ",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "truncate table th.LibroMayor",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "tipo",
-											"type": "Int16"
-										},
-										"sink": {
-											"name": "tipo",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Account",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Account",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "FormatCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FormatCode",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "AcctName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "AcctName",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TransId",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "TransId",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "RefDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "RefDate",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "Debit",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Debit",
-											"type": "Double",
-											"physicalType": "float"
-										}
-									},
-									{
-										"source": {
-											"name": "Credit",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Credit",
-											"type": "Double",
-											"physicalType": "float"
-										}
-									},
-									{
-										"source": {
-											"name": "SYSDebit",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "SYSDebit",
-											"type": "Double",
-											"physicalType": "float"
-										}
-									},
-									{
-										"source": {
-											"name": "SYSCredit",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "SYSCredit",
-											"type": "Double",
-											"physicalType": "float"
-										}
-									},
-									{
-										"source": {
-											"name": "LineMemo",
-											"type": "String"
-										},
-										"sink": {
-											"name": "LineMemo",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TransType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "TransType",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Libro",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Libro",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "CodSucursal",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "CodSucursal",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "Sucursal",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Sucursal",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha_Snapshot",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Fecha_Snapshot",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SAP_HANA",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ThLibroMayor",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "ActualizacionCorrecta",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "LibroMayorDetalle",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-126.westus.logic.azure.com:443/workflows/0caaa07409624674825ab5b13aec0982/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3e1QOQSCBQrUrkLZwLYF3aI_2WjYE3sBv5LmHc2K5ug",
-							"method": "GET",
-							"headers": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "SAP"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-06T18:45:21Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/010_DetalleMovimiento')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "DetalleMovimiento",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "th.DetalleMovimiento"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SapHanaSource",
-								"additionalColumns": [
-									{
-										"name": "Fecha_Snapshot",
-										"value": {
-											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
-											"type": "Expression"
-										}
-									}
-								],
-								"query": "select *\nfrom \"SBO_MANQUEHUE\".\"JDT1\"",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "truncate table th.DetalleMovimiento",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "TransId",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "TransId",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									},
-									{
-										"source": {
-											"name": "LineMemo",
-											"type": "String"
-										},
-										"sink": {
-											"name": "LineMemo",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SAP_HANA",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ThDetalleMovimiento",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "SAP"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-06T18:45:21Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Conexion tester')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Base Proveedores SAP to Datalake",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "imsa-files/@{'SAP'}/@{'Proveedores.csv'}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SapHanaSource",
-								"additionalColumns": [
-									{
-										"name": "Fecha_Snapshot",
-										"value": {
-											"value": "@formatDateTime(addhours(utcnow(),-4), 'yyyy-MM-dd')",
-											"type": "Expression"
-										}
-									}
-								],
-								"query": "SELECT 'Entrada de Mercancias Interna' \"Tipo_Documento\",T1.\"Project\" \"Cod_Proyecto\",T2.\"PrjName\" \"Nom_Proyecto\",T1.\"U_Partida\" \"Partida\",\r\n(SELECT T100.\"U_Description\" FROM \"SBO_MANQUEHUE\".\"@EXX_PRE3\" T100 WHERE T100.\"U_DocEntry\" = T1.\"U_PresEntry\" and T100.\"U_Code\" = T1.\"U_Partida\") \"Nom_Partida\",\r\nT3.\"Segment_0\" \"Num_Cuenta_Contable\",T3.\"AcctName\" \"Cuenta_Contable\",T4.\"RefDate\" \"Fecha_Registro_Contable\",T4.\"Number\" \"Numero_Asiento\",T4.\"TransId\" \"Num_Trasaccion\",T0.\"DocNum\" \"Num_Doc_Origen\",\r\nT1.\"OcrCode\" \"CeCo\",T10.\"OcrName\" \"Nombre CeCo\",T1.\"OcrCode2\" \"Segmento Negocio\",T12.\"OcrName\" \"Nombre Segmento Negocio\",T1.\"OcrCode3\" \"Area Negocio\",T13.\"OcrName\" \"Nombre Area Negocio\",\r\nT1.\"OcrCode4\" \"Concepto Gasto\",T14.\"OcrName\" \"Nombre Concepto Gasto\",T1.\"LineTotal\" \"Credito\",T1.\"TotalSumSy\" \"Credito UF\",0 \"Debito\",0 \"Debito UF\",T4.\"Memo\" \"Glosa\",\r\nT15.\"U_NAME\" \"Creador Asiento\",T0.\"Comments\" \"Comentarios\" ,T4.\"RefDate\"\r\nFROM \"SBO_MANQUEHUE\".\"IGN1\" T1 \r\nINNER JOIN \"SBO_MANQUEHUE\".\"OIGN\" T0 ON T1.\"DocEntry\" = T0.\"DocEntry\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OPRJ\" T2 ON T2.\"PrjCode\" = T1.\"Project\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OACT\" T3 ON T3.\"AcctCode\" = T1.\"AcctCode\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OJDT\" T4 ON T4.\"TransId\" = T0.\"TransId\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T10 ON T1.\"OcrCode\" = T10.\"OcrCode\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T12 ON T1.\"OcrCode2\" = T12.\"OcrCode\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T13 ON T1.\"OcrCode3\" = T13.\"OcrCode\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OOCR\" T14 ON T1.\"OcrCode4\" = T14.\"OcrCode\" \r\nLEFT JOIN \"SBO_MANQUEHUE\".\"OUSR\" T15 ON T0.\"UserSign\" = T15.\"USERID\" \r\nwhere T3.\"Segment_0\" IN ('5101101','5101102','5101201','5101202','5101203','5101204','5101205','5101206','5101207','5101401','5101402','5101403','5101404','5101405') \r\nand T0.\"BPLId\" = 32 AND T0.\"ObjType\" = 59 \r\nAND (T4.\"RefDate\" >= '2022-07-01')\r\nORDER BY T4.\"RefDate\" ASC",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "FolioNum",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "FolioNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Project",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Project",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PrjName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PrjName",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DIAS",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "DIAS",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BPLId",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "BPLId",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BPLName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BPLName",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UNIDAD DE NEGOCIO",
-											"type": "String"
-										},
-										"sink": {
-											"name": "UNIDAD DE NEGOCIO",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "GroupCode",
-											"type": "Int16"
-										},
-										"sink": {
-											"name": "GroupCode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "GroupName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "GroupName",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SALDO",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "SALDO",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocNum",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "DocNum",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CANCELED",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CANCELED",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "DocDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocDueDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "DocDueDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CardCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CardCode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CardName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CardName",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocTotal",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "DocTotal",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PaidToDate",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "PaidToDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SysRate",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "SysRate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocTotalSy",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "DocTotalSy",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Indicator",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Indicator",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Fecha_Snapshot",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Fecha_Snapshot",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SAP_HANA",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CSV_Datalake",
-								"type": "DatasetReference",
-								"parameters": {
-									"Folder": "SAP",
-									"File": "Proveedores.csv"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"fch_inicio": {
-						"type": "String",
-						"defaultValue": "07/01/2022"
-					}
-				},
-				"folder": {
-					"name": "SAP/test"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-09-11T23:30:28Z"
 			},
 			"dependsOn": []
 		}
