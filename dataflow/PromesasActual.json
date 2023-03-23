@@ -124,7 +124,7 @@
 				"          {productos.id} as integer,",
 				"          {productos.nombre} as string,",
 				"          {productos.tipo} as string,",
-				"          {productos.precioLista} as string,",
+				"          {productos.precioLista} as integer,",
 				"          {productos.descuento.valor} as double,",
 				"          {productos.descuento.unidad} as string,",
 				"          {productos.precioVenta} as integer,",
@@ -182,7 +182,8 @@
 				"          id_promesa,",
 				"          id_negocio,",
 				"          fecha_firma_comprador,",
-				"          setFechaFirmaComprador",
+				"          setFechaFirmaComprador,",
+				"          FechaCargaBI",
 				"     )) ~> sink1"
 			]
 		}
