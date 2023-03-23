@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "PromesasActual",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -25,10 +25,10 @@
 					"name": "Promesa"
 				},
 				{
-					"name": "Firma"
+					"name": "lookup1"
 				},
 				{
-					"name": "lookup1"
+					"name": "FirmaClientePromesa"
 				}
 			],
 			"scriptLines": [
@@ -84,19 +84,18 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> Promesa",
-				"NegocioPromesaFirma foldDown(unroll(),",
-				"     mapColumn(",
+				"Promesa, FirmaClientePromesa lookup(id == id_negocio,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"NegocioPromesaFirma select(mapColumn(",
 				"          id_promesa,",
 				"          id_negocio,",
 				"          fecha_firma_comprador,",
 				"          setFechaFirmaComprador",
 				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> Firma",
-				"Promesa, Firma lookup(id == id_negocio,",
-				"     multiple: false,",
-				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1"
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FirmaClientePromesa"
 			]
 		}
 	}
