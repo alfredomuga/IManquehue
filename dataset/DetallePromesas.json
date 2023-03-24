@@ -73,7 +73,7 @@
 								}
 							},
 							"precioVenta": {
-								"type": "integer"
+								"type": "number"
 							},
 							"proyecto": {
 								"type": "object",

@@ -49,7 +49,7 @@
 				"          totalLista as integer,",
 				"          descuentoSubtotal as (valor as double, unidad as string),",
 				"          totalVenta as double,",
-				"          productos as (id as integer, nombre as string, tipo as string, precioLista as integer, descuento as (valor as double, unidad as string), precioVenta as integer, proyecto as (id as integer, nombre as string), etapa as (id as integer, nombre as string), subAgrupacion as (id as integer, nombre as string))[],",
+				"          productos as (id as integer, nombre as string, tipo as string, precioLista as integer, descuento as (valor as double, unidad as string), precioVenta as double, proyecto as (id as integer, nombre as string), etapa as (id as integer, nombre as string), subAgrupacion as (id as integer, nombre as string))[],",
 				"          cliente as (id as integer, identificadorPersonal as string, nombre as string, telefono as string, email as string)",
 				"     ),",
 				"     allowSchemaDrift: true,",
