@@ -21,6 +21,28 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/EscribirHES')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Publicar OC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"PayDays": "Value"
+					}
+				},
+				"folder": {
+					"name": "Otros"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Excel_Area_Empleados_DataLake')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -307,6 +329,48 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FechaFirmaPromesa')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/PlanOK"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FechaFirmaPromesa",
+						"folderPath": "PlanOK",
+						"fileSystem": "imsa-files"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id_promesa": {
+							"type": "integer"
+						},
+						"id_negocio": {
+							"type": "integer"
+						},
+						"fecha_firma_comprador": {
+							"type": "string"
+						},
+						"setFechaFirmaComprador": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ThDetalleMovimiento')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -428,277 +492,6 @@
 				"typeProperties": {
 					"schema": "th",
 					"table": "LibroMayor"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sapDeudoresInmobiliarios')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWIM2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DW2/DeudoresInmobiliarios"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "idFecha",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "idProyectoEtapa",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "idEscenario",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CodigoHito",
-						"type": "varchar"
-					},
-					{
-						"name": "OrdenHito",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Proyecto",
-						"type": "varchar"
-					},
-					{
-						"name": "Etapa",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "sap",
-					"table": "DeudoresInmobiliarios"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWIM_IMSA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('DWIM_IMSA_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "DWIM",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IMSA_HANA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SapHana",
-				"typeProperties": {
-					"connectionString": "[parameters('IMSA_HANA_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationHana",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DetallePromesas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/PlanOK"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "DetallePromesas",
-						"folderPath": "PlanOK",
-						"fileSystem": "imsa-files"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"id": {
-							"type": "integer"
-						},
-						"fechaPromesa": {
-							"type": "string"
-						},
-						"totalLista": {
-							"type": "integer"
-						},
-						"descuentoSubtotal": {
-							"type": "object",
-							"properties": {
-								"valor": {
-									"type": "number"
-								},
-								"unidad": {
-									"type": "string"
-								}
-							}
-						},
-						"totalVenta": {
-							"type": "number"
-						},
-						"productos": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"type": "integer"
-									},
-									"nombre": {
-										"type": "string"
-									},
-									"tipo": {
-										"type": "string"
-									},
-									"precioLista": {
-										"type": "integer"
-									},
-									"descuento": {
-										"type": "object",
-										"properties": {
-											"valor": {
-												"type": "number"
-											},
-											"unidad": {
-												"type": "string"
-											}
-										}
-									},
-									"precioVenta": {
-										"type": "integer"
-									},
-									"proyecto": {
-										"type": "object",
-										"properties": {
-											"id": {
-												"type": "integer"
-											},
-											"nombre": {
-												"type": "string"
-											}
-										}
-									},
-									"etapa": {
-										"type": "object",
-										"properties": {
-											"id": {
-												"type": "integer"
-											},
-											"nombre": {
-												"type": "string"
-											}
-										}
-									},
-									"subAgrupacion": {
-										"type": "object",
-										"properties": {
-											"id": {
-												"type": "integer"
-											},
-											"nombre": {
-												"type": "string"
-											}
-										}
-									}
-								}
-							}
-						},
-						"cliente": {
-							"type": "object",
-							"properties": {
-								"id": {
-									"type": "integer"
-								},
-								"identificadorPersonal": {
-									"type": "string"
-								},
-								"nombre": {
-									"type": "string"
-								},
-								"telefono": {
-									"type": "string"
-								},
-								"email": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FechaFirmaPromesa')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/PlanOK"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FechaFirmaPromesa",
-						"folderPath": "PlanOK",
-						"fileSystem": "imsa-files"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"id_promesa": {
-							"type": "integer"
-						},
-						"id_negocio": {
-							"type": "integer"
-						},
-						"fecha_firma_comprador": {
-							"type": "string"
-						},
-						"setFechaFirmaComprador": {
-							"type": "string"
-						}
-					}
 				}
 			},
 			"dependsOn": []
@@ -852,6 +645,95 @@
 				"typeProperties": {
 					"schema": "th",
 					"table": "Promesas"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sapDeudoresInmobiliarios')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/DeudoresInmobiliarios"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "idFecha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProyectoEtapa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idEscenario",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CodigoHito",
+						"type": "varchar"
+					},
+					{
+						"name": "OrdenHito",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Proyecto",
+						"type": "varchar"
+					},
+					{
+						"name": "Etapa",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "sap",
+					"table": "DeudoresInmobiliarios"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWIM_IMSA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('DWIM_IMSA_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "DWIM",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IMSA_HANA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SapHana",
+				"typeProperties": {
+					"connectionString": "[parameters('IMSA_HANA_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationHana",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": []

@@ -85663,6 +85663,54 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PlanOK')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ThPromesas",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:15:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "PromesasActual",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"DetallePromesa": {},
+									"NegocioPromesaFirma": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/PromesasActual')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SAP_Tanner_HES')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -87309,6 +87357,148 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DetallePromesas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/PlanOK"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DetallePromesas",
+						"folderPath": "PlanOK",
+						"fileSystem": "imsa-files"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "integer"
+						},
+						"fechaPromesa": {
+							"type": "string"
+						},
+						"totalLista": {
+							"type": "integer"
+						},
+						"descuentoSubtotal": {
+							"type": "object",
+							"properties": {
+								"valor": {
+									"type": "number"
+								},
+								"unidad": {
+									"type": "string"
+								}
+							}
+						},
+						"totalVenta": {
+							"type": "number"
+						},
+						"productos": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"nombre": {
+										"type": "string"
+									},
+									"tipo": {
+										"type": "string"
+									},
+									"precioLista": {
+										"type": "integer"
+									},
+									"descuento": {
+										"type": "object",
+										"properties": {
+											"valor": {
+												"type": "number"
+											},
+											"unidad": {
+												"type": "string"
+											}
+										}
+									},
+									"precioVenta": {
+										"type": "number"
+									},
+									"proyecto": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer"
+											},
+											"nombre": {
+												"type": "string"
+											}
+										}
+									},
+									"etapa": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer"
+											},
+											"nombre": {
+												"type": "string"
+											}
+										}
+									},
+									"subAgrupacion": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer"
+											},
+											"nombre": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"cliente": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "integer"
+								},
+								"identificadorPersonal": {
+									"type": "string"
+								},
+								"nombre": {
+									"type": "string"
+								},
+								"telefono": {
+									"type": "string"
+								},
+								"email": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/EscribirHES')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -87625,6 +87815,50 @@
 						"type": "String"
 					}
 				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FechaFirmaPromesa')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataLake/PlanOK"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FechaFirmaPromesa",
+						"folderPath": "PlanOK",
+						"fileSystem": "imsa-files"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id_promesa": {
+							"type": "integer"
+						},
+						"id_negocio": {
+							"type": "integer"
+						},
+						"fecha_firma_comprador": {
+							"type": "string"
+						},
+						"setFechaFirmaComprador": {
+							"type": "string"
+						}
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
@@ -88038,6 +88272,161 @@
 				"typeProperties": {
 					"schema": "th",
 					"table": "LibroMayor"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ThPromesas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWIM2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DW2/Backlog"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "fechaPromesa",
+						"type": "varchar"
+					},
+					{
+						"name": "totalLista",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "descuentoSubtotal.valor",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "descuentoSubtotal.unidadad",
+						"type": "varchar"
+					},
+					{
+						"name": "totalVenta",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "productos.id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "productos.nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "productos.tipo",
+						"type": "varchar"
+					},
+					{
+						"name": "productos.precioLista",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "productos.descuento.valor",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "productos.descuento.unidad",
+						"type": "varchar"
+					},
+					{
+						"name": "productos.precioVenta",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "productos.proyecto.id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "productos.proyecto.nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "productos.etapa.id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "productos.etapa.nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "productos.subAgrupacion.id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "productos.subAgrupacion.nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "cliente.id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "cliente.identificadorPersonal",
+						"type": "varchar"
+					},
+					{
+						"name": "cliente.nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "cliente.telefono",
+						"type": "varchar"
+					},
+					{
+						"name": "cliente.email",
+						"type": "varchar"
+					},
+					{
+						"name": "id_promesa",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id_negocio",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "fecha_firma_comprador",
+						"type": "varchar"
+					},
+					{
+						"name": "setFechaFirmaComprador",
+						"type": "varchar"
+					},
+					{
+						"name": "FechaCargaBI",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "th",
+					"table": "Promesas"
 				}
 			},
 			"dependsOn": [
@@ -88859,192 +89248,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DetallePromesas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/PlanOK"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "DetallePromesas",
-						"folderPath": "PlanOK",
-						"fileSystem": "imsa-files"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"id": {
-							"type": "integer"
-						},
-						"fechaPromesa": {
-							"type": "string"
-						},
-						"totalLista": {
-							"type": "integer"
-						},
-						"descuentoSubtotal": {
-							"type": "object",
-							"properties": {
-								"valor": {
-									"type": "number"
-								},
-								"unidad": {
-									"type": "string"
-								}
-							}
-						},
-						"totalVenta": {
-							"type": "number"
-						},
-						"productos": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"type": "integer"
-									},
-									"nombre": {
-										"type": "string"
-									},
-									"tipo": {
-										"type": "string"
-									},
-									"precioLista": {
-										"type": "integer"
-									},
-									"descuento": {
-										"type": "object",
-										"properties": {
-											"valor": {
-												"type": "number"
-											},
-											"unidad": {
-												"type": "string"
-											}
-										}
-									},
-									"precioVenta": {
-										"type": "integer"
-									},
-									"proyecto": {
-										"type": "object",
-										"properties": {
-											"id": {
-												"type": "integer"
-											},
-											"nombre": {
-												"type": "string"
-											}
-										}
-									},
-									"etapa": {
-										"type": "object",
-										"properties": {
-											"id": {
-												"type": "integer"
-											},
-											"nombre": {
-												"type": "string"
-											}
-										}
-									},
-									"subAgrupacion": {
-										"type": "object",
-										"properties": {
-											"id": {
-												"type": "integer"
-											},
-											"nombre": {
-												"type": "string"
-											}
-										}
-									}
-								}
-							}
-						},
-						"cliente": {
-							"type": "object",
-							"properties": {
-								"id": {
-									"type": "integer"
-								},
-								"identificadorPersonal": {
-									"type": "string"
-								},
-								"nombre": {
-									"type": "string"
-								},
-								"telefono": {
-									"type": "string"
-								},
-								"email": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FechaFirmaPromesa')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "imsadatalake",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DataLake/PlanOK"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FechaFirmaPromesa",
-						"folderPath": "PlanOK",
-						"fileSystem": "imsa-files"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"id_promesa": {
-							"type": "integer"
-						},
-						"id_negocio": {
-							"type": "integer"
-						},
-						"fecha_firma_comprador": {
-							"type": "string"
-						},
-						"setFechaFirmaComprador": {
-							"type": "string"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PromesasActual')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -89097,7 +89300,7 @@
 						"          totalLista as integer,",
 						"          descuentoSubtotal as (valor as double, unidad as string),",
 						"          totalVenta as double,",
-						"          productos as (id as integer, nombre as string, tipo as string, precioLista as integer, descuento as (valor as double, unidad as string), precioVenta as integer, proyecto as (id as integer, nombre as string), etapa as (id as integer, nombre as string), subAgrupacion as (id as integer, nombre as string))[],",
+						"          productos as (id as integer, nombre as string, tipo as string, precioLista as integer, descuento as (valor as double, unidad as string), precioVenta as double, proyecto as (id as integer, nombre as string), etapa as (id as integer, nombre as string), subAgrupacion as (id as integer, nombre as string))[],",
 						"          cliente as (id as integer, identificadorPersonal as string, nombre as string, telefono as string, email as string)",
 						"     ),",
 						"     allowSchemaDrift: true,",
@@ -89233,210 +89436,6 @@
 				"[concat(variables('factoryId'), '/datasets/DetallePromesas')]",
 				"[concat(variables('factoryId'), '/datasets/FechaFirmaPromesa')]",
 				"[concat(variables('factoryId'), '/datasets/ThPromesas')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ThPromesas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWIM2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DW2/Backlog"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "fechaPromesa",
-						"type": "varchar"
-					},
-					{
-						"name": "totalLista",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "descuentoSubtotal.valor",
-						"type": "float",
-						"precision": 15
-					},
-					{
-						"name": "descuentoSubtotal.unidadad",
-						"type": "varchar"
-					},
-					{
-						"name": "totalVenta",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "productos.id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "productos.nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "productos.tipo",
-						"type": "varchar"
-					},
-					{
-						"name": "productos.precioLista",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "productos.descuento.valor",
-						"type": "float",
-						"precision": 15
-					},
-					{
-						"name": "productos.descuento.unidad",
-						"type": "varchar"
-					},
-					{
-						"name": "productos.precioVenta",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "productos.proyecto.id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "productos.proyecto.nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "productos.etapa.id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "productos.etapa.nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "productos.subAgrupacion.id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "productos.subAgrupacion.nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "cliente.id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "cliente.identificadorPersonal",
-						"type": "varchar"
-					},
-					{
-						"name": "cliente.nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "cliente.telefono",
-						"type": "varchar"
-					},
-					{
-						"name": "cliente.email",
-						"type": "varchar"
-					},
-					{
-						"name": "id_promesa",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "id_negocio",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "fecha_firma_comprador",
-						"type": "varchar"
-					},
-					{
-						"name": "setFechaFirmaComprador",
-						"type": "varchar"
-					},
-					{
-						"name": "FechaCargaBI",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "th",
-					"table": "Promesas"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DWIM2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PlanOK')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ThPromesas",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.00:15:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "PromesasActual",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"DetallePromesa": {},
-									"NegocioPromesaFirma": {},
-									"sink1": {}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/PromesasActual')]"
 			]
 		}
 	]

@@ -1576,27 +1576,145 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/EscribirHES')]",
+			"name": "[concat(parameters('factoryName'), '/DetallePromesas')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Publicar OC",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"PayDays": "Value"
-					}
+					"referenceName": "imsadatalake",
+					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Otros"
+					"name": "DataLake/PlanOK"
 				},
 				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {},
-				"schema": []
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DetallePromesas",
+						"folderPath": "PlanOK",
+						"fileSystem": "imsa-files"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "integer"
+						},
+						"fechaPromesa": {
+							"type": "string"
+						},
+						"totalLista": {
+							"type": "integer"
+						},
+						"descuentoSubtotal": {
+							"type": "object",
+							"properties": {
+								"valor": {
+									"type": "number"
+								},
+								"unidad": {
+									"type": "string"
+								}
+							}
+						},
+						"totalVenta": {
+							"type": "number"
+						},
+						"productos": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"nombre": {
+										"type": "string"
+									},
+									"tipo": {
+										"type": "string"
+									},
+									"precioLista": {
+										"type": "integer"
+									},
+									"descuento": {
+										"type": "object",
+										"properties": {
+											"valor": {
+												"type": "number"
+											},
+											"unidad": {
+												"type": "string"
+											}
+										}
+									},
+									"precioVenta": {
+										"type": "number"
+									},
+									"proyecto": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer"
+											},
+											"nombre": {
+												"type": "string"
+											}
+										}
+									},
+									"etapa": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer"
+											},
+											"nombre": {
+												"type": "string"
+											}
+										}
+									},
+									"subAgrupacion": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer"
+											},
+											"nombre": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"cliente": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "integer"
+								},
+								"identificadorPersonal": {
+									"type": "string"
+								},
+								"nombre": {
+									"type": "string"
+								},
+								"telefono": {
+									"type": "string"
+								},
+								"email": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Publicar OC')]"
+				"[concat(variables('factoryId'), '/linkedServices/imsadatalake')]"
 			]
 		}
 	]
