@@ -31,7 +31,7 @@
 				"precision": 15
 			},
 			{
-				"name": "descuentoSubtotal.unidadad",
+				"name": "descuentoSubtotal.unidad",
 				"type": "varchar"
 			},
 			{
