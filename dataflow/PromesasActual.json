@@ -146,6 +146,7 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     truncate:true,",
 				"     format: 'table',",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
