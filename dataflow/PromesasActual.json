@@ -116,7 +116,7 @@
 				"          fechaPromesa as string,",
 				"          totalLista as integer,",
 				"          {descuentoSubtotal.valor} as double,",
-				"          {descuentoSubtotal.unidadad} as string,",
+				"          {descuentoSubtotal.unidad} as string,",
 				"          totalVenta as integer,",
 				"          {productos.id} as integer,",
 				"          {productos.nombre} as string,",
