@@ -81,7 +81,7 @@
 				"          {productos.precioLista} = productos.precioLista,",
 				"          {productos.descuento.valor} = productos.descuento.valor,",
 				"          {productos.descuento.unidad} = productos.descuento.unidad,",
-				"          precioVenta = productos.precioVenta,",
+				"          {productos.precioVenta} = productos.precioVenta,",
 				"          {productos.proyecto.id} = productos.proyecto.id,",
 				"          {productos.proyecto.nombre} = productos.proyecto.nombre,",
 				"          {productos.etapa.id} = productos.etapa.id,",
