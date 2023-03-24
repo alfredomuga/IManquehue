@@ -154,7 +154,7 @@
 				"          fechaPromesa,",
 				"          totalLista,",
 				"          {descuentoSubtotal.valor},",
-				"          {descuentoSubtotal.unidad} = {descuentoSubtotal.unidadad},",
+				"          {descuentoSubtotal.unidad},",
 				"          totalVenta,",
 				"          {productos.id},",
 				"          {productos.nombre},",
@@ -177,8 +177,7 @@
 				"          id_promesa,",
 				"          id_negocio,",
 				"          fecha_firma_comprador,",
-				"          setFechaFirmaComprador,",
-				"          FechaCargaBI",
+				"          setFechaFirmaComprador",
 				"     )) ~> sink1"
 			]
 		}
