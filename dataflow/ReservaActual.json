@@ -35,7 +35,7 @@
 			"scriptLines": [
 				"source(output(",
 				"          id as integer,",
-				"          fechaPromesa as string,",
+				"          fechaReserva as string,",
 				"          totalLista as integer,",
 				"          descuentoSubtotal as (valor as double, unidad as string),",
 				"          totalVenta as double,",
